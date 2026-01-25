@@ -121,7 +121,13 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       if (response.statusCode == 200) {
         final participant = json.decode(response.body);
         if (mounted) {
-          _showParticipantDetailsDialog(participant);
+          // Check if participant is already checked in
+          bool isAlreadyCheckedIn = (participant['is_checked_in'] == 1);
+          if (isAlreadyCheckedIn) {
+            _showAlreadyCheckedInDialog(participant); // Show dialog instead of snackbar
+          } else {
+            _showParticipantDetailsDialog(participant);
+          }
         }
       } else {
         final errorData = json.decode(response.body);
@@ -156,6 +162,60 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     } catch (e) {
       _showSnackbar(context, e.toString().contains('Exception:') ? e.toString().replaceFirst('Exception: ', '') : 'Erreur réseau ou du serveur.', false);
     }
+  }
+
+  void _showAlreadyCheckedInDialog(Map<String, dynamic> participant) {
+    DateTime? checkInTime = participant['check_in_time'] != null ? DateTime.parse(participant['check_in_time']) : null;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: const Text(
+            'Participant Déjà Enregistré',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildDetailRow('Nom:', '${participant['first_name']} ${participant['last_name']}'),
+                _buildDetailRow('Email:', participant['email']),
+                _buildDetailRow('Pass:', participant['pass_type'].toString().replaceAll('_', ' ').toUpperCase()),
+                _buildDetailRow('Statut Check-in:', 'Oui', color: Colors.green),
+                if (checkInTime != null)
+                  _buildDetailRow('Heure Check-in:', DateFormat('dd/MM/yyyy HH:mm:ss').format(checkInTime)),
+                const SizedBox(height: 20),
+                const Text(
+                  'Ce participant a déjà été enregistré.',
+                  style: TextStyle(color: Colors.orange, fontStyle: FontStyle.italic),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Close dialog
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    ).then((_) {
+      _resumeScannerAfterDelay();
+    });
   }
 
   void _showParticipantDetailsDialog(Map<String, dynamic> participant) {
@@ -302,18 +362,20 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       ),
       body: Stack(
         children: [
-          MobileScanner(
-            controller: cameraController,
-            onDetect: (capture) {
-              final List<Barcode> barcodes = capture.barcodes;
-              if (barcodes.isNotEmpty && !_isProcessingScan) {
-                final barcode = barcodes.first;
-                if (barcode.rawValue != null) {
-                  _fetchAndDisplayParticipant(barcode.rawValue!);
-                }
-              }
-            },
-          ),
+          !_isProcessingScan
+              ? MobileScanner(
+                  controller: cameraController,
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    if (barcodes.isNotEmpty && !_isProcessingScan) {
+                      final barcode = barcodes.first;
+                      if (barcode.rawValue != null) {
+                        _fetchAndDisplayParticipant(barcode.rawValue!);
+                      }
+                    }
+                  },
+                )
+              : Container(), // Show an empty container when processing to hide camera
           Positioned.fill(
             child: Align(
               alignment: Alignment.center,
