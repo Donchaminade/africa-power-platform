@@ -305,6 +305,8 @@ const RegistrationsManager: React.FC = () => {
                     <div><label className="block text-sm font-medium mb-1">Last Name</label><input name="last_name" defaultValue={editingRegistration?.last_name} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" required /></div>
                     <div><label className="block text-sm font-medium mb-1">Email</label><input type="email" name="email" defaultValue={editingRegistration?.email} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" required /></div>
                     <div><label className="block text-sm font-medium mb-1">Company (Optional)</label><input name="company" defaultValue={editingRegistration?.company} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Job Title (Optional)</label><input name="job_title" defaultValue={editingRegistration?.job_title} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" /></div>
+                    <div><label className="block text-sm font-medium mb-1">Country (Optional)</label><input name="country" defaultValue={editingRegistration?.country} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" /></div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Pass Type</label>
                         <select name="pass_type" defaultValue={editingRegistration?.pass_type || 'conference'} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" required>

@@ -75,6 +75,8 @@ const Registration: React.FC = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [company, setCompany] = useState('');
+    const [jobTitle, setJobTitle] = useState(''); // New state for jobTitle
+    const [country, setCountry] = useState('');   // New state for country
     const [passType, setPassType] = useState('conference');
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -122,6 +124,8 @@ const Registration: React.FC = () => {
                     last_name: lastName,
                     email,
                     company,
+                    job_title: jobTitle, // New field
+                    country: country,     // New field
                     pass_type: passType,
                 }),
             });
@@ -138,6 +142,8 @@ const Registration: React.FC = () => {
             setLastName('');
             setEmail('');
             setCompany('');
+            setJobTitle(''); // Reset new field
+            setCountry('');   // Reset new field
             setPassType('conference');
 
         } catch (err) {
@@ -206,6 +212,16 @@ const Registration: React.FC = () => {
                             <div>
                                 <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entreprise (Optionnel)</label>
                                 <input type="text" id="company" value={company} onChange={(e) => setCompany(e.target.value)} 
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                            </div>
+                            <div> {/* New field for Job Title */}
+                                <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre du Poste (Optionnel)</label>
+                                <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} 
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                            </div>
+                            <div> {/* New field for Country */}
+                                <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pays (Optionnel)</label>
+                                <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
                             </div>
                             

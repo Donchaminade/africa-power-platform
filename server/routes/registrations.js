@@ -64,7 +64,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/registrations - Ajouter une nouvelle inscription depuis le formulaire public
 router.post('/', async (req, res) => {
-  const { first_name, last_name, email, company, pass_type } = req.body;
+  const { first_name, last_name, email, company, job_title, country, pass_type } = req.body;
 
   if (!first_name || !last_name || !email || !pass_type) {
     return res.status(400).json({ message: 'Missing required registration fields.' });
@@ -72,8 +72,8 @@ router.post('/', async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      'INSERT INTO registrations (first_name, last_name, email, company, pass_type) VALUES (?, ?, ?, ?, ?)',
-      [first_name, last_name, email, company || null, pass_type]
+      'INSERT INTO registrations (first_name, last_name, email, company, job_title, country, pass_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [first_name, last_name, email, company || null, job_title || null, country || null, pass_type]
     );
 
     res.status(201).json({ message: 'Registration successful!', registrationId: result.insertId });

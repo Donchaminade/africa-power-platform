@@ -6,7 +6,8 @@ import '../config/api_config.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:audioplayers/audioplayers.dart'; // For sound feedback
 import 'package:vibration/vibration.dart'; // For haptic feedback
-import 'package:permission_handler/permission_handler.dart' as permission_handler; // For explicit permission checks
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler; // For explicit permission checks
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -15,7 +16,8 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProviderStateMixin {
+class _ScannerScreenState extends State<ScannerScreen>
+    with SingleTickerProviderStateMixin {
   MobileScannerController cameraController = MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: CameraFacing.back,
@@ -47,7 +49,10 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_animationController);
   }
 
   void _checkCameraPermissions() async {
@@ -57,7 +62,11 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     }
     if (status.isPermanentlyDenied) {
       if (mounted) {
-        _showSnackbar(context, 'Les permissions caméra sont nécessaires pour scanner. Veuillez les activer manuellement dans les paramètres de l\'application.', false);
+        _showSnackbar(
+          context,
+          'Les permissions caméra sont nécessaires pour scanner. Veuillez les activer manuellement dans les paramètres de l\'application.',
+          false,
+        );
       }
     } else if (status.isGranted) {
       // No need to call _initializeCameraState() anymore as states are initialized directly
@@ -68,7 +77,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     // You need to place scan_sound.mp3 in the mobile_app/assets/ folder
     // and declare it in pubspec.yaml under the assets section.
     // Example: assets: - assets/scan_sound.mp3
-    await _audioPlayer.play(AssetSource('scan_sound.mp3')); 
+    await _audioPlayer.play(AssetSource('scan_sound.mp3'));
   }
 
   Future<void> _vibrate() async {
@@ -97,14 +106,22 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       try {
         final parsedData = json.decode(qrData);
         registrationId = parsedData['id'];
-        debugPrint('ID d\'enregistrement parsé (JSON): $registrationId'); // Debug print
+        debugPrint(
+          'ID d\'enregistrement parsé (JSON): $registrationId',
+        ); // Debug print
       } catch (e) {
         registrationId = int.tryParse(qrData);
-        debugPrint('ID d\'enregistrement parsé (int.tryParse): $registrationId'); // Debug print
+        debugPrint(
+          'ID d\'enregistrement parsé (int.tryParse): $registrationId',
+        ); // Debug print
       }
 
       if (registrationId == null) {
-        _showSnackbar(context, 'Contenu du QR code invalide. Attendu: un JSON avec "id" ou un nombre.', false);
+        _showSnackbar(
+          context,
+          'Contenu du QR code invalide. Attendu: un JSON avec "id" ou un nombre.',
+          false,
+        );
         return; // Exit early if QR data is invalid
       }
 
@@ -115,8 +132,12 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
         headers: {'Content-Type': 'application/json'},
       );
 
-      debugPrint('Réponse du serveur - Statut: ${response.statusCode}'); // Debug print for status code
-      debugPrint('Réponse du serveur - Corps: ${response.body}'); // Debug print for response body
+      debugPrint(
+        'Réponse du serveur - Statut: ${response.statusCode}',
+      ); // Debug print for status code
+      debugPrint(
+        'Réponse du serveur - Corps: ${response.body}',
+      ); // Debug print for response body
 
       if (response.statusCode == 200) {
         final participant = json.decode(response.body);
@@ -124,18 +145,32 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
           // Check if participant is already checked in
           bool isAlreadyCheckedIn = (participant['is_checked_in'] == 1);
           if (isAlreadyCheckedIn) {
-            _showAlreadyCheckedInDialog(participant); // Show dialog instead of snackbar
+            _showAlreadyCheckedInDialog(
+              participant,
+            ); // Show dialog instead of snackbar
           } else {
             _showParticipantDetailsDialog(participant);
           }
         }
       } else {
         final errorData = json.decode(response.body);
-        _showSnackbar(context, errorData['message'] ?? 'Participant non trouvé.', false);
+        _showSnackbar(
+          context,
+          errorData['message'] ?? 'Participant non trouvé.',
+          false,
+        );
       }
     } catch (e) {
-      debugPrint('Erreur lors de la récupération du participant: $e'); // Debug print for actual exception
-      _showSnackbar(context, e.toString().contains('Exception:') ? e.toString().replaceFirst('Exception: ', '') : 'Erreur réseau ou du serveur.', false);
+      debugPrint(
+        'Erreur lors de la récupération du participant: $e',
+      ); // Debug print for actual exception
+      _showSnackbar(
+        context,
+        e.toString().contains('Exception:')
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'Erreur réseau ou du serveur.',
+        false,
+      );
     } finally {
       setState(() {
         _isProcessingScan = false;
@@ -155,24 +190,42 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       final responseData = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        _showSnackbar(context, responseData['message'] ?? 'Check-in réussi !', true);
+        _showSnackbar(
+          context,
+          responseData['message'] ?? 'Check-in réussi !',
+          true,
+        );
       } else {
-        _showSnackbar(context, responseData['message'] ?? 'Échec du check-in.', false);
+        _showSnackbar(
+          context,
+          responseData['message'] ?? 'Échec du check-in.',
+          false,
+        );
       }
     } catch (e) {
-      _showSnackbar(context, e.toString().contains('Exception:') ? e.toString().replaceFirst('Exception: ', '') : 'Erreur réseau ou du serveur.', false);
+      _showSnackbar(
+        context,
+        e.toString().contains('Exception:')
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'Erreur réseau ou du serveur.',
+        false,
+      );
     }
   }
 
   void _showAlreadyCheckedInDialog(Map<String, dynamic> participant) {
-    DateTime? checkInTime = participant['check_in_time'] != null ? DateTime.parse(participant['check_in_time']) : null;
+    DateTime? checkInTime = participant['check_in_time'] != null
+        ? DateTime.parse(participant['check_in_time'])
+        : null;
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           title: const Text(
             'Participant Déjà Enregistré',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
@@ -182,16 +235,31 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow('Nom:', '${participant['first_name']} ${participant['last_name']}'),
+                _buildDetailRow(
+                  'Nom:',
+                  '${participant['first_name']} ${participant['last_name']}',
+                ),
                 _buildDetailRow('Email:', participant['email']),
-                _buildDetailRow('Pass:', participant['pass_type'].toString().replaceAll('_', ' ').toUpperCase()),
+                _buildDetailRow(
+                  'Pass:',
+                  participant['pass_type']
+                      .toString()
+                      .replaceAll('_', ' ')
+                      .toUpperCase(),
+                ),
                 _buildDetailRow('Statut Check-in:', 'Oui', color: Colors.green),
                 if (checkInTime != null)
-                  _buildDetailRow('Heure Check-in:', DateFormat('dd/MM/yyyy HH:mm:ss').format(checkInTime)),
+                  _buildDetailRow(
+                    'Heure Check-in:',
+                    DateFormat('dd/MM/yyyy HH:mm:ss').format(checkInTime),
+                  ),
                 const SizedBox(height: 20),
                 const Text(
                   'Ce participant a déjà été enregistré.',
-                  style: TextStyle(color: Colors.orange, fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ],
             ),
@@ -220,14 +288,18 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
 
   void _showParticipantDetailsDialog(Map<String, dynamic> participant) {
     bool isAlreadyCheckedIn = (participant['is_checked_in'] == 1);
-    DateTime? checkInTime = participant['check_in_time'] != null ? DateTime.parse(participant['check_in_time']) : null;
+    DateTime? checkInTime = participant['check_in_time'] != null
+        ? DateTime.parse(participant['check_in_time'])
+        : null;
 
     showDialog(
       context: context,
       barrierDismissible: false, // User must tap button to close
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
           title: const Text(
             'Détails du Participant',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
@@ -237,17 +309,36 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow('Nom:', '${participant['first_name']} ${participant['last_name']}'),
+                _buildDetailRow(
+                  'Nom:',
+                  '${participant['first_name']} ${participant['last_name']}',
+                ),
                 _buildDetailRow('Email:', participant['email']),
-                _buildDetailRow('Pass:', participant['pass_type'].toString().replaceAll('_', ' ').toUpperCase()),
-                _buildDetailRow('Statut Check-in:', isAlreadyCheckedIn ? 'Oui' : 'Non', color: isAlreadyCheckedIn ? Colors.green : Colors.red),
+                _buildDetailRow(
+                  'Pass:',
+                  participant['pass_type']
+                      .toString()
+                      .replaceAll('_', ' ')
+                      .toUpperCase(),
+                ),
+                _buildDetailRow(
+                  'Statut Check-in:',
+                  isAlreadyCheckedIn ? 'Oui' : 'Non',
+                  color: isAlreadyCheckedIn ? Colors.green : Colors.red,
+                ),
                 if (isAlreadyCheckedIn && checkInTime != null)
-                  _buildDetailRow('Heure Check-in:', DateFormat('dd/MM/yyyy HH:mm:ss').format(checkInTime)),
+                  _buildDetailRow(
+                    'Heure Check-in:',
+                    DateFormat('dd/MM/yyyy HH:mm:ss').format(checkInTime),
+                  ),
                 const SizedBox(height: 20),
                 if (isAlreadyCheckedIn)
                   const Text(
                     'Ce participant est déjà enregistré.',
-                    style: TextStyle(color: Colors.orange, fontStyle: FontStyle.italic),
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
               ],
             ),
@@ -312,13 +403,15 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       SnackBar(
         content: Text(message),
         backgroundColor: isSuccess ? Colors.green : Colors.red,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 5),
       ),
     );
   }
 
   void _resumeScannerAfterDelay() async {
-    await Future.delayed(const Duration(seconds: 1)); // Give some time for UI to settle
+    await Future.delayed(
+      const Duration(seconds: 3),
+    ); // Give some time for UI to settle
     if (mounted) {
       cameraController.start();
     }
@@ -354,7 +447,9 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
             onPressed: () async {
               await cameraController.switchCamera();
               setState(() {
-                _currentFacing = (_currentFacing == CameraFacing.back) ? CameraFacing.front : CameraFacing.back;
+                _currentFacing = (_currentFacing == CameraFacing.back)
+                    ? CameraFacing.front
+                    : CameraFacing.back;
               });
             },
           ),
@@ -391,7 +486,9 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
                     animation: _animation,
                     builder: (context, child) {
                       return CustomPaint(
-                        painter: _ScanLinePainter(animationValue: _animation.value),
+                        painter: _ScanLinePainter(
+                          animationValue: _animation.value,
+                        ),
                       );
                     },
                   ),
@@ -400,9 +497,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
             ),
           ),
           if (_isProcessingScan)
-            const Center(
-              child: CircularProgressIndicator(color: Colors.green),
-            ),
+            const Center(child: CircularProgressIndicator(color: Colors.green)),
           Positioned(
             bottom: 20,
             left: 0,
