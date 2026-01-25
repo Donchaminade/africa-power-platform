@@ -21,6 +21,7 @@ import SeoManager from './management/SeoManager';
 
 import GalleryManager from './management/GalleryManager';
 import CheckinManager from './management/CheckinManager'; // Import the new CheckinManager
+import SettingsManager from './management/SettingsManager'; // Import the new SettingsManager
 
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 
@@ -488,51 +489,55 @@ const Dashboard: React.FC = () => {
 
                                 { id: 'checkin', label: 'Check-in', icon: 'fa-check-circle', roles: ['admin', 'manager'], group: 'content' }, // New Check-in item
 
-                                { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
+                                                                { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
 
-                { id: 'seo', label: 'Paramètres SEO', icon: 'fa-chart-line', roles: ['admin'], group: 'admin' },
+                                                                { id: 'seo', label: 'Paramètres SEO', icon: 'fa-chart-line', roles: ['admin'], group: 'admin' },
 
-            ];
+                                                                { id: 'settings', label: 'Paramètres du Site', icon: 'fa-cog', roles: ['admin'], group: 'admin' },
 
-        
+                                                            ];
 
-            const navItems = allNavItems.filter(item => authUser && item.roles.includes(authUser.role));
+                                                        
 
-            
+                                                            const navItems = allNavItems.filter(item => authUser && item.roles.includes(authUser.role));
 
-            const renderContent = () => {
+                                                            
 
-                switch (activeView) {
+                                                            const renderContent = () => {
 
-                    case 'dashboard': return <DashboardOverview />;
+                                                                switch (activeView) {
 
-                    case 'registrations': return <RegistrationsManager />;
+                                                                    case 'dashboard': return <DashboardOverview />;
 
-                    case 'speakers': return <SpeakersManager authUser={authUser} />;
+                                                                    case 'registrations': return <RegistrationsManager />;
 
-                    case 'program': return <ProgramManager authUser={authUser} />;
+                                                                    case 'speakers': return <SpeakersManager authUser={authUser} />;
 
-                    case 'sponsors': return <SponsorsManager />;
+                                                                    case 'program': return <ProgramManager authUser={authUser} />;
 
-                    case 'faq': return <FaqManager authUser={authUser} />;
+                                                                    case 'sponsors': return <SponsorsManager />;
 
-                    case 'testimonials': return <TestimonialsManager authUser={authUser} />;
+                                                                    case 'faq': return <FaqManager authUser={authUser} />;
 
-                    case 'team': return <TeamManager />;
+                                                                    case 'testimonials': return <TestimonialsManager authUser={authUser} />;
 
-                                        case 'gallery': return <GalleryManager authUser={authUser} />;
+                                                                    case 'team': return <TeamManager />;
 
-                                        case 'checkin': return <CheckinManager />; // Render CheckinManager
+                                                                    case 'gallery': return <GalleryManager authUser={authUser} />;
 
-                                        case 'users': return <UsersManager />;
+                                                                    case 'checkin': return <CheckinManager />; // Render CheckinManager
 
-                    case 'seo': return <SeoManager />;
+                                                                    case 'users': return <UsersManager />;
 
-                    default: return <div>Select a section</div>;
+                                                                    case 'seo': return <SeoManager />;
 
-                }
+                                                                    case 'settings': return <SettingsManager />; // Render SettingsManager
 
-            };
+                                                                    default: return <div>Select a section</div>;
+
+                                                                }
+
+                                                            };
 
 
 

@@ -1,0 +1,161 @@
+W/WindowOnBackDispatcher(11584): OnBackInvokedCallback is not enabled for the application.
+W/WindowOnBackDispatcher(11584): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+I/DynamiteModule(11584): Considering local module com.google.mlkit.dynamite.barcode:10000 and remote module com.google.mlkit.dynamite.barcode:0
+I/DynamiteModule(11584): Selected local version of com.google.mlkit.dynamite.barcode
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=DEFAULT, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, DEFAULT, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+D/SensorManager(11584): registerListenerImpl sensor = {Sensor name="acc_mxc4005", vendor="MEMSIC", version=1, type=1, maxRange=78.4532, resolution=0.038326, power=0.17, minDelay=5000}, delayUs = 200000, latencyUs = 0, listener = android.view.OrientationEventListener$SensorEventListenerImpl@1055a7
+D/Camera2PresenceSrc(11584): System onCameraUnavailable: 0
+D/Camera2PresenceSrc(11584): [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+D/mali_gralloc(11584): register: id=25900002eb9, handle=0xb400006ee3e759c0, importpid=-1, gRegisteredHandles=11
+D/mali_gralloc(11584): register: id=25900002eba, handle=0xb400006ee58a9280, importpid=-1, gRegisteredHandles=12
+3
+D/BLASTBufferQueue(11584): [SurfaceView[com.example.mobile_app/com.example.mobile_app.MainActivity]#1](f:1,a:4) Can not acquire next buffer (WTC=false), ret=2
+D/mali_gralloc(11584): register: id=25900002ebb, handle=0xb400006ee567b1a0, importpid=-1, gRegisteredHandles=13
+D/mali_gralloc(11584): register: id=25900002ebc, handle=0xb400006ee567b440, importpid=-1, gRegisteredHandles=14
+D/mali_gralloc(11584): register: id=25900002ebd, handle=0xb400006eec3f8040, importpid=-1, gRegisteredHandles=15
+D/mali_gralloc(11584): register: id=25900002ebe, handle=0xb400006eec3f7240, importpid=-1, gRegisteredHandles=16
+D/mali_gralloc(11584): register: id=25900002ebf, handle=0xb400006ee567b8a0, importpid=-1, gRegisteredHandles=17
+D/mali_gralloc(11584): register: id=25900002ec0, handle=0xb400006ee5603780, importpid=-1, gRegisteredHandles=18
+D/mali_gralloc(11584): register: id=25900002ec1, handle=0xb400006ee5678b20, importpid=-1, gRegisteredHandles=19
+D/mali_gralloc(11584): register: id=25900002ec2, handle=0xb400006ee567c240, importpid=-1, gRegisteredHandles=20
+D/mali_gralloc(11584): register: id=25900002ec3, handle=0xb400006ee58a5700, importpid=-1, gRegisteredHandles=21
+D/mali_gralloc(11584): register: id=25900002ec4, handle=0xb400006ee58a5000, importpid=-1, gRegisteredHandles=22
+D/mali_gralloc(11584): register: id=25900002ec6, handle=0xb400006ee58a5ee0, importpid=-1, gRegisteredHandles=23
+D/mali_gralloc(11584): register: id=25900002ec7, handle=0xb400006ee58a5fc0, importpid=-1, gRegisteredHandles=24
+D/mali_gralloc(11584): register: id=25900002ec8, handle=0xb400006ee58a6880, importpid=-1, gRegisteredHandles=25
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/mali_gralloc(11584): register: id=25900002ec9, handle=0xb400006ee58a6180, importpid=-1, gRegisteredHandles=26
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+I/tflite  (11584): Replacing 43 out of 43 node(s) with delegate (TfLiteXNNPackDelegate) node, yielding 1 partitions for the whole graph.
+I/tflite  (11584): Replacing 35 out of 47 node(s) with delegate (TfLiteXNNPackDelegate) node, yielding 23 partitions for the whole graph.
+I/native  (11584): I0000 00:00:1769353720.415682   18626 oned_decoder_client.cc:696] barhopper::deep_learning::OnedDecoderClient is created successfully.
+I/mple.mobile_app(11584): Background young concurrent mark compact GC freed 5606KB AllocSpace bytes, 0(0B) LOS objects, 41% free, 7473KB/12MB, paused 374us,5.540ms total 42.729ms
+D/mali_gralloc(11584): unregister: id=25900002e9e, handle=0xb40000711de46000, base=0x6eedccd000, importpid=11584, count:0
+I/BpBinder(11584): onLastStrongRef automatically unlinking death recipients: 
+D/mali_gralloc(11584): register: id=25900002ecb, handle=0xb400006ee58a7ca0, importpid=-1, gRegisteredHandles=26
+D/mali_gralloc(11584): register: id=25900002ecc, handle=0xb400006ee58a8b80, importpid=-1, gRegisteredHandles=27
+D/mali_gralloc(11584): register: id=25900002ecd, handle=0xb400006eec3f7be0, importpid=-1, gRegisteredHandles=28
+D/mali_gralloc(11584): register: id=25900002ece, handle=0xb400006ee58a6dc0, importpid=-1, gRegisteredHandles=29
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+I/flutter (11584): QR Data reçu: {"id":1,"name":"Chaminade ADJOLOU","email":"chaminade.dondah.adjolou@gmail.com","pass_type":"","event":"Africa Power Platform 2026"}
+I/flutter (11584): ID d'enregistrement parsé (JSON): 1
+I/flutter (11584): Requête GET vers: http://10.230.146.205:4000/api/registrations/1
+D/mali_gralloc(11584): register: id=25900002ecf, handle=0xb40000711de46c40, importpid=-1, gRegisteredHandles=30
+D/SensorManager(11584): unregisterListenerImpl sensor = null, listener = android.view.OrientationEventListener$SensorEventListenerImpl@1055a7
+D/mali_gralloc(11584): unregister: id=25900002ecd, handle=0xb400006eec3f7be0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ece, handle=0xb400006ee58a6dc0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002eb9, handle=0xb400006ee3e759c0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec8, handle=0xb400006ee58a6880, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ecb, handle=0xb400006ee58a7ca0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ebb, handle=0xb400006ee567b1a0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ebd, handle=0xb400006eec3f8040, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ebf, handle=0xb400006ee567b8a0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec1, handle=0xb400006ee5678b20, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec3, handle=0xb400006ee58a5700, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec6, handle=0xb400006ee58a5ee0, base=0x0, importpid=11584, count:0
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+I/flutter (11584): Réponse du serveur - Statut: 200
+I/flutter (11584): Réponse du serveur - Corps: {"id":1,"first_name":"Chaminade","last_name":"ADJOLOU","email":"chaminade.dondah.adjolou@gmail.com","company":"Hyver | Python Togo | ABC | EthAfrique","job_title":null,"country":"","pass_type":"","registration_date":"2026-01-25T05:58:35.000Z","has_attended":0,"confirmation_token":null,"is_confirmed":0,"is_checked_in":0,"check_in_time":null}
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+I/flutter (11584): Erreur lors de la récupération du participant: type 'int' is not a subtype of type 'bool'
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-11](id:2d400000000d,api:4,p:787,c:11584) dequeueBuffer: BufferQueue has been abandoned
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-11](id:2d400000000d,api:4,p:787,c:11584) queueBuffer: BufferQueue has been abandoned
+V/MediaPlayer(11584): resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+V/MediaPlayer(11584): cleanDrmObj: mDrmObj=null mDrmSessionId=null
+5
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-11](id:2d400000000d,api:4,p:787,c:11584) cancelBuffer: BufferQueue has been abandoned
+D/mali_gralloc(11584): unregister: id=25900002ecf, handle=0xb40000711de46c40, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002eba, handle=0xb400006ee58a9280, base=0x6ee12c3000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ebc, handle=0xb400006ee567b440, base=0x6ec5db6000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ebe, handle=0xb400006eec3f7240, base=0x6ec46ea000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec0, handle=0xb400006ee5603780, base=0x708e6c1000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec2, handle=0xb400006ee567c240, base=0x708e10e000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec4, handle=0xb400006ee58a5000, base=0x6eedccd000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec7, handle=0xb400006ee58a5fc0, base=0x6ec5803000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ec9, handle=0xb400006ee58a6180, base=0x6ec5250000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ecc, handle=0xb400006ee58a8b80, base=0x6ec4c9d000, importpid=11584, count:0
+D/Camera2PresenceSrc(11584): System onCameraAvailable: 0
+D/Camera2PresenceSrc(11584): [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+I/DynamiteModule(11584): Considering local module com.google.mlkit.dynamite.barcode:10000 and remote module com.google.mlkit.dynamite.barcode:0
+I/DynamiteModule(11584): Selected local version of com.google.mlkit.dynamite.barcode
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=DEFAULT, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, DEFAULT, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+D/SensorManager(11584): registerListenerImpl sensor = {Sensor name="acc_mxc4005", vendor="MEMSIC", version=1, type=1, maxRange=78.4532, resolution=0.038326, power=0.17, minDelay=5000}, delayUs = 200000, latencyUs = 0, listener = android.view.OrientationEventListener$SensorEventListenerImpl@1055a7
+D/Camera2PresenceSrc(11584): System onCameraUnavailable: 0
+D/Camera2PresenceSrc(11584): [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+D/mali_gralloc(11584): register: id=25900002ed0, handle=0xb40000711de47260, importpid=-1, gRegisteredHandles=10
+D/mali_gralloc(11584): register: id=25900002ed1, handle=0xb40000711de48ae0, importpid=-1, gRegisteredHandles=11
+D/mali_gralloc(11584): register: id=25900002ed2, handle=0xb400006ee567ae20, importpid=-1, gRegisteredHandles=12
+D/mali_gralloc(11584): register: id=25900002ed3, handle=0xb400006ee58a5380, importpid=-1, gRegisteredHandles=13
+D/mali_gralloc(11584): register: id=25900002ed4, handle=0xb400006ee5679220, importpid=-1, gRegisteredHandles=14
+D/mali_gralloc(11584): register: id=25900002ed5, handle=0xb400006ee567b7c0, importpid=-1, gRegisteredHandles=15
+D/mali_gralloc(11584): register: id=25900002ed6, handle=0xb400006ee58a58c0, importpid=-1, gRegisteredHandles=16
+D/mali_gralloc(11584): register: id=25900002ed7, handle=0xb400006ee58a6340, importpid=-1, gRegisteredHandles=17
+D/mali_gralloc(11584): register: id=25900002ed8, handle=0xb400006ee5678b20, importpid=-1, gRegisteredHandles=18
+D/mali_gralloc(11584): register: id=25900002ed9, handle=0xb400006ee58a6180, importpid=-1, gRegisteredHandles=19
+D/mali_gralloc(11584): register: id=25900002eda, handle=0xb400006ee58a5540, importpid=-1, gRegisteredHandles=20
+D/mali_gralloc(11584): register: id=25900002edb, handle=0xb400006ee58a5fc0, importpid=-1, gRegisteredHandles=21
+D/mali_gralloc(11584): register: id=25900002edd, handle=0xb400006ee58a8720, importpid=-1, gRegisteredHandles=22
+D/mali_gralloc(11584): register: id=25900002ede, handle=0xb400006ee567b8a0, importpid=-1, gRegisteredHandles=23
+I/tflite  (11584): Replacing 43 out of 43 node(s) with delegate (TfLiteXNNPackDelegate) node, yielding 1 partitions for the whole graph.
+I/tflite  (11584): Replacing 35 out of 47 node(s) with delegate (TfLiteXNNPackDelegate) node, yielding 23 partitions for the whole graph.
+I/native  (11584): I0000 00:00:1769353722.682991   18399 oned_decoder_client.cc:696] barhopper::deep_learning::OnedDecoderClient is created successfully.
+D/mali_gralloc(11584): register: id=25900002edf, handle=0xb400006ee58a9440, importpid=-1, gRegisteredHandles=24
+D/mali_gralloc(11584): register: id=25900002ee0, handle=0xb400006ee3e75fe0, importpid=-1, gRegisteredHandles=25
+D/mali_gralloc(11584): register: id=25900002ee2, handle=0xb400006ee3e76a60, importpid=-1, gRegisteredHandles=26
+D/mali_gralloc(11584): register: id=25900002ee3, handle=0xb400006ee3e76600, importpid=-1, gRegisteredHandles=27
+D/mali_gralloc(11584): register: id=25900002ee4, handle=0xb400006ee3e775c0, importpid=-1, gRegisteredHandles=28
+V/MediaPlayer(11584): resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+V/MediaPlayer(11584): cleanDrmObj: mDrmObj=null mDrmSessionId=null
+V/MediaPlayer(11584): resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+V/MediaPlayer(11584): cleanDrmObj: mDrmObj=null mDrmSessionId=null
+I/BpBinder(11584): onLastStrongRef automatically unlinking death recipients: 
+D/mali_gralloc(11584): unregister: id=25900002e85, handle=0xb40000711de46460, base=0x6ed0b11000, importpid=11584, count:0
+I/BpBinder(11584): onLastStrongRef automatically unlinking death recipients: 
+D/mali_gralloc(11584): register: id=25900002ee9, handle=0xb400006ee3e78660, importpid=-1, gRegisteredHandles=28
+307
+D/BLASTBufferQueue(11584): [SurfaceView[com.example.mobile_app/com.example.mobile_app.MainActivity]#1](f:1,a:4) Can not acquire next buffer (WTC=false), ret=2
+I/mple.mobile_app(11584): Background young concurrent mark compact GC freed 5042KB AllocSpace bytes, 0(0B) LOS objects, 44% free, 6281KB/11MB, paused 398us,5.044ms total 33.608ms
+58
+D/BLASTBufferQueue(11584): [SurfaceView[com.example.mobile_app/com.example.mobile_app.MainActivity]#1](f:1,a:4) Can not acquire next buffer (WTC=false), ret=2
+W/ImageReader_JNI(11584): Unable to acquire a buffer item, very likely client tried to acquire more than maxImages buffers
+D/mali_gralloc(11584): register: id=25900002eeb, handle=0xb40000711de460e0, importpid=-1, gRegisteredHandles=29
+5
+W/ImageReader_JNI(11584): Unable to acquire a buffer item, very likely client tried to acquire more than maxImages buffers
+D/SensorManager(11584): unregisterListenerImpl sensor = null, listener = android.view.OrientationEventListener$SensorEventListenerImpl@1055a7
+D/mali_gralloc(11584): unregister: id=25900002ed6, handle=0xb400006ee58a58c0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002eda, handle=0xb400006ee58a5540, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002edd, handle=0xb400006ee58a8720, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002edf, handle=0xb400006ee58a9440, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ee2, handle=0xb400006ee3e76a60, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002eeb, handle=0xb40000711de460e0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ee3, handle=0xb400006ee3e76600, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ee4, handle=0xb400006ee3e775c0, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed0, handle=0xb40000711de47260, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed2, handle=0xb400006ee567ae20, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed4, handle=0xb400006ee5679220, base=0x0, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed8, handle=0xb400006ee5678b20, base=0x0, importpid=11584, count:0
+D/TransportRuntime.SQLiteEventStore(11584): Storing event with priority=VERY_LOW, name=FIREBASE_ML_SDK for destination cct
+D/TransportRuntime.JobInfoScheduler(11584): Upload for context TransportContext(cct, VERY_LOW, MSRodHRwczovL2ZpcmViYXNlbG9nZ2luZy5nb29nbGVhcGlzLmNvbS92MGNjL2xvZy9iYXRjaD9mb3JtYXQ9anNvbl9wcm90bzNc) is already scheduled. Returning...
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-14](id:2d4000000010,api:4,p:787,c:11584) dequeueBuffer: BufferQueue has been abandoned
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-14](id:2d4000000010,api:4,p:787,c:11584) queueBuffer: BufferQueue has been abandoned
+5
+E/BufferQueueProducer(11584): [ImageReader-960x720f22m6-11584-14](id:2d4000000010,api:4,p:787,c:11584) cancelBuffer: BufferQueue has been abandoned
+D/mali_gralloc(11584): unregister: id=25900002ed1, handle=0xb40000711de48ae0, base=0x708e3a7000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed3, handle=0xb400006ee58a5380, base=0x6eedccd000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed5, handle=0xb400006ee567b7c0, base=0x6ee12c3000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed7, handle=0xb400006ee58a6340, base=0x6ec4db6000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ed9, handle=0xb400006ee58a6180, base=0x6ec4803000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002edb, handle=0xb400006ee58a5fc0, base=0x6ec1137000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ee0, handle=0xb400006ee3e75fe0, base=0x6ebd250000, importpid=11584, count:0
+D/mali_gralloc(11584): unregister: id=25900002ee9, handle=0xb400006ee3e78660, base=0x6ed1b11000, importpid=11584, count:0
+D/Camera2PresenceSrc(11584): System onCameraAvailable: 0
+D/Camera2PresenceSrc(11584): [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}

@@ -1,12 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 
 const Hero: React.FC = () => {
   const { t, language } = useTranslation();
-  
-  const calculateTimeLeft = () => {
-    const eventDate = new Date('June 20, 2026 09:00:00 GMT+0100').getTime();
+  const { settings, isLoading: settingsLoading, error: settingsError } = useSettings(); // Get settings from context
+
+  const calculateTimeLeft = (eventDateString: string) => {
+    // Assuming eventDateString is in 'YYYY-MM-DD' format
+    // Convert to a compatible Date object, e.g., 'YYYY-MM-DDTHH:mm:ss' or 'MM/DD/YYYY'
+    const eventDate = new Date(`${eventDateString}T09:00:00Z`).getTime(); // Assuming 9 AM UTC
     const now = new Date().getTime();
     const difference = eventDate - now;
 
@@ -28,20 +31,36 @@ const Hero: React.FC = () => {
     return timeLeft;
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(settings?.event_date || '')); // Initialize with settings date
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+    // Recalculate if settings.event_date changes
+    if (settings?.event_date) {
+      setTimeLeft(calculateTimeLeft(settings.event_date));
+    }
+
+    const timer = setInterval(() => {
+      if (settings?.event_date) {
+        setTimeLeft(calculateTimeLeft(settings.event_date));
+      }
     }, 1000);
-    return () => clearTimeout(timer);
-  });
-  
+    return () => clearInterval(timer);
+  }, [settings?.event_date]); // Depend on settings.event_date
+
   const countdownUnits = {
       days: t('hero.countdown.days'),
       hours: t('hero.countdown.hours'),
       minutes: t('hero.countdown.minutes'),
       seconds: t('hero.countdown.seconds'),
+  }
+
+  // Display loading or error state for settings
+  if (settingsLoading) {
+    return <div>Chargement de la section Hero...</div>;
+  }
+
+  if (settingsError) {
+    return <div>Erreur de chargement de la section Hero: {settingsError}</div>;
   }
 
   return (
@@ -50,7 +69,9 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 py-32 relative z-10 text-center">
         <div className="mb-8">
           <span className="inline-block bg-brand-green text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            <i className="fas fa-calendar-alt mr-2"></i>{t('hero.date')}
+            <i className="fas fa-calendar-alt mr-2"></i>
+            {settings?.event_date ? new Date(settings.event_date).toLocaleDateString(language) : t('hero.date_placeholder')}
+            {settings?.event_venue && ` | ${settings.event_venue}`}
           </span>
         </div>
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight text-white">

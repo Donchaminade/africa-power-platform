@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../contexts/LanguageContext';
+import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, t } = useTranslation();
+  const { settings, isLoading: settingsLoading, error: settingsError } = useSettings(); // Get settings from context
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,6 +53,15 @@ const Header: React.FC = () => {
     </div>
   );
 
+  // Display loading or error state for settings
+  if (settingsLoading) {
+    return <div>Chargement de l'en-tête...</div>; // Or a skeleton loader
+  }
+
+  if (settingsError) {
+    return <div>Erreur de chargement de l'en-tête: {settingsError}</div>; // Or a fallback header
+  }
+
   return (
     <>
       <header
@@ -67,9 +77,14 @@ const Header: React.FC = () => {
       >
         <div className="flex items-center justify-between px-6 py-2">
           <a href="#" className="flex-shrink-0" aria-label="Africa Power Platform Home">
-             <svg className="h-10 w-auto" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M26 0C11.64 0 0 11.64 0 26s11.64 26 26 26 26-11.64 26-26S40.36 0 26 0zm-2 49.86C12.05 49.37 4 38.65 4 26S12.05 2.63 24 2.14v47.72zm4-47.72c11.95.49 20 11.21 20 23.86s-8.05 23.37-20 23.86V2.14z" fill="currentColor" className="text-brand-green"/>
-             </svg>
+             {settings?.event_logo_url ? (
+                 <img src={settings.event_logo_url} alt="Event Logo" className="h-10 w-auto" />
+             ) : (
+                 // Fallback SVG or text if logo not available
+                 <svg className="h-10 w-auto" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M26 0C11.64 0 0 11.64 0 26s11.64 26 26 26 26-11.64 26-26S40.36 0 26 0zm-2 49.86C12.05 49.37 4 38.65 4 26S12.05 2.63 24 2.14v47.72zm4-47.72c11.95.49 20 11.21 20 23.86s-8.05 23.37-20 23.86V2.14z" fill="currentColor" className="text-brand-green"/>
+                 </svg>
+             )}
           </a>
           <div className="hidden md:flex items-center gap-8">
             {renderNavLinks()}

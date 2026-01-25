@@ -27,14 +27,20 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
+        final requestBody = json.encode({
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        });
+        debugPrint('Login Request Body: $requestBody'); // Log request body
+
         final response = await http.post(
           Uri.parse('${ApiConfig.baseUrl}/login'),
           headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'email': _emailController.text,
-            'password': _passwordController.text,
-          }),
+          body: requestBody,
         );
+
+        debugPrint('Login Response Status Code: ${response.statusCode}'); // Log status code
+        debugPrint('Login Response Body: ${response.body}'); // Log response body
 
         if (response.statusCode == 200) {
           final responseData = json.decode(response.body);
@@ -54,8 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         }
       } catch (e) {
+        debugPrint('Login Error: $e'); // Log network error
         setState(() {
-          _errorMessage = 'Network error. Please try again.';
+          _errorMessage = 'Erreur réseau. Veuillez réessayer.';
         });
       } finally {
         setState(() {

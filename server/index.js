@@ -56,7 +56,7 @@ app.use('/api/testimonials', testimonialsRouter);
 app.use('/api/team', teamRouter);
 app.use('/api/registrations', registrationsRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/settings', settingsRouter);
+app.use('/api/settings', settingsRouter); // Use the new settings router
 app.use('/api/stats', statsRouter);
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/upload', uploadRouter);

@@ -93,21 +93,30 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
       _vibrate();
 
       int? registrationId;
+      debugPrint('QR Data reçu: $qrData'); // Debug print
       try {
         final parsedData = json.decode(qrData);
         registrationId = parsedData['id'];
+        debugPrint('ID d\'enregistrement parsé (JSON): $registrationId'); // Debug print
       } catch (e) {
         registrationId = int.tryParse(qrData);
+        debugPrint('ID d\'enregistrement parsé (int.tryParse): $registrationId'); // Debug print
       }
 
       if (registrationId == null) {
-        throw Exception('Données du QR code invalides : ID d\'inscription introuvable.');
+        _showSnackbar(context, 'Contenu du QR code invalide. Attendu: un JSON avec "id" ou un nombre.', false);
+        return; // Exit early if QR data is invalid
       }
 
+      final requestUrl = '${ApiConfig.baseUrl}/registrations/$registrationId';
+      debugPrint('Requête GET vers: $requestUrl'); // Debug print for URL
       final response = await http.get(
-        Uri.parse('${ApiConfig.baseUrl}/registrations/$registrationId'),
+        Uri.parse(requestUrl),
         headers: {'Content-Type': 'application/json'},
       );
+
+      debugPrint('Réponse du serveur - Statut: ${response.statusCode}'); // Debug print for status code
+      debugPrint('Réponse du serveur - Corps: ${response.body}'); // Debug print for response body
 
       if (response.statusCode == 200) {
         final participant = json.decode(response.body);
@@ -119,6 +128,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
         _showSnackbar(context, errorData['message'] ?? 'Participant non trouvé.', false);
       }
     } catch (e) {
+      debugPrint('Erreur lors de la récupération du participant: $e'); // Debug print for actual exception
       _showSnackbar(context, e.toString().contains('Exception:') ? e.toString().replaceFirst('Exception: ', '') : 'Erreur réseau ou du serveur.', false);
     } finally {
       setState(() {
@@ -149,7 +159,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
   }
 
   void _showParticipantDetailsDialog(Map<String, dynamic> participant) {
-    bool isAlreadyCheckedIn = participant['is_checked_in'] ?? false;
+    bool isAlreadyCheckedIn = (participant['is_checked_in'] == 1);
     DateTime? checkInTime = participant['check_in_time'] != null ? DateTime.parse(participant['check_in_time']) : null;
 
     showDialog(
