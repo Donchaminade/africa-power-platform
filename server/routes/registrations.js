@@ -87,10 +87,21 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/registrations/export/pdf - Exporter toutes les inscriptions en PDF (paysage)
+// GET /api/registrations/export/pdf - Exporter les inscriptions en PDF (paysage)
 router.get('/export/pdf', async (req, res) => {
     try {
-        const [allRegistrations] = await pool.query('SELECT * FROM registrations ORDER BY registration_date DESC');
+        let query = 'SELECT * FROM registrations';
+        const queryParams = [];
+
+        // Check for 'checkedIn' query parameter
+        if (req.query.checkedIn === 'true') {
+            query += ' WHERE is_checked_in = 1';
+        } else if (req.query.checkedIn === 'false') {
+            query += ' WHERE is_checked_in = 0';
+        }
+        query += ' ORDER BY registration_date DESC';
+
+        const [allRegistrations] = await pool.query(query, queryParams);
 
         const pdfDoc = await PDFDocument.create();
         const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
