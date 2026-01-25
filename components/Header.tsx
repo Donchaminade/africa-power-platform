@@ -23,6 +23,7 @@ const Header: React.FC = () => {
     { href: '#program', label: t('nav.program') },
     { href: '#register', label: t('nav.register') },
     { href: '#team', label: t('nav.team') },
+    { href: '#gallery', label: "Galerie" }, // Added Gallery Link
     { href: '#faq', label: t('nav.faq') },
   ];
 

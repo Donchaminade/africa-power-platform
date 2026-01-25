@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useRef } from 'react';
-import { GoogleGenAI, Chat, GenerateContentResponse } from '@google/genai';
 import { useTranslation } from '../contexts/LanguageContext';
+import { API_URL } from '../utils/config';
 
 interface Message {
     role: 'user' | 'model';
@@ -9,15 +8,12 @@ interface Message {
 }
 
 const Chatbot: React.FC = () => {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [chat, setChat] = useState<Chat | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
     useEffect(() => {
         if (isOpen && messages.length === 0) {
@@ -39,38 +35,45 @@ const Chatbot: React.FC = () => {
         setIsLoading(true);
 
         try {
-            let currentChat = chat;
-            if (!currentChat) {
-                const newChat = ai.chats.create({
-                    model: 'gemini-3-flash-preview',
-                    config: {
-                         systemInstruction: `You are a friendly and helpful assistant for the "Africa Power Platform" event. Your goal is to answer questions about the event. The event is a premier summit dedicated to Microsoft Power Platform in West Africa, taking place in Cotonou, Benin, on June 20-21, 2026. Key topics include low-code/no-code, Power BI, Power Apps, and Dynamics 365. The event is free but requires registration. Use the information provided on the website to answer questions concisely and accurately. Always be polite and encouraging. Answer in the language of the user's question (${t('nav.about') === 'About' ? 'English' : 'French'}).`,
-                    },
-                });
-                setChat(newChat);
-                currentChat = newChat;
+            const systemInstruction = `You are a friendly and helpful assistant for the "Africa Power Platform" event. Your goal is to answer questions about the event. The event is a premier summit dedicated to Microsoft Power Platform in West Africa, taking place in Cotonou, Benin, on June 20-21, 2026. Key topics include low-code/no-code, Power BI, Power Apps, and Dynamics 365. The event is free but requires registration. Use the information provided on the website to answer questions concisely and accurately. Always be polite and encouraging. Answer in the language of the user's question (${language === 'en' ? 'English' : 'French'}).`;
+
+            const response = await fetch(`${API_URL}/chatbot`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    history: messages, // Send the current chat history
+                    message: userMessage.text,
+                    systemInstruction: systemInstruction,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Chatbot API call failed');
             }
 
-            const stream = await currentChat.sendMessageStream({ message: input });
-
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
             let modelResponse = '';
+
             setMessages(prev => [...prev, { role: 'model', text: '' }]);
 
-            for await (const chunk of stream) {
-                const c = chunk as GenerateContentResponse
-                const chunkText = c.text;
-                if (chunkText) {
-                    modelResponse += chunkText;
-                    setMessages(prev => {
-                        const newMessages = [...prev];
-                        newMessages[newMessages.length - 1].text = modelResponse;
-                        return newMessages;
-                    });
-                }
+            // Stream the response
+            while (true) {
+                const { done, value } = await reader!.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                modelResponse += chunk;
+                setMessages(prev => {
+                    const newMessages = [...prev];
+                    newMessages[newMessages.length - 1].text = modelResponse;
+                    return newMessages;
+                });
             }
+
         } catch (error) {
-            console.error('Gemini API error:', error);
-            setMessages(prev => [...prev, { role: 'model', text: "Sorry, I'm having trouble connecting. Please try again later." }]);
+            console.error('Chatbot error:', error);
+            setMessages(prev => [...prev, { role: 'model', text: "Désolé, je rencontre des difficultés à me connecter. Veuillez réessayer plus tard." }]);
         } finally {
             setIsLoading(false);
         }

@@ -1,11 +1,154 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import { API_URL } from '../utils/config';
+
+interface PassOption {
+    value: string;
+    titleKey: string;
+    subtitleKey: string;
+    tagKey?: string;
+    featuresKeys: string[];
+    price: string;
+    highlighted?: boolean;
+}
+
+interface PassCardProps {
+    option: PassOption;
+    isSelected: boolean;
+    onSelect: (value: string) => void;
+}
+
+const PassCard: React.FC<PassCardProps> = ({ option, isSelected, onSelect }) => {
+    const { t } = useTranslation();
+    return (
+        <div 
+            className={`relative flex flex-col p-6 rounded-2xl shadow-lg border-2 cursor-pointer 
+                        transition-all duration-300 ease-in-out 
+                        ${isSelected 
+                            ? 'border-brand-green bg-gradient-to-br from-brand-green/10 to-transparent scale-105' 
+                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:border-brand-green/50 hover:shadow-xl'
+                        }`}
+            onClick={() => onSelect(option.value)}
+        >
+            {option.tagKey && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-green text-white px-3 py-0.5 rounded-full text-xs font-bold shadow-md">
+                    {t(option.tagKey)}
+                </span>
+            )}
+            <div className="text-center">
+                <h3 className="text-xl font-bold mb-1">{t(option.titleKey)}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{t(option.subtitleKey)}</p>
+                <div className="mb-6">
+                    <span className={`text-5xl font-black ${isSelected ? 'text-brand-green' : 'text-gray-900 dark:text-white'}`}>{option.price}</span>
+                </div>
+            </div>
+            <ul className="space-y-3 mb-8 text-left flex-grow">
+                {option.featuresKeys.map((featureKey, index) => (
+                    <li key={index} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                        <i className="fas fa-check text-green-500"></i><span>{t(featureKey)}</span>
+                    </li>
+                ))}
+            </ul>
+            <button
+                type="button" // Important: type="button" to prevent form submission
+                className={`w-full py-3 rounded-full font-semibold transition-all duration-300
+                            ${isSelected 
+                                ? 'bg-brand-green text-white hover:bg-green-700' 
+                                : 'border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black'
+                            }`}
+                onClick={() => onSelect(option.value)}
+            >
+                {t(option.buttonKey)}
+            </button>
+            {isSelected && (
+                <div className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 rounded-full bg-brand-green text-white">
+                    <i className="fas fa-check text-xs"></i>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const Registration: React.FC = () => {
     const { t } = useTranslation();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [company, setCompany] = useState('');
+    const [passType, setPassType] = useState('conference');
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    const passOptions: PassOption[] = [
+        {
+            value: 'conference',
+            titleKey: 'registration.pass1_title',
+            subtitleKey: 'registration.pass1_subtitle',
+            featuresKeys: ['registration.pass1_feature1', 'registration.pass1_feature2', 'registration.pass1_feature3'],
+            price: t('registration.price'),
+            buttonKey: 'registration.pass1_button',
+        },
+        {
+            value: 'full',
+            titleKey: 'registration.pass2_title',
+            subtitleKey: 'registration.pass2_subtitle',
+            tagKey: 'registration.pass2_tag',
+            featuresKeys: ['registration.pass2_feature1', 'registration.pass2_feature2', 'registration.pass2_feature3'],
+            price: t('registration.price'),
+            buttonKey: 'registration.pass2_button',
+            highlighted: true,
+        },
+        {
+            value: 'bootcamp',
+            titleKey: 'registration.pass3_title',
+            subtitleKey: 'registration.pass3_subtitle',
+            featuresKeys: ['registration.pass3_feature1', 'registration.pass3_feature2', 'registration.pass3_feature3'],
+            price: t('registration.price'),
+            buttonKey: 'registration.pass3_button',
+        },
+    ];
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setMessage(null);
+
+        try {
+            const response = await fetch(`${API_URL}/registrations`, { // Using /api/registrations POST endpoint
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email,
+                    company,
+                    pass_type: passType,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed.');
+            }
+
+            setMessage({ type: 'success', text: 'Inscription réussie ! Un e-mail de confirmation vous sera envoyé prochainement.' });
+            // Reset form
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setCompany('');
+            setPassType('conference');
+
+        } catch (err) {
+            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue lors de l\'inscription.' });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <section id="register" className="py-24 bg-white dark:bg-black">
+        <section id="register" className="py-24 bg-gradient-to-br from-white to-gray-100 dark:from-black dark:to-gray-900">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
                     <span className="text-brand-green font-semibold text-sm tracking-widest uppercase">{t('registration.pre_title')}</span>
@@ -16,43 +159,72 @@ const Registration: React.FC = () => {
                         {t('registration.description')}
                     </p>
                 </div>
-                <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    {/* Pass Conférence */}
-                    <div className="rounded-2xl p-8 border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:border-brand-green bg-gray-50 dark:bg-gray-900/50 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-brand-green/10">
-                        <h3 className="text-xl font-bold mb-2">{t('registration.pass1_title')}</h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{t('registration.pass1_subtitle')}</p>
-                        <div className="mb-6"><span className="text-5xl font-black">{t('registration.price')}</span></div>
-                        <ul className="space-y-3 mb-8 text-left">
-                            <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass1_feature1')}</span></li>
-                            <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass1_feature2')}</span></li>
-                            <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass1_feature3')}</span></li>
-                        </ul>
-                        <button className="w-full py-3 border-2 border-gray-900 dark:border-white rounded-full font-semibold hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all">{t('registration.pass1_button')}</button>
+                
+                {message && (
+                    <div className={`p-4 rounded-md mb-8 max-w-xl mx-auto ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {message.text}
                     </div>
-                    {/* Pass Complet */}
-                    <div className="rounded-2xl p-8 border-2 border-brand-green relative transition-all duration-300 transform md:scale-105 bg-gray-50 dark:bg-gray-900 hover:scale-110 hover:shadow-2xl dark:hover:shadow-brand-green/25">
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-green text-white px-4 py-1 rounded-full text-sm font-bold">{t('registration.pass2_tag')}</div>
-                        <h3 className="text-xl font-bold mb-2">{t('registration.pass2_title')}</h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{t('registration.pass2_subtitle')}</p>
-                        <div className="mb-6"><span className="text-5xl font-black text-brand-green">{t('registration.price')}</span></div>
-                        <ul className="space-y-3 mb-8 text-left">
-                           <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass2_feature1')}</span></li>
-                           <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass2_feature2')}</span></li>
-                           <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass2_feature3')}</span></li>
-                        </ul>
-                        <button className="w-full py-3 bg-brand-green text-white rounded-full font-semibold hover:bg-green-700 transition-all">{t('registration.pass2_button')}</button>
+                )}
+
+                <div className="grid lg:grid-cols-2 gap-12 items-start">
+                    {/* Pass Options Selection */}
+                    <div className="space-y-8">
+                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">1. Choisissez votre Pass</h3>
+                        <div className="grid md:grid-cols-1 gap-6"> {/* Changed to 1 column for PassCard display */}
+                            {passOptions.map((option) => (
+                                <PassCard 
+                                    key={option.value}
+                                    option={option}
+                                    isSelected={passType === option.value}
+                                    onSelect={setPassType}
+                                />
+                            ))}
+                        </div>
                     </div>
-                    {/* Pass Bootcamp */}
-                    <div className="rounded-2xl p-8 border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:border-brand-green bg-gray-50 dark:bg-gray-900/50 hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-brand-green/10">
-                        <h3 className="text-xl font-bold mb-2">{t('registration.pass3_title')}</h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{t('registration.pass3_subtitle')}</p>
-                        <div className="mb-6"><span className="text-5xl font-black">{t('registration.price')}</span></div>
-                        <ul className="space-y-3 mb-8 text-left">
-                             <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass3_feature1')}</span></li>
-                             <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass3_feature2')}</span></li>
-                             <li className="flex items-center gap-3"><i className="fas fa-check text-green-500"></i><span>{t('registration.pass3_feature3')}</span></li>
-                        </ul>
-                        <button className="w-full py-3 border-2 border-gray-900 dark:border-white rounded-full font-semibold hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all">{t('registration.pass3_button')}</button>
+
+                    {/* Registration Form */}
+                    <div className="bg-white dark:bg-gray-800/50 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">2. Vos Informations</h3>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
+                                    <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required 
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                </div>
+                                <div>
+                                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                                    <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required 
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required 
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                            </div>
+                            <div>
+                                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entreprise (Optionnel)</label>
+                                <input type="text" id="company" value={company} onChange={(e) => setCompany(e.target.value)} 
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                            </div>
+                            
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full bg-brand-green text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin"></i> {t('registration.register_button')}
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-ticket-alt"></i> {t('registration.register_button')}
+                                    </>
+                                )}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

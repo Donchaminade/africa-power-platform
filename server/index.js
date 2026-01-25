@@ -44,6 +44,8 @@ const newsletterRouter = require('./routes/newsletter');
 const uploadRouter = require('./routes/upload');
 const authRouter = require('./routes/auth');
 const galleryRouter = require('./routes/gallery');
+const chatbotRouter = require('./routes/chatbot'); // Import the new chatbot router
+const checkinRouter = require('./routes/checkin'); // Import the new checkin router
 
 // Utiliser les routes
 app.use('/api/speakers', speakersRouter);
@@ -61,6 +63,8 @@ app.use('/api/upload', uploadRouter);
 app.use('/api', authRouter); // Using /api prefix for /login
 app.use('/api/gallery', galleryRouter);
 app.use('/api/ticket', require('./routes/ticket'));
+app.use('/api/chatbot', chatbotRouter); // Use the new chatbot router
+app.use('/api', checkinRouter); // Use the new checkin router
 
 
 // ======= Démarrage du serveur =======

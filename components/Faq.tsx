@@ -1,14 +1,18 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import { Faq as FaqType } from '../utils/types';
+import { API_URL } from '../utils/config';
 
 interface FaqItemProps {
-  question: string;
-  answer: string;
+  faq: FaqType;
 }
 
-const FaqItem: React.FC<FaqItemProps> = ({ question, answer }) => {
+const FaqItem: React.FC<FaqItemProps> = ({ faq }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { language } = useTranslation();
+
+  const question = language === 'fr' ? faq.question_fr : faq.question_en;
+  const answer = language === 'fr' ? faq.answer_fr : faq.answer_en;
 
   return (
     <div className="border-b border-gray-200 dark:border-gray-800">
@@ -40,7 +44,28 @@ const FaqItem: React.FC<FaqItemProps> = ({ question, answer }) => {
 
 const Faq: React.FC = () => {
   const { t } = useTranslation();
-  const faqItems = t('faq.items') as unknown as { q: string, a: string }[];
+  const [faqItems, setFaqItems] = useState<FaqType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+      const fetchFaqs = async () => {
+          try {
+              const response = await fetch(`${API_URL}/faq`);
+              if (!response.ok) {
+                  throw new Error('Failed to fetch FAQ data.');
+              }
+              const data: FaqType[] = await response.json();
+              setFaqItems(data.filter(f => f.is_active));
+          } catch (err) {
+              setError(err instanceof Error ? err.message : 'An unknown error occurred');
+          } finally {
+              setIsLoading(false);
+          }
+      };
+
+      fetchFaqs();
+  }, []);
 
   return (
     <section id="faq" className="py-24 bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
@@ -54,11 +79,20 @@ const Faq: React.FC = () => {
             {t('faq.description')}
           </p>
         </div>
-        <div className="space-y-2">
-          {faqItems.map((item, index) => (
-            <FaqItem key={index} question={item.q} answer={item.a} />
-          ))}
-        </div>
+        
+        {isLoading && <div className="text-center">Chargement de la FAQ...</div>}
+        {error && <div className="text-center text-red-500">Erreur: {error}</div>}
+
+        {!isLoading && !error && (
+            <div className="space-y-2">
+              {faqItems.map((item) => (
+                <FaqItem key={item.id} faq={item} />
+              ))}
+            </div>
+        )}
+        {!isLoading && !error && faqItems.length === 0 && (
+            <p className="text-center text-gray-500">Aucune question fréquente pour le moment.</p>
+        )}
       </div>
     </section>
   );

@@ -1,0 +1,53 @@
+Your project is configured to compile against Android SDK 35, but the following plugin(s) require to be compiled against a higher Android SDK version:
+- mobile_scanner compiles against Android SDK 36
+Fix this issue by compiling against the highest Android SDK version (they are backward compatible).
+Add the following to C:\xampp\htdocs\africa-power-platform\mobile_app\android\app\build.gradle.kts:
+
+    android {
+        compileSdk = 36
+        ...
+    }
+Your project is configured with Android NDK 26.3.11579264, but the following plugin(s) depend on a different Android NDK version:
+- mobile_scanner requires Android NDK 27.0.12077973
+- shared_preferences_android requires Android NDK 27.0.12077973
+Fix this issue by using the highest Android NDK version (they are backward compatible).       
+Add the following to C:\xampp\htdocs\africa-power-platform\mobile_app\android\app\build.gradle.kts:
+
+    android {
+        ndkVersion = "27.0.12077973"
+        ...
+    }
+lib/screens/scanner_screen.dart:108:47: Error: The getter 'torchState' isn't defined for the class 'MobileScannerController'.
+ - 'MobileScannerController' is from 'package:mobile_scanner/src/mobile_scanner_controller.dart' ('/C:/Users/chami/AppData/Local/Pub/Cache/hosted/pub.dev/mobile_scanner-7.1.4/lib/src/mobile_scanner_controller.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'torchState'.
+            valueListenable: cameraController.torchState,
+                                              ^^^^^^^^^^
+lib/screens/scanner_screen.dart:121:47: Error: The getter 'cameraFacingState' isn't defined for the class 'MobileScannerController'.
+ - 'MobileScannerController' is from 'package:mobile_scanner/src/mobile_scanner_controller.dart' ('/C:/Users/chami/AppData/Local/Pub/Cache/hosted/pub.dev/mobile_scanner-7.1.4/lib/src/mobile_scanner_controller.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'cameraFacingState'.
+            valueListenable: cameraController.cameraFacingState,
+                                              ^^^^^^^^^^^^^^^^^
+lib/screens/history_screen.dart:94:76: Error: The method 'toLocaleString' isn't defined for the class 'DateTime'.
+ - 'DateTime' is from 'dart:core'.
+Try correcting the name to the name of an existing method, or defining a method named 'toLocaleString'.
+                            ? DateTime.parse(participant['check_in_time']).toLocaleString()   
+                                                                           ^^^^^^^^^^^^^^     
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1      
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 28s
+Running Gradle task 'assembleDebug'...                             28,8s
+Error: Gradle task assembleDebug failed with exit code 1
+PS C:\xampp\htdocs\africa-power-platform\mobile_app> 

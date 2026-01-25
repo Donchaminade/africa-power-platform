@@ -20,6 +20,7 @@ import UsersManager from './management/UsersManager';
 import SeoManager from './management/SeoManager';
 
 import GalleryManager from './management/GalleryManager';
+import CheckinManager from './management/CheckinManager'; // Import the new CheckinManager
 
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 
@@ -483,9 +484,11 @@ const Dashboard: React.FC = () => {
 
                 { id: 'team', label: 'Équipe', icon: 'fa-users-cog', roles: ['admin'], group: 'content' },
 
-                { id: 'gallery', label: 'Galerie', icon: 'fa-images', roles: ['admin', 'manager'], group: 'content' },
+                                { id: 'gallery', label: 'Galerie', icon: 'fa-images', roles: ['admin', 'manager'], group: 'content' },
 
-                { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
+                                { id: 'checkin', label: 'Check-in', icon: 'fa-check-circle', roles: ['admin', 'manager'], group: 'content' }, // New Check-in item
+
+                                { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
 
                 { id: 'seo', label: 'Paramètres SEO', icon: 'fa-chart-line', roles: ['admin'], group: 'admin' },
 
@@ -517,9 +520,11 @@ const Dashboard: React.FC = () => {
 
                     case 'team': return <TeamManager />;
 
-                    case 'gallery': return <GalleryManager authUser={authUser} />;
+                                        case 'gallery': return <GalleryManager authUser={authUser} />;
 
-                    case 'users': return <UsersManager />;
+                                        case 'checkin': return <CheckinManager />; // Render CheckinManager
+
+                                        case 'users': return <UsersManager />;
 
                     case 'seo': return <SeoManager />;
 
