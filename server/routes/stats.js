@@ -10,19 +10,37 @@ router.get('/', async (req, res) => {
       [registrations],
       [speakers],
       [sponsors],
-      [subscribers]
+      [subscribers],
+      [contactMessages], // New
+      [partnershipRequests], // New
+      [mediaAssets], // New
+      [contentBlocks], // New
+      [galleryImages], // New
+      [teamMembers] // New
     ] = await Promise.all([
       pool.query('SELECT COUNT(*) as count FROM registrations'),
       pool.query('SELECT COUNT(*) as count FROM speakers'),
       pool.query('SELECT COUNT(*) as count FROM sponsors'),
-      pool.query('SELECT COUNT(*) as count FROM newsletter_subscribers')
+      pool.query('SELECT COUNT(*) as count FROM newsletter_subscribers'),
+      pool.query('SELECT COUNT(*) as count FROM contact_messages'), // New
+      pool.query('SELECT COUNT(*) as count FROM partnership_requests'), // New
+      pool.query('SELECT COUNT(*) as count FROM media_assets'), // New
+      pool.query('SELECT COUNT(*) as count FROM content_blocks'), // New
+      pool.query('SELECT COUNT(*) as count FROM gallery'), // New
+      pool.query('SELECT COUNT(*) as count FROM team_members') // Corrected table name
     ]);
 
     const stats = {
       registrations: registrations[0].count,
       speakers: speakers[0].count,
       sponsors: sponsors[0].count,
-      newsletterSubscribers: subscribers[0].count
+      newsletterSubscribers: subscribers[0].count,
+      contactMessages: contactMessages[0].count, // New
+      partnershipRequests: partnershipRequests[0].count, // New
+      mediaAssets: mediaAssets[0].count, // New
+      contentBlocks: contentBlocks[0].count, // New
+      galleryImages: galleryImages[0].count, // New
+      teamMembers: teamMembers[0].count // New
     };
 
     res.json(stats);

@@ -31,11 +31,11 @@ router.get('/:id', async (req, res) => {
 
 // POST a new content block
 router.post('/', async (req, res) => {
-    const { name, content_fr, content_en, type, is_active } = req.body;
+    const { block_key, display_name, content_fr, content_en, page_section } = req.body;
     try {
         const [result] = await pool.query(
-            'INSERT INTO content_blocks (name, content_fr, content_en, type, is_active) VALUES (?, ?, ?, ?, ?)',
-            [name, content_fr, content_en, type, is_active]
+            'INSERT INTO content_blocks (block_key, display_name, content_fr, content_en, page_section) VALUES (?, ?, ?, ?, ?)',
+            [block_key, display_name, content_fr, content_en, page_section]
         );
         res.status(201).json({ id: result.insertId, ...req.body });
     } catch (error) {
@@ -47,11 +47,11 @@ router.post('/', async (req, res) => {
 // PUT update a content block
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, content_fr, content_en, type, is_active } = req.body;
+    const { block_key, display_name, content_fr, content_en, page_section } = req.body;
     try {
         const [result] = await pool.query(
-            'UPDATE content_blocks SET name = ?, content_fr = ?, content_en = ?, type = ?, is_active = ? WHERE id = ?',
-            [name, content_fr, content_en, type, is_active, id]
+            'UPDATE content_blocks SET block_key = ?, display_name = ?, content_fr = ?, content_en = ?, page_section = ? WHERE id = ?',
+            [block_key, display_name, content_fr, content_en, page_section, id]
         );
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Content block not found' });

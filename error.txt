@@ -1,53 +1,647 @@
-Your project is configured to compile against Android SDK 35, but the following plugin(s) require to be compiled against a higher Android SDK version:
-- mobile_scanner compiles against Android SDK 36
-Fix this issue by compiling against the highest Android SDK version (they are backward compatible).
-Add the following to C:\xampp\htdocs\africa-power-platform\mobile_app\android\app\build.gradle.kts:
+295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_NO_SUCH_TABLE',
+  errno: 1146,
+  sql: 'SELECT * FROM contact_messages ORDER BY submitted_at DESC',
+  sqlState: '42S02',
+  sqlMessage: "Table 'africa_power_platform.contact_messages' doesn't exist"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Error fetching contact messages: Error: Table 'africa_power_platform.contact_messages' doesn't exist
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\contact.js:9:35
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_NO_SUCH_TABLE',
+  errno: 1146,
+  sql: 'SELECT * FROM contact_messages ORDER BY submitted_at DESC',
+  sqlState: '42S02',
+  sqlMessage: "Table 'africa_power_platform.contact_messages' doesn't exist"
+}
+Error fetching contact messages: Error: Table 'africa_power_platform.contact_messages' doesn't exist
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\contact.js:9:35
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_NO_SUCH_TABLE',
+  errno: 1146,
+  sql: 'SELECT * FROM contact_messages ORDER BY submitted_at DESC',
+  sqlState: '42S02',
+  sqlMessage: "Table 'africa_power_platform.contact_messages' doesn't exist"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Error fetching contact messages: Error: Table 'africa_power_platform.contact_messages' doesn't exist
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\contact.js:9:35
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_NO_SUCH_TABLE',
+  errno: 1146,
+  sql: 'SELECT * FROM contact_messages ORDER BY submitted_at DESC',
+  sqlState: '42S02',
+  sqlMessage: "Table 'africa_power_platform.contact_messages' doesn't exist"
+}
+Error fetching contact messages: Error: Table 'africa_power_platform.contact_messages' doesn't exist
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\contact.js:9:35
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_NO_SUCH_TABLE',
+  errno: 1146,
+  sql: 'SELECT * FROM contact_messages ORDER BY submitted_at DESC',
+  sqlState: '42S02',
+  sqlMessage: "Table 'africa_power_platform.contact_messages' doesn't exist"
+}
+[nodemon] restarting due to changes...
+[nodemon] starting `node index.js`
+[dotenv@17.2.3] injecting env (7) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
 
-    android {
-        compileSdk = 36
-        ...
-    }
-Your project is configured with Android NDK 26.3.11579264, but the following plugin(s) depend on a different Android NDK version:
-- mobile_scanner requires Android NDK 27.0.12077973
-- shared_preferences_android requires Android NDK 27.0.12077973
-Fix this issue by using the highest Android NDK version (they are backward compatible).       
-Add the following to C:\xampp\htdocs\africa-power-platform\mobile_app\android\app\build.gradle.kts:
+  ************************************************
+  *                                              *
+  *    🚀 Serveur backend démarré sur le port 4000    *
+  *                                              *
+  ************************************************
 
-    android {
-        ndkVersion = "27.0.12077973"
-        ...
-    }
-lib/screens/scanner_screen.dart:108:47: Error: The getter 'torchState' isn't defined for the class 'MobileScannerController'.
- - 'MobileScannerController' is from 'package:mobile_scanner/src/mobile_scanner_controller.dart' ('/C:/Users/chami/AppData/Local/Pub/Cache/hosted/pub.dev/mobile_scanner-7.1.4/lib/src/mobile_scanner_controller.dart').
-Try correcting the name to the name of an existing getter, or defining a getter or field named 'torchState'.
-            valueListenable: cameraController.torchState,
-                                              ^^^^^^^^^^
-lib/screens/scanner_screen.dart:121:47: Error: The getter 'cameraFacingState' isn't defined for the class 'MobileScannerController'.
- - 'MobileScannerController' is from 'package:mobile_scanner/src/mobile_scanner_controller.dart' ('/C:/Users/chami/AppData/Local/Pub/Cache/hosted/pub.dev/mobile_scanner-7.1.4/lib/src/mobile_scanner_controller.dart').
-Try correcting the name to the name of an existing getter, or defining a getter or field named 'cameraFacingState'.
-            valueListenable: cameraController.cameraFacingState,
-                                              ^^^^^^^^^^^^^^^^^
-lib/screens/history_screen.dart:94:76: Error: The method 'toLocaleString' isn't defined for the class 'DateTime'.
- - 'DateTime' is from 'dart:core'.
-Try correcting the name to the name of an existing method, or defining a method named 'toLocaleString'.
-                            ? DateTime.parse(participant['check_in_time']).toLocaleString()   
-                                                                           ^^^^^^^^^^^^^^     
-Target kernel_snapshot_program failed: Exception
+URL du serveur: http://localhost:4000
+Health Check: http://localhost:4000/api/healthcheck
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15    
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+[nodemon] restarting due to changes...
+[nodemon] starting `node index.js`
+[dotenv@17.2.3] injecting env (7) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
 
+  ************************************************
+  *                                              *
+  *    🚀 Serveur backend démarré sur le port 4000    *
+  *                                              *
+  ************************************************
 
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:compileFlutterBuildDebug'.
-> Process 'command 'C:\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1      
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights.
-> Get more help at https://help.gradle.org.
-
-BUILD FAILED in 28s
-Running Gradle task 'assembleDebug'...                             28,8s
-Error: Gradle task assembleDebug failed with exit code 1
-PS C:\xampp\htdocs\africa-power-platform\mobile_app> 
+URL du serveur: http://localhost:4000
+Health Check: http://localhost:4000/api/healthcheck
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37 
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Error fetching media assets: Error: Unknown column 'uploaded_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\media_assets.js:28:37 
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM media_assets ORDER BY uploaded_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'uploaded_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39   
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}
+Erreur lors de la récupération des demandes de partenariat : Error: Unknown column 'created_at' in 'order clause'
+    at PromisePool.query (C:\xampp\htdocs\africa-power-platform\server\node_modules\mysql2\lib\promise\pool.js:36:22)
+    at C:\xampp\htdocs\africa-power-platform\server\routes\partnership.js:8:39   
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\route.js:117:3)
+    at handle (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\lib\layer.js:152:17)
+    at C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:295:15
+    at processParams (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:582:12)
+    at next (C:\xampp\htdocs\africa-power-platform\server\node_modules\router\index.js:291:5) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sql: 'SELECT * FROM partnership_requests ORDER BY created_at DESC',
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'created_at' in 'order clause'"
+}

@@ -6,7 +6,7 @@ const pool = require('../db');
 // GET all contact messages
 router.get('/', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM contact_messages ORDER BY submitted_at DESC');
+        const [rows] = await pool.query('SELECT * FROM contact_messages ORDER BY id DESC');
         res.json(rows);
     } catch (error) {
         console.error('Error fetching contact messages:', error);

@@ -4,11 +4,11 @@ import axios from 'axios';
 
 interface ContentBlock {
   id: number;
-  name: string;
+  block_key: string;
+  display_name: string;
   content_fr: string;
   content_en: string;
-  type: string;
-  is_active: boolean;
+  page_section: string;
 }
 
 const ContentBlocksManager: React.FC = () => {
@@ -53,10 +53,10 @@ const ContentBlocksManager: React.FC = () => {
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (editingBlock) {
-        const { name, value, type } = e.target;
+        const { name, value } = e.target;
         setEditingBlock({
             ...editingBlock,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+            [name]: value,
         });
     }
   };
@@ -82,80 +82,100 @@ const ContentBlocksManager: React.FC = () => {
   const handleAddNew = () => {
     setEditingBlock({
         id: 0,
-        name: '',
+        block_key: '',
+        display_name: '', // Initialize display_name
         content_fr: '',
         content_en: '',
-        type: 'text', // Default type
-        is_active: true,
+        page_section: '',
     });
   };
 
-  if (loading) return <div className="p-4">Chargement...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
+  if (loading) return <div className="p-4 text-center text-gray-500">Chargement des blocs de contenu...</div>;
+  if (error) return <div className="p-4 text-red-500 text-center">Erreur: {error}</div>;
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Gestion des Blocs de Contenu</h2>
+    <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Gestion des Blocs de Contenu</h2>
       
-      <div className="mb-6">
-        <button onClick={handleAddNew} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-          Ajouter un nouveau bloc
-        </button>
-      </div>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{editingBlock ? 'Modifier le bloc' : 'Liste des blocs de contenu'}</h3>
+          <button onClick={handleAddNew} className="bg-brand-green text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors duration-200">
+            <i className="fas fa-plus mr-2"></i> Ajouter un nouveau bloc
+          </button>
+        </div>
 
-      {editingBlock && (
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h3 className="text-xl font-bold mb-4">{editingBlock.id ? 'Modifier le bloc' : 'Ajouter un bloc'}</h3>
-          <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input type="text" name="name" value={editingBlock.name} onChange={handleFormChange} placeholder="Nom du bloc (identifiant unique)" className="p-2 border rounded-md" required />
-            <select name="type" value={editingBlock.type} onChange={handleFormChange} className="p-2 border rounded-md">
-                <option value="text">Texte</option>
-                <option value="html">HTML</option>
-                <option value="markdown">Markdown</option>
-            </select>
-            <textarea name="content_fr" value={editingBlock.content_fr} onChange={handleFormChange} placeholder="Contenu (FR)" className="p-2 border rounded-md md:col-span-2" rows={5}></textarea>
-            <textarea name="content_en" value={editingBlock.content_en} onChange={handleFormChange} placeholder="Contenu (EN)" className="p-2 border rounded-md md:col-span-2" rows={5}></textarea>
-            
-            <div className="flex items-center gap-2 md:col-span-2">
-                <input type="checkbox" name="is_active" checked={editingBlock.is_active} onChange={handleFormChange} className="h-4 w-4 text-brand-green focus:ring-brand-green border-gray-300 rounded" />
-                <label>Actif</label>
+        {editingBlock && (
+          <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-md">
+            <div>
+              <label htmlFor="display_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom affichable (pour les admins)</label>
+              <input type="text" name="display_name" id="display_name" value={editingBlock.display_name} onChange={handleFormChange} placeholder="Ex: Titre de la section Hero" className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required />
             </div>
-
+            <div>
+              <label htmlFor="block_key" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Clé du bloc (identifiant unique)</label>
+              <input type="text" name="block_key" id="block_key" value={editingBlock.block_key} onChange={handleFormChange} placeholder="Clé du bloc (ex: homepage_intro_text)" className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required />
+            </div>
+            <div>
+              <label htmlFor="page_section" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Section de la page</label>
+              <input type="text" name="page_section" id="page_section" value={editingBlock.page_section} onChange={handleFormChange} placeholder="Section (ex: hero, about)" className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+            </div>
+            <div className="md:col-span-2">
+              <label htmlFor="content_fr" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Contenu (Français)</label>
+              <textarea name="content_fr" id="content_fr" value={editingBlock.content_fr} onChange={handleFormChange} placeholder="Contenu en français" className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white" rows={5}></textarea>
+            </div>
+            <div className="md:col-span-2">
+              <label htmlFor="content_en" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Contenu (Anglais)</label>
+              <textarea name="content_en" id="content_en" value={editingBlock.content_en} onChange={handleFormChange} placeholder="Contenu en anglais" className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white" rows={5}></textarea>
+            </div>
+            
             <div className="md:col-span-2 flex justify-end gap-4">
-              <button type="button" onClick={() => setEditingBlock(null)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">Annuler</button>
-              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Sauvegarder</button>
+              <button type="button" onClick={() => setEditingBlock(null)} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">Annuler</button>
+              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                <i className="fas fa-save mr-2"></i> Sauvegarder
+              </button>
             </div>
           </form>
-        </div>
-      )}
+        )}
 
-      <div className="bg-white shadow rounded-lg overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actif</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {contentBlocks.map(block => (
-                <tr key={block.id}>
-                  <td className="px-6 py-4">{block.name}</td>
-                  <td className="px-6 py-4">{block.type}</td>
-                  <td className="px-6 py-4">{block.is_active ? 'Oui' : 'Non'}</td>
-                  <td className="px-6 py-4 text-right">
-                    <button onClick={() => handleEdit(block)} className="text-blue-600 hover:text-blue-900 mr-4">Modifier</button>
-                    <button onClick={() => handleDelete(block.id)} className="text-red-600 hover:text-red-900">Supprimer</button>
-                  </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom Affichable</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Clé du Bloc</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Section</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-        </table>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {contentBlocks.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">Aucun bloc de contenu trouvé.</td>
+                  </tr>
+                ) : (
+                  contentBlocks.map(block => (
+                    <tr key={block.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{block.display_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{block.block_key}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{block.page_section}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onClick={() => handleEdit(block)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors duration-200">
+                          <i className="fas fa-edit mr-1"></i> Modifier
+                        </button>
+                        <button onClick={() => handleDelete(block.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200">
+                          <i className="fas fa-trash-alt mr-1"></i> Supprimer
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 };
 
 export default ContentBlocksManager;
+

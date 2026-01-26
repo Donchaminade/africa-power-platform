@@ -5,7 +5,7 @@ const pool = require('../db');
 // GET /api/partnership-requests - Récupérer toutes les demandes de partenariat
 router.get('/', async (req, res) => {
     try {
-        const [requests] = await pool.query('SELECT * FROM partnership_requests ORDER BY created_at DESC');
+        const [requests] = await pool.query('SELECT * FROM partnership_requests ORDER BY submitted_at DESC');
         res.json(requests);
     } catch (error) {
         console.error('Erreur lors de la récupération des demandes de partenariat :', error);

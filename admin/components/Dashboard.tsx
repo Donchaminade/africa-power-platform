@@ -18,6 +18,7 @@ import TeamManager from './management/TeamManager';
 import UsersManager from './management/UsersManager';
 
 import SeoManager from './management/SeoManager';
+import axios from 'axios';
 
 import GalleryManager from './management/GalleryManager';
 import CheckinManager from './management/CheckinManager'; // Import the new CheckinManager
@@ -131,7 +132,29 @@ const StatCard: React.FC<{ title: string; value: string; icon: string, isLoading
 
 const DashboardOverview: React.FC = () => {
 
-    const [stats, setStats] = useState({ registrations: 0, speakers: 0, sponsors: 0, newsletterSubscribers: 0 });
+    const [stats, setStats] = useState({
+
+        registrations: 0,
+
+        speakers: 0,
+
+        sponsors: 0,
+
+        newsletterSubscribers: 0,
+
+        contactMessages: 0,
+
+        partnershipRequests: 0,
+
+        mediaAssets: 0,
+
+        contentBlocks: 0,
+
+        galleryImages: 0,
+
+        teamMembers: 0
+
+    });
 
     const [lineChartData, setLineChartData] = useState<ChartData<"line">>({
 
@@ -211,7 +234,9 @@ const DashboardOverview: React.FC = () => {
 
                 const statsData = await statsRes.json();
 
-                setStats(statsData);
+                
+
+                setStats(statsData); // statsData now contains all counts including galleryImages and teamMembers
 
                 setIsLoading(false);
 
@@ -333,7 +358,7 @@ const DashboardOverview: React.FC = () => {
 
             <h3 className="font-bold text-lg mb-4">{title}</h3>
 
-            {isChartsLoading ? <div className="h-48 flex justify-center items-center">Loading...</div> : children}
+            {isChartsLoading ? <div className="h-48 flex justify-center items-center">Chargement...</div> : children}
 
         </div>
 
@@ -345,13 +370,13 @@ const DashboardOverview: React.FC = () => {
 
         <div className="space-y-8">
 
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Dashboard Overview</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Aperçu du Tableau de Bord</h2>
 
-            {error && <div className="text-red-500 bg-red-100 p-4 rounded-lg">Error: {error}</div>}
+            {error && <div className="text-red-500 bg-red-100 p-4 rounded-lg">Erreur: {error}</div>}
 
             
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
 
                 <StatCard title="Inscriptions" value={stats.registrations.toLocaleString()} icon="fas fa-users" isLoading={isLoading} />
 
@@ -360,6 +385,18 @@ const DashboardOverview: React.FC = () => {
                 <StatCard title="Sponsors" value={stats.sponsors.toLocaleString()} icon="fas fa-handshake" isLoading={isLoading} />
 
                 <StatCard title="Abonnés Newsletter" value={stats.newsletterSubscribers.toLocaleString()} icon="fas fa-envelope-open-text" isLoading={isLoading} />
+
+                <StatCard title="Messages Contact" value={stats.contactMessages.toLocaleString()} icon="fas fa-envelope" isLoading={isLoading} />
+
+                <StatCard title="Demandes Partenariat" value={stats.partnershipRequests.toLocaleString()} icon="fas fa-handshake-alt" isLoading={isLoading} />
+
+                <StatCard title="Actifs Médias" value={stats.mediaAssets.toLocaleString()} icon="fas fa-photo-video" isLoading={isLoading} />
+
+                <StatCard title="Blocs Contenu" value={stats.contentBlocks.toLocaleString()} icon="fas fa-cube" isLoading={isLoading} />
+
+                <StatCard title="Images Galerie" value={stats.galleryImages.toLocaleString()} icon="fas fa-images" isLoading={isLoading} />
+
+                <StatCard title="Membres de l'Équipe" value={stats.teamMembers.toLocaleString()} icon="fas fa-users-cog" isLoading={isLoading} />
 
             </div>
 
@@ -391,7 +428,7 @@ const DashboardOverview: React.FC = () => {
 
                      <h3 className="font-bold text-lg mb-4">Dernières Inscriptions</h3>
 
-                     {isTablesLoading ? <div className="text-center py-4">Loading...</div> : recentRegistrations.length > 0 ? (
+                     {isTablesLoading ? <div className="text-center py-4 text-gray-500">Chargement...</div> : recentRegistrations.length > 0 ? (
 
                         <table className="w-full text-left text-sm">
 
@@ -411,7 +448,7 @@ const DashboardOverview: React.FC = () => {
 
                     <h3 className="font-bold text-lg mb-4">Nouveaux Abonnés Newsletter</h3>
 
-                    {isTablesLoading ? <div className="text-center py-4">Loading...</div> : recentSubscribers.length > 0 ? (
+                    {isTablesLoading ? <div className="text-center py-4 text-gray-500">Chargement...</div> : recentSubscribers.length > 0 ? (
 
                         <ul className="space-y-2">{recentSubscribers.map(sub => (
 
