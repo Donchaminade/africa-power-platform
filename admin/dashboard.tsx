@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dashboard from './components/Dashboard';
+import { LanguageProvider } from '../contexts/LanguageContext'; // Import LanguageProvider
+import { translations } from '../locales/translations'; // Import translations
 
 const AppGate: React.FC = () => {
     useEffect(() => {
@@ -29,6 +31,8 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <AppGate />
+    <LanguageProvider messages={translations} locale="fr" defaultLocale="fr">
+        <AppGate />
+    </LanguageProvider>
   </React.StrictMode>
 );

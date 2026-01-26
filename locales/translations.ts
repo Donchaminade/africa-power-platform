@@ -185,6 +185,20 @@ export const translations = {
       contact_title: "Contact",
       copyright: "Africa Power Platform. Tous droits réservés.",
     },
+    settings: { // New settings section
+      event_logo_url: "URL du Logo de l'événement",
+      event_date: "Date de l'événement",
+      event_venue: "Lieu de l'événement",
+      event_edition_number: "Numéro d'édition",
+      registration_start_date: "Date de début des inscriptions",
+      registration_end_date: "Date de fin des inscriptions",
+      event_speakers_count: "Nombre d'intervenants",
+      event_participants_count: "Nombre de participants",
+      event_days_count: "Nombre de jours",
+      event_workshops_count: "Nombre d'ateliers",
+      about_video_url: "URL de la vidéo 'À propos'",
+      // Add other setting keys here as needed
+    },
     chatbot: {
       title: "APP Assistant",
       welcome: "Bonjour ! Je suis l'assistant virtuel de l'Africa Power Platform. Comment puis-je vous aider ?",
@@ -375,6 +389,20 @@ export const translations = {
       terms: "Terms of Use",
       contact_title: "Contact",
       copyright: "Africa Power Platform. All rights reserved.",
+    },
+    settings: { // New settings section
+      event_logo_url: "Event Logo URL",
+      event_date: "Event Date",
+      event_venue: "Event Venue",
+      event_edition_number: "Event Edition Number",
+      registration_start_date: "Registration Start Date",
+      registration_end_date: "Registration End Date",
+      event_speakers_count: "Number of Speakers",
+      event_participants_count: "Number of Participants",
+      event_days_count: "Number of Days",
+      event_workshops_count: "Number of Workshops",
+      about_video_url: "About Video URL",
+      // Add other setting keys here as needed
     },
     chatbot: {
       title: "APP Assistant",
