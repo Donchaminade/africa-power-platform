@@ -67,23 +67,23 @@ router.post('/', async (req, res) => {
   const { first_name, last_name, email, company, job_title, country, pass_type } = req.body;
 
   if (!first_name || !last_name || !email || !pass_type) {
-    return res.status(400).json({ message: 'Missing required registration fields.' });
+    return res.status(400).json({ message: 'Certains champs obligatoires n\'ont pas été remplis.' });
   }
 
   try {
     const [result] = await pool.query(
       'INSERT INTO registrations (first_name, last_name, email, company, job_title, country, pass_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [first_name, last_name, email, company || null, job_title || null, country || null, pass_type]
+      [first_name, last_name, email, company || '', job_title || '', country || '', pass_type]
     );
 
-    res.status(201).json({ message: 'Registration successful!', registrationId: result.insertId });
+    res.status(201).json({ message: 'Registration successful!', id: result.insertId }); // Renamed registrationId to id for frontend compatibility
   } catch (error) {
     console.error('Error during registration:', error);
     // Handle duplicate email error
     if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(409).json({ message: 'An account with this email already exists.' });
+      return res.status(409).json({ message: 'Cette adresse e-mail est déjà enregistrée.' });
     }
-    res.status(500).json({ message: 'Server error during registration.' });
+    res.status(500).json({ message: 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer plus tard.' });
   }
 });
 

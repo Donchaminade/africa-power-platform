@@ -141,6 +141,7 @@ const RegistrationPage: React.FC = () => {
             setMessage({ type: 'error', text: 'Aucun ticket ID disponible pour le téléchargement.' });
             return;
         }
+        console.log("Downloading ticket for ID:", ticketId); // Added for diagnosis
         try {
             const response = await axios.get(`${API_URL}/ticket/${ticketId}`, {
                 responseType: 'blob', // Important for downloading files

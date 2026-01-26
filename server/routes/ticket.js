@@ -9,6 +9,7 @@ const path = require('path');
 // GET /api/ticket/:registrationId - Générer un ticket en PDF avec un design amélioré et en mode paysage
 router.get('/:registrationId', async (req, res) => {
     const { registrationId } = req.params;
+    console.log(`[Ticket Route] Requête de téléchargement pour registrationId: ${registrationId}`);
 
     try {
         // 1. Récupérer les données de l'inscription
@@ -16,6 +17,7 @@ router.get('/:registrationId', async (req, res) => {
         const registration = rows[0];
 
         if (!registration) {
+            console.warn(`[Ticket Route] Inscription non trouvée pour l'ID: ${registrationId}`);
             return res.status(404).json({ message: 'Inscription non trouvée.' });
         }
 
@@ -29,11 +31,12 @@ router.get('/:registrationId', async (req, res) => {
         });
 
         // 3. Générer le QR code en tant que Data URL (base64)
+        const qrCodeDataURL = await QRCode.toDataURL(qrContent, { errorCorrectionLevel: 'H', width: 200 });
+        
         // 4. Créer un nouveau document PDF
         const pdfDoc = await PDFDocument.create();
+        console.log("[Ticket Route] PDFDocument.create() finished. pdfDoc is type:", typeof pdfDoc);
 
-        // 3. Générer le QR code en tant que Data URL (base64)
-        const qrCodeDataURL = await QRCode.toDataURL(qrContent, { errorCorrectionLevel: 'H', width: 200 });
         const qrImage = await pdfDoc.embedPng(qrCodeDataURL); // Déclaration anticipée
         // Définir la taille du ticket en mode paysage [width, height]
         const page = pdfDoc.addPage([600, 400]); 
@@ -235,15 +238,17 @@ router.get('/:registrationId', async (req, res) => {
 
         // 6. Sérialiser le PDF en bytes
         const pdfBytes = await pdfDoc.save();
-
+        console.log(`[Ticket Route] PDF généré. Taille en bytes: ${pdfBytes.length}`); // Debug log
+        
         // 7. Envoyer le PDF au client
+        console.log(`[Ticket Route] Envoi du PDF pour registrationId: ${registrationId}`); // Debug log
         res.setHeader('Content-Length', pdfBytes.length);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=ticket-${registration.id}.pdf`);
         res.send(Buffer.from(pdfBytes));
 
     } catch (error) {
-        console.error(`Erreur lors de la génération du ticket pour l'ID ${registrationId} :`, error);
+        console.error(`Erreur lors de la génération du ticket pour l\'ID ${registrationId} :`, error);
         res.status(500).json({ message: 'Erreur serveur lors de la génération du PDF.', error: error.message });
     }
 });

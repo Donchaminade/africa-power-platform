@@ -78,6 +78,32 @@ const RegistrationsManager: React.FC = () => {
         }
     };
 
+    const handleDownloadTicket = async (registrationId: number) => {
+        if (!registrationId) {
+            setMessage({ type: 'error', text: 'Aucun ID d\'inscription disponible pour le téléchargement du ticket.' });
+            return;
+        }
+        try {
+            const response = await axios.get(`${API_URL}/ticket/${registrationId}`, {
+                responseType: 'blob', // Important for downloading files
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `ticket-${registrationId}.pdf`); // Or whatever filename you want
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            window.URL.revokeObjectURL(url); // Clean up the URL
+
+            setMessage({ type: 'success', text: 'Le ticket a été téléchargé avec succès !' });
+        } catch (err) {
+            console.error('Erreur lors du téléchargement du ticket:', err);
+            setMessage({ type: 'error', text: 'Échec du téléchargement du ticket. Veuillez réessayer.' });
+        }
+    };
+
     // --- Modal related functions (Add/Edit) ---
     const openModal = (registration: Registration | null = null) => {
         setEditingRegistration(registration);
@@ -272,9 +298,9 @@ const RegistrationsManager: React.FC = () => {
                                         <button onClick={() => openConfirmDeleteModal(reg.id!)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200" title="Supprimer l'inscription">
                                             <i className="fas fa-trash"></i> Supprimer
                                         </button>
-                                        <a href={`${API_URL}/ticket/${reg.id}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-200" title="Télécharger le billet">
+                                        <button onClick={() => handleDownloadTicket(reg.id!)} className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-200" title="Télécharger le billet">
                                             <i className="fas fa-download"></i> Billet
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
