@@ -136,9 +136,7 @@ const SettingsManager: React.FC = () => {
                                              <img src={settings.event_logo_url} alt="Logo de l\'événement" className="h-16 w-16 object-contain mr-4 rounded" />
                                          )}
                                          <ImageUpload 
-                                             onUploadSuccess={handleImageUploadSuccess} 
-                                             uploadPath="/uploads/settings" // Specific path for settings images
-                                             currentImageUrl={settings?.event_logo_url}
+                                             onUploadSuccess={handleImageUploadSuccess}
                                          />
                                      </div>
                                      <input
