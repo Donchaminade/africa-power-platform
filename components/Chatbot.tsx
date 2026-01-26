@@ -37,11 +37,16 @@ const Chatbot: React.FC = () => {
         try {
             const systemInstruction = `You are a friendly and helpful assistant for the "Africa Power Platform" event. Your goal is to answer questions about the event. The event is a premier summit dedicated to Microsoft Power Platform in West Africa, taking place in Cotonou, Benin, on June 20-21, 2026. Key topics include low-code/no-code, Power BI, Power Apps, and Dynamics 365. The event is free but requires registration. Use the information provided on the website to answer questions concisely and accurately. Always be polite and encouraging. Answer in the language of the user's question (${language === 'en' ? 'English' : 'French'}).`;
 
+            // Filter out the initial welcome message if it's from the model and is the very first message
+            const historyToSend = messages.length > 0 && messages[0].role === 'model' && messages[0].text === t('chatbot.welcome')
+                ? messages.slice(1) // Exclude the welcome message
+                : messages;
+
             const response = await fetch(`${API_URL}/chatbot`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    history: messages, // Send the current chat history
+                    history: historyToSend, // Send the filtered chat history
                     message: userMessage.text,
                     systemInstruction: systemInstruction,
                 }),
