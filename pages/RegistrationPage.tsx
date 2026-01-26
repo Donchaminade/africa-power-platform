@@ -4,6 +4,7 @@ import { API_URL } from '../utils/config';
 import { PassType } from '../utils/types';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 import axios from 'axios'; // Ensure axios is imported
+import Modal from '../components/ui/Modal'; // Import the Modal component
 
 const RegistrationPage: React.FC = () => {
     const { t, language } = useTranslation();
@@ -19,6 +20,11 @@ const RegistrationPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [passTypes, setPassTypes] = useState<PassType[]>([]);
+
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showAlertModal, setShowAlertModal] = useState(false);
+    const [ticketId, setTicketId] = useState<number | null>(null);
+    const [hasDownloadedTicket, setHasDownloadedTicket] = useState(false);
 
     const [registrationStatus, setRegistrationStatus] = useState<'open' | 'closed' | 'closing_soon' | 'not_yet_open'>('closed');
     const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
@@ -107,6 +113,12 @@ const RegistrationPage: React.FC = () => {
                 throw new Error(data.message || 'Registration failed.');
             }
 
+            // --- Trigger success modal and store ticket ID ---
+            setTicketId(data.id); // Assuming backend returns { id: ... }
+            setShowSuccessModal(true);
+            setHasDownloadedTicket(false); // Reset for new registration
+            // --- End trigger success modal ---
+
             setMessage({ type: 'success', text: 'Inscription réussie ! Un e-mail de confirmation vous sera envoyé prochainement.' });
             setFirstName('');
             setLastName('');
@@ -122,6 +134,60 @@ const RegistrationPage: React.FC = () => {
     };
 
     const isFormDisabled = registrationStatus !== 'open' && registrationStatus !== 'closing_soon';
+
+    // --- Modal related functions ---
+    const handleDownloadTicket = async () => {
+        if (!ticketId) {
+            setMessage({ type: 'error', text: 'Aucun ticket ID disponible pour le téléchargement.' });
+            return;
+        }
+        try {
+            const response = await axios.get(`${API_URL}/ticket/${ticketId}`, {
+                responseType: 'blob', // Important for downloading files
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `ticket-${ticketId}.pdf`); // Or whatever filename you want
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            window.URL.revokeObjectURL(url); // Clean up the URL
+
+            setHasDownloadedTicket(true);
+            setMessage({ type: 'success', text: 'Votre ticket a été téléchargé avec succès !' });
+        } catch (err) {
+            console.error('Erreur lors du téléchargement du ticket:', err);
+            setMessage({ type: 'error', text: 'Échec du téléchargement du ticket. Veuillez réessayer.' });
+        }
+    };
+
+    const handleCloseSuccessModal = () => {
+        if (!hasDownloadedTicket) {
+            setShowAlertModal(true); // Show alert if ticket not downloaded
+        } else {
+            setShowSuccessModal(false); // Close success modal directly
+            // Optionally clear form and message after full closure
+            setMessage(null);
+            setTicketId(null);
+        }
+    };
+
+    const handleCloseAlertModal = () => {
+        setShowAlertModal(false);
+        setShowSuccessModal(false); // Close both modals
+        setMessage(null);
+        setTicketId(null);
+        // Reset form fields
+        setFirstName(''); setLastName(''); setEmail(''); setCompany(''); setJobTitle(''); setCountry('');
+    };
+
+    const handleReturnToSuccessModal = () => {
+        setShowAlertModal(false); // Hide alert, return to success modal
+    };
+
+    // --- End modal related functions ---
 
     return (
         <section id="register" className="py-24 bg-gradient-to-br from-white to-gray-100 dark:from-black dark:to-gray-900">
@@ -268,6 +334,51 @@ const RegistrationPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Success Modal */}
+            <Modal isOpen={showSuccessModal} onClose={handleCloseSuccessModal} title={t('registration.success_modal_title')} icon="fas fa-check-circle text-green-500">
+                <div className="p-4 text-center">
+                    <i className="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                    <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">{t('registration.success_modal_message')}</p>
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={handleDownloadTicket}
+                            className="bg-brand-green text-white px-5 py-2 rounded-md font-semibold hover:bg-green-700 transition"
+                            disabled={!ticketId}
+                        >
+                            <i className="fas fa-ticket-alt mr-2"></i> {t('registration.button_my_ticket')}
+                        </button>
+                        <button
+                            onClick={handleCloseSuccessModal}
+                            className="px-5 py-2 rounded-md bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                        >
+                            {t('registration.button_quit')}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Alert Modal (if user tries to quit without downloading ticket) */}
+            <Modal isOpen={showAlertModal} onClose={handleCloseAlertModal} title={t('registration.alert_modal_title')} icon="fas fa-exclamation-triangle text-yellow-500">
+                <div className="p-4 text-center">
+                    <i className="fas fa-exclamation-triangle text-yellow-500 text-5xl mb-4"></i>
+                    <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">{t('registration.alert_modal_message')}</p>
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={handleReturnToSuccessModal}
+                            className="bg-brand-green text-white px-5 py-2 rounded-md font-semibold hover:bg-green-700 transition"
+                        >
+                            <i className="fas fa-arrow-left mr-2"></i> {t('registration.button_return')}
+                        </button>
+                        <button
+                            onClick={handleCloseAlertModal}
+                            className="px-5 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                        >
+                            <i className="fas fa-times mr-2"></i> {t('registration.button_quit_anyway')}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </section>
     );
 };

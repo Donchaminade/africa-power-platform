@@ -91,6 +91,15 @@ export const translations = {
       pass3_feature3: "Accès aux mentors",
       pass3_button: "Candidater",
       price: "Gratuit",
+      // New translation keys for registration modals
+      success_modal_title: "Inscription Réussie !",
+      success_modal_message: "Félicitations ! Votre inscription à l'événement a été enregistrée avec succès. Téléchargez votre ticket dès maintenant.",
+      button_my_ticket: "Mon ticket",
+      button_quit: "Quitter",
+      alert_modal_title: "Attention !",
+      alert_modal_message: "Vous n'avez pas téléchargé votre ticket. Êtes-vous sûr de vouloir quitter malgré cela ? Vous pourrez le télécharger plus tard via l'e-mail de confirmation.",
+      button_return: "Retourner",
+      button_quit_anyway: "Quitter quand même",
     },
     location: {
       pre_title: "Lieu",
@@ -296,6 +305,15 @@ export const translations = {
       pass3_feature3: "Access to mentors",
       pass3_button: "Apply",
       price: "Free",
+      // New translation keys for registration modals
+      success_modal_title: "Registration Successful!",
+      success_modal_message: "Congratulations! Your event registration has been successfully recorded. Download your ticket now.",
+      button_my_ticket: "My Ticket",
+      button_quit: "Quit",
+      alert_modal_title: "Warning!",
+      alert_modal_message: "You have not downloaded your ticket. Are you sure you want to quit despite this? You can download it later via the confirmation email.",
+      button_return: "Go Back",
+      button_quit_anyway: "Quit Anyway",
     },
     location: {
       pre_title: "Venue",
