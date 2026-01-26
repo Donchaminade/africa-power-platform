@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import { API_URL } from '../../../utils/config';
 import { Registration } from '../../../utils/types'; // Using the shared Registration interface
 import { useDebounce } from './RegistrationsManager'; // Re-use the debounce hook
+import Modal from '../ui/Modal'; // Import Modal for potential future use or consistency
 
-const CheckinManager: React.FC = () => {
+export const CheckinManager: React.FC = () => {
     const [registrations, setRegistrations] = useState<Registration[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -20,13 +22,11 @@ const CheckinManager: React.FC = () => {
             if (debouncedSearchTerm) {
                 url.searchParams.append('search', debouncedSearchTerm);
             }
-            const response = await fetch(url.toString());
-            if (!response.ok) throw new Error('Failed to fetch registrations');
-            const result = await response.json();
-            // Assuming the backend returns the correct structure, possibly result.data
+            const response = await axios.get(url.toString()); // Changed to axios
+            const result = await response.data; // Changed for axios
             setRegistrations(result.data || result); 
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
+            setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue.');
         } finally {
             setIsLoading(false);
         }
@@ -39,320 +39,170 @@ const CheckinManager: React.FC = () => {
     const handleCheckin = async (registrationId: number) => {
         setMessage(null);
         try {
-            const response = await fetch(`${API_URL}/checkin/${registrationId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            });
-            const result = await response.json();
+            const response = await axios.post(`${API_URL}/checkin/${registrationId}`, {}); // Changed to axios
+            const result = await response.data; // Changed for axios
 
-            if (!response.ok) {
-                throw new Error(result.message || 'Check-in failed.');
+            if (response.status < 200 || response.status >= 300) { // Changed for axios
+                throw new Error(result.message || 'Échec de l\'enregistrement.');
             }
 
             setMessage({ type: 'success', text: result.message });
-            // Update the registration status in the local state or re-fetch
             fetchRegistrations(); // Re-fetch to get updated data
         } catch (err) {
-            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'An unknown error occurred during check-in.' });
+            setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue lors de l\'enregistrement.' });
         }
     };
 
-        const handleExportPdf = async (exportFilter: 'all' | 'checked' | 'not_checked') => {
-
-            try {
-
-                const url = new URL(`${API_URL}/registrations/export/pdf`);
-
-                if (exportFilter === 'checked') {
-
-                    url.searchParams.append('checkedIn', 'true');
-
-                } else if (exportFilter === 'not_checked') {
-
-                    url.searchParams.append('checkedIn', 'false');
-
-                }
-
-                // Add search term if present
-
-                if (debouncedSearchTerm) {
-
-                    url.searchParams.append('search', debouncedSearchTerm);
-
-                }
-
-    
-
-                const response = await fetch(url.toString(), {
-
-                    method: 'GET',
-
-                });
-
-                if (!response.ok) {
-
-                    const errorText = await response.text();
-
-                    throw new Error(`Failed to generate PDF: ${errorText}`);
-
-                }
-
-                const blob = await response.blob();
-
-                const urlBlob = window.URL.createObjectURL(blob);
-
-                const link = document.createElement('a');
-
-                link.href = urlBlob;
-
-                
-
-                let filename = 'registrations_';
-
-                if (exportFilter === 'checked') {
-
-                    filename += 'checked_in.pdf';
-
-                } else if (exportFilter === 'not_checked') {
-
-                    filename += 'not_checked_in.pdf';
-
-                } else {
-
-                    filename += 'all.pdf';
-
-                }
-
-                link.setAttribute('download', filename);
-
-                
-
-                document.body.appendChild(link);
-
-                link.click();
-
-                link.parentNode?.removeChild(link);
-
-            } catch (err) {
-
-                alert('Error exporting PDF: ' + (err instanceof Error ? err.message : 'Unknown error'));
-
-            }
-
-        };
-
-    
-
-    
-
-        const renderContent = () => {
-
-            if (isLoading) return <div className="text-center p-8">Chargement des inscrits...</div>;
-
-            if (error) return <div className="text-center p-8 text-red-500">Erreur: {error}</div>;
-
-            if (registrations.length === 0) {
-
-                return <div className="text-center p-8">Aucune inscription trouvée{debouncedSearchTerm ? ` pour \"${debouncedSearchTerm}\"` : ''}.</div>;
-
-            }
-
-    
-
-            return (
-
-                <div className="overflow-x-auto">
-
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-
-                        <thead className="bg-gray-50 dark:bg-gray-700">
-
-                            <tr>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Nom</th>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Email</th>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Pass</th>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Date Inscr.</th>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Check-in</th>
-
-                                <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Heure Check-in</th>
-
-                                <th scope="col" className="p-4 text-center text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Actions</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-
-                            {registrations.map(reg => (
-
-                                <tr key={reg.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-
-                                    <td className="p-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">{reg.first_name} {reg.last_name}</td>
-
-                                    <td className="p-4 whitespace-nowrap text-gray-500 dark:text-gray-400">{reg.email}</td>
-
-                                    <td className="p-4 whitespace-nowrap">
-
-                                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-
-                                            ${reg.pass_type === 'conference' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 
-
-                                              reg.pass_type === 'full' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 
-
-                                              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'} capitalize`}>
-
-                                            {reg.pass_type.replace('_', ' ')}
-
-                                        </span>
-
-                                    </td>
-
-                                    <td className="p-4 whitespace-nowrap text-gray-500 dark:text-gray-400">{reg.registration_date ? new Date(reg.registration_date).toLocaleDateString() : 'N/A'}</td>
-
-                                    <td className="p-4 whitespace-nowrap">
-
-                                        {reg.is_checked_in ? (
-
-                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Oui</span>
-
-                                        ) : (
-
-                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">Non</span>
-
-                                        )}
-
-                                    </td>
-
-                                    <td className="p-4 whitespace-nowrap text-gray-500 dark:text-gray-400">
-
-                                        {reg.check_in_time ? new Date(reg.check_in_time).toLocaleString() : 'N/A'}
-
-                                    </td>
-
-                                    <td className="p-4 whitespace-nowrap text-center text-sm font-medium">
-
-                                        <div className="flex justify-center gap-4">
-
-                                            {!reg.is_checked_in && (
-
-                                                <button 
-
-                                                    onClick={() => handleCheckin(reg.id!)} // Use ! for non-null assertion as id is always present for existing regs
-
-                                                    className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 transition"
-
-                                                    title="Marquer comme Check-in"
-
-                                                >
-
-                                                    Check-in
-
-                                                </button>
-
-                                            )}
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                            ))}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            );
-
-        };
-
-    
-
-        return (
-
-            <div className="space-y-8">
-
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Gestion du Check-in</h2>
-
-                
-
-                {message && (
-
-                    <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-
-                        {message.text}
-
-                    </div>
-
-                )}
-
-    
-
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-
-                    <div className="flex justify-between items-center mb-4">
-
-                        <h3 className="text-xl font-semibold">Liste des Inscrits</h3>
-
-                        <div className="flex gap-4"> {/* Added a div to group buttons */}
-
-                            <input
-
-                                type="text"
-
-                                placeholder="Rechercher par nom, email..."
-
-                                value={searchTerm}
-
-                                onChange={(e) => setSearchTerm(e.target.value)}
-
-                                className="px-4 py-2 w-64 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
-
-                            />
-
-                            <button onClick={() => handleExportPdf('all')} className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">
-
-                                <i className="fas fa-file-pdf mr-2"></i> Export PDF (Tous)
-
-                            </button>
-
-                            <button onClick={() => handleExportPdf('checked')} className="bg-green-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-green-700 transition">
-
-                                <i className="fas fa-file-pdf mr-2"></i> Export PDF (Checké)
-
-                            </button>
-
-                            <button onClick={() => handleExportPdf('not_checked')} className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition">
-
-                                <i className="fas fa-file-pdf mr-2"></i> Export PDF (Non Checké)
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    {renderContent()}
-
-                </div>
-
-            </div>
-
-        );
-
+    const formatDate = (dateString: string | undefined, includeTime: boolean = false) => {
+      if (!dateString) return 'N/A';
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+          return "Date invalide";
+        }
+        return date.toLocaleString('fr-FR', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          ...(includeTime && { hour: '2-digit', minute: '2-digit' }),
+        });
+      } catch (e) {
+        return "Date invalide";
+      }
     };
 
-    
+    const handleExportPdf = async (exportFilter: 'all' | 'checked' | 'not_checked') => {
+        try {
+            const url = new URL(`${API_URL}/registrations/export/pdf`);
+            if (exportFilter === 'checked') {
+                url.searchParams.append('checkedIn', 'true');
+            } else if (exportFilter === 'not_checked') {
+                url.searchParams.append('checkedIn', 'false');
+            }
+            if (debouncedSearchTerm) {
+                url.searchParams.append('search', debouncedSearchTerm);
+            }
 
-    export default CheckinManager;
+            const response = await axios.get(url.toString(), { responseType: 'blob' }); // Changed to axios with responseType
+            
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const urlBlob = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = urlBlob;
+            
+            let filename = 'registrations_';
+            if (exportFilter === 'checked') {
+                filename += 'checked_in.pdf';
+            } else if (exportFilter === 'not_checked') {
+                filename += 'not_checked_in.pdf';
+            } else {
+                filename += 'all.pdf';
+            }
+            link.setAttribute('download', filename);
+            
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            setMessage({type: 'success', text: 'Export PDF réussi !'});
+        } catch (err) {
+            setMessage({type: 'error', text: 'Erreur lors de l\'export PDF: ' + (err instanceof Error ? err.message : 'Erreur inconnue')});
+        }
+    };
 
-    
+    return (
+        <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Gestion du Check-in</h2>
+            
+            {message && (
+                <div className={`p-4 rounded-md mb-4 ${message.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}`}>
+                    {message.text}
+                </div>
+            )}
+
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Liste des Inscrits</h3>
+                    <div className="flex flex-wrap items-center gap-4">
+                        <input
+                            type="text"
+                            placeholder="Rechercher par nom, email..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="px-4 py-2 rounded-md bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
+                        />
+                        <button onClick={() => handleExportPdf('all')} className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">
+                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Tous)
+                        </button>
+                        <button onClick={() => handleExportPdf('checked')} className="bg-green-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-green-700 transition">
+                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Checké)
+                        </button>
+                        <button onClick={() => handleExportPdf('not_checked')} className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition">
+                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Non Checké)
+                        </button>
+                    </div>
+                </div>
+                {isLoading && <div className="text-center p-8 text-gray-500">Chargement des inscrits...</div>}
+                {error && <div className="text-center p-8 text-red-500">Erreur: {error}</div>}
+                {!isLoading && !error && registrations.length === 0 && <div className="text-center p-8 text-gray-500">Aucune inscription trouvée{debouncedSearchTerm ? ` pour \"${debouncedSearchTerm}\"` : ''}.</div>}
+
+                {!isLoading && !error && registrations.length > 0 && (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead className="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pass</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date Inscr.</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Check-in</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Heure Check-in</th>
+                                    <th scope="col" className="relative px-6 py-3 text-right"><span className="sr-only">Actions</span>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                {registrations.map(reg => (
+                                    <tr key={reg.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">{reg.first_name} {reg.last_name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{reg.email}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                ${reg.pass_type === 'conference' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 
+                                                reg.pass_type === 'full' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 
+                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'} capitalize`}>
+                                                {reg.pass_type.replace('_', ' ')}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{formatDate(reg.registration_date)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {reg.is_checked_in ? (
+                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">Oui</span>
+                                            ) : (
+                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">Non</span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            {formatDate(reg.check_in_time, true)}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="flex justify-end gap-2">
+                                                {!reg.is_checked_in && (
+                                                    <button 
+                                                        onClick={() => handleCheckin(reg.id!)} 
+                                                        className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 transition"
+                                                        title="Marquer comme Check-in"
+                                                    >
+                                                        <i className="fas fa-check-circle mr-1"></i> Check-in
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};

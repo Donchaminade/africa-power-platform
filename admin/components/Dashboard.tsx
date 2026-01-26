@@ -21,7 +21,7 @@ import SeoManager from './management/SeoManager';
 import axios from 'axios';
 
 import GalleryManager from './management/GalleryManager';
-import CheckinManager from './management/CheckinManager'; // Import the new CheckinManager
+import { CheckinManager } from './management/CheckinManager'; // Import the new CheckinManager
 import SettingsManager from './management/SettingsManager'; // Import the new SettingsManager
 import ContactManager from './management/ContactManager'; // Import the new ContactManager
 import NewsletterManager from './management/NewsletterManager'; // Import the new NewsletterManager

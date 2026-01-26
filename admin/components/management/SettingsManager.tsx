@@ -17,8 +17,9 @@ interface SiteSettings {
 const SettingsManager: React.FC = () => {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false); // New state for saving status
     const [error, setError] = useState<string | null>(null);
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null); // For general messages
 
     useEffect(() => {
         fetchSettings();
@@ -41,9 +42,13 @@ const SettingsManager: React.FC = () => {
             if (data.registration_end_date && data.registration_end_date.includes('T')) {
                 data.registration_end_date = data.registration_end_date.split('T')[0];
             }
+            // Initialize about_video_url if null/undefined
+            if (!data.about_video_url) {
+                data.about_video_url = ''; 
+            }
             setSettings(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
+            setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue.');
         } finally {
             setIsLoading(false);
         }
@@ -64,19 +69,19 @@ const SettingsManager: React.FC = () => {
         if (!settings) return;
 
         setMessage(null);
-        setIsLoading(true);
+        setIsSaving(true);
         try {
             const response = await axios.put(`${API_URL}/settings`, settings); // Changed to axios
 
             if (response.status < 200 || response.status >= 300) { // Changed for axios
-                throw new Error(response.data.message || 'Failed to save settings');
+                throw new Error(response.data.message || 'Échec de la sauvegarde des paramètres.');
             }
 
             setMessage({ type: 'success', text: 'Paramètres mis à jour avec succès !' });
         } catch (err) {
             setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue.' });
         } finally {
-            setIsLoading(false);
+            setIsSaving(false);
         }
     };
 
@@ -99,7 +104,7 @@ const SettingsManager: React.FC = () => {
                         <label htmlFor="event_logo_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Logo de l\'événement</label>
                         <div className="mt-1 flex items-center">
                             {settings?.event_logo_url && (
-                                <img src={settings.event_logo_url} alt="Event Logo" className="h-16 w-16 object-contain mr-4 rounded" />
+                                <img src={settings.event_logo_url} alt="Logo de l\'événement" className="h-16 w-16 object-contain mr-4 rounded" />
                             )}
                             <ImageUpload 
                                 onUploadSuccess={handleImageUploadSuccess} 
@@ -126,7 +131,7 @@ const SettingsManager: React.FC = () => {
                             id="event_date"
                             value={settings?.event_date || ''}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                             required
                         />
                     </div>
@@ -139,7 +144,7 @@ const SettingsManager: React.FC = () => {
                             id="event_venue"
                             value={settings?.event_venue || ''}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                             required
                         />
                     </div>
@@ -153,7 +158,7 @@ const SettingsManager: React.FC = () => {
                                 id="registration_start_date"
                                 value={settings?.registration_start_date || ''}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                                className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                             />
                         </div>
                         <div>
@@ -164,7 +169,7 @@ const SettingsManager: React.FC = () => {
                                 id="registration_end_date"
                                 value={settings?.registration_end_date || ''}
                                 onChange={handleInputChange}
-                                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                                className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                             />
                         </div>
                     </div>
@@ -177,7 +182,7 @@ const SettingsManager: React.FC = () => {
                             id="about_video_url"
                             value={settings?.about_video_url || ''}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                             placeholder="Ex: https://www.youtube.com/embed/your_video_id"
                         />
                     </div>
@@ -185,9 +190,18 @@ const SettingsManager: React.FC = () => {
                     <div className="flex justify-end">
                         <button
                             type="submit"
-                            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                            disabled={isSaving}
+                            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green disabled:opacity-50"
                         >
-                            <i className="fas fa-save mr-2"></i> Sauvegarder les Paramètres
+                            {isSaving ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i> Sauvegarde...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-save mr-2"></i> Sauvegarder les Paramètres
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>
