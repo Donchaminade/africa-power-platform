@@ -1,14 +1,42 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import axios from 'axios'; // Import axios
+import { API_URL } from '../utils/config'; // Import API_URL
+
+interface SiteSettings {
+    event_speakers_count?: string;
+    event_participants_count?: string;
+    event_days_count?: string;
+    event_workshops_count?: string;
+    [key: string]: any; // Allow for other properties
+}
 
 const Stats: React.FC = () => {
     const { t } = useTranslation();
+    const [settings, setSettings] = useState<SiteSettings>({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/settings`);
+                setSettings(response.data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching settings.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchSettings();
+    }, []);
 
     const stats = [
-        { value: '+25', key: 'speakers', icon: 'fa-user-tie' },
-        { value: '+500', key: 'participants', icon: 'fa-users' },
-        { value: '2', key: 'days', icon: 'fa-calendar-alt' },
-        { value: '+10', key: 'workshops', icon: 'fa-tools' },
+        { value: settings.event_speakers_count || '+25', key: 'speakers', icon: 'fa-user-tie' },
+        { value: settings.event_participants_count || '+500', key: 'participants', icon: 'fa-users' },
+        { value: settings.event_days_count || '2', key: 'days', icon: 'fa-calendar-alt' },
+        { value: settings.event_workshops_count || '+10', key: 'workshops', icon: 'fa-tools' },
     ];
 
     // Duplicate for seamless scroll - now each stat is an object
@@ -54,7 +82,7 @@ const Stats: React.FC = () => {
         .stat-icon {
             font-size: 2.5rem; /* Large icon size */
             margin-bottom: 0.5rem; /* Space between icon and text */
-            color: #FFD700; /* brand-yellow for icons */
+            color: #FFFFFF; /* brand-yellow for icons */
         }
         .stat-value {
             font-size: 2.5rem; /* Large value text */
@@ -72,18 +100,23 @@ const Stats: React.FC = () => {
     return (
         <section className="py-10 bg-brand-green text-white overflow-hidden relative">
             <style>{animationStyles}</style>
-            <div className="marquee-container">
-                <div className="marquee-content">
-                    {marqueeItems.map((item, index) => (
-                        <div key={index} className="stat-card">
-                            <i className={`fa-solid ${item.icon} stat-icon`}></i>
-                            <span className="stat-value">{item.value}</span>
-                            <span className="stat-text">{t(`stats.${item.key}`)}</span>
-                        </div>
-                    ))}
+            {isLoading ? (
+                <div className="text-center">Chargement des statistiques...</div>
+            ) : error ? (
+                <div className="text-center text-red-500">Erreur: {error}</div>
+            ) : (
+                <div className="marquee-container">
+                    <div className="marquee-content">
+                        {marqueeItems.map((item, index) => (
+                            <div key={index} className="stat-card">
+                                <i className={`fa-solid ${item.icon} stat-icon`}></i>
+                                <span className="stat-value">{item.value}</span>
+                                <span className="stat-text">{t(`stats.${item.key}`)}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                {/* The second marquee-content div is removed, animation handles seamless loop */}
-            </div>
+            )}
         </section>
     );
 };

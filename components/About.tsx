@@ -3,18 +3,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import { API_URL } from '../utils/config';
 import axios from 'axios';
+import VideoModal from './VideoModal'; // Import VideoModal
 
 interface SiteSettings {
     about_video_url?: string;
     [key: string]: any;
 }
 
-const About: React.FC = () => {
+const AboutComponent: React.FC = () => {
   const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [settings, setSettings] = useState<SiteSettings>({});
   const [loadingSettings, setLoadingSettings] = useState(true);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -89,31 +91,44 @@ const About: React.FC = () => {
             </div>
           </div>
           <div className="relative">
-            <div className="aspect-video rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 shadow-2xl">
+            <div className="aspect-video rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 shadow-2xl relative flex items-center justify-center">
               {loadingSettings ? (
                 <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">Chargement de la vidéo...</div>
               ) : settings.about_video_url ? (
-                <iframe
-                  src={settings.about_video_url}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full object-cover"
-                ></iframe>
+                <>
+                  {/* Thumbnail / Placeholder */}
+                  <div 
+                    className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center cursor-pointer relative"
+                    onClick={() => setIsVideoModalOpen(true)}
+                  >
+                    {/* You might want a proper thumbnail here if available. For now, a generic play icon on a dark background */}
+                    <i className="fas fa-play-circle text-brand-green text-7xl relative z-10 play-button-animation"></i>
+                    {/* Optional: if there's an image for the video thumbnail, use it here */}
+                    {/* <img src="URL_TO_VIDEO_THUMBNAIL" alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover"/> */}
+                    <div className="absolute inset-0 bg-black opacity-40 hover:opacity-20 transition-opacity"></div>
+                  </div>
+                </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">Vidéo non disponible</div>
               )}
             </div>
-             <div className="absolute -bottom-6 -left-6 bg-brand-green p-6 rounded-xl shadow-xl text-white">
-                <p className="text-3xl font-bold">{t('about.badge_line1')}</p>
-                <p className="text-sm">{t('about.badge_line2')}</p>
+             <div className="absolute -bottom-6 -left-6 bg-brand-green p-6 rounded-xl shadow-xl text-white"><i className="fas fa-certificate text-white text-3xl"></i>
+             
+                <p className="text-5xl font-bold leading-none">{settings.event_edition_number} </p>
+                <p className="text-sm leading-none">Édition</p>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default About;
+                    </div>
+                </div>
+                {settings.about_video_url && (
+                    <VideoModal
+                        isOpen={isVideoModalOpen}
+                        onClose={() => setIsVideoModalOpen(false)}
+                        videoUrl={settings.about_video_url}
+                        title={t('about.video_title')} // Assuming a translation key for video title
+                    />
+                )}
+            </section>
+          );
+        };
+export { AboutComponent as default };

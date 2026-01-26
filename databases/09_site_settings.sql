@@ -29,7 +29,12 @@ INSERT INTO `site_settings` (`setting_key`, `setting_value`, `setting_group`) VA
 ('event_venue', 'Palais des Congrès de Cotonou', 'event'),
 ('about_video_url', 'https://www.youtube.com/embed/your_video_id', 'event'),
 ('registration_start_date', '2026-01-01', 'event'),
-('registration_end_date', '2026-06-15', 'event')
+('registration_end_date', '2026-06-15', 'event'),
+('event_edition_number', '1ère', 'event'),
+('event_speakers_count', '25', 'stats'), -- Nouveau
+('event_participants_count', '500', 'stats'), -- Nouveau
+('event_days_count', '2', 'stats'), -- Nouveau
+('event_workshops_count', '10', 'stats') -- Nouveau
 ON DUPLICATE KEY UPDATE
     setting_value = VALUES(setting_value),
     setting_group = VALUES(setting_group);

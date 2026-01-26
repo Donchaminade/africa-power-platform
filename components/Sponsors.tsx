@@ -50,9 +50,10 @@ const Sponsors: React.FC = () => {
                 {!isLoading && !error && sponsors.length > 0 && (
                     <Swiper
                         modules={[Autoplay, Pagination, Navigation]}
-                        spaceBetween={30}
+                        spaceBetween={0}
                         slidesPerView={2}
                         loop={true}
+                        centeredSlides={true}
                         autoplay={{
                             delay: 2500,
                             disableOnInteraction: false,
@@ -62,35 +63,39 @@ const Sponsors: React.FC = () => {
                         breakpoints={{
                             640: {
                                 slidesPerView: 3,
-                                spaceBetween: 20,
+                                spaceBetween: 0,
                             },
                             768: {
                                 slidesPerView: 4,
-                                spaceBetween: 40,
+                                spaceBetween: 0,
                             },
                             1024: {
                                 slidesPerView: 5,
-                                spaceBetween: 50,
+                                spaceBetween: 0,
                             },
                         }}
                         className="mySwiper"
                     >
-                        {sponsors.map(sponsor => (
-                            <SwiperSlide key={sponsor.id}>
-                                <a href={sponsor.website_url || '#'} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center h-40">
-                                    <img 
-                                        src={sponsor.logo_url} 
-                                        alt={`${sponsor.name} logo`}
-                                        className="max-h-20 max-w-full object-contain"
-                                    />
-                                </a>
-                            </SwiperSlide>
-                        ))}
+                        {
+                            // Duplicate slides if there are fewer than 4 to ensure smooth looping
+                            // This ensures Swiper has enough elements to create the loop effect without issues.
+                            [...sponsors, ... (sponsors.length < 4 ? sponsors : []), ... (sponsors.length < 2 ? sponsors : [])].map((sponsor, index) => (
+                                <SwiperSlide key={`${sponsor.id}-${index}`}>
+                                    <a href={sponsor.website_url || '#'} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center h-40">
+                                        <img 
+                                            src={sponsor.logo_url} 
+                                            alt={`${sponsor.name} logo`}
+                                            className="max-h-28 max-w-full object-contain"
+                                        />
+                                    </a>
+                                </SwiperSlide>
+                            ))
+                        }
                     </Swiper>
                 )}
 
                 {!isLoading && !error && sponsors.length === 0 && (
-                    <p className="text-center text-gray-500">Nos partenaires pour 2026 seront annoncés bientôt. Contactez-nous pour rejoindre l'aventure !</p>
+                    <p className="text-center text-gray-500">Nos partenaires pour {new Date().getFullYear() + 1} seront annoncés bientôt. Contactez-nous pour rejoindre l'aventure !</p>
                 )}
 
                 <div className="text-center mt-20">

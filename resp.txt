@@ -1,0 +1,62 @@
+Settings in AboutComponent: 
+{contact_email: 'contact@africapowerplatform.org', contact_phone: '+229 68 38 01 12', contact_address: 'Cotonou, Bénin', social_linkedin_url: '#', social_facebook_url: '#', …}
+about_video_url
+: 
+"/uploads/video-1769440441287.mp4"
+contact_address
+: 
+"Cotonou, Bénin"
+contact_email
+: 
+"contact@africapowerplatform.org"
+contact_phone
+: 
+"+229 68 38 01 12"
+event_date
+: 
+"2026-03-15"
+event_edition_number
+: 
+"3e"
+event_location_google_maps_embed
+: 
+"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.111833544525!2d2.404550615349471!3d6.379200995386005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10249df1b9e54865%3A0x6b3589b389f1d24a!2sPalais%20des%20Congr%C3%A8s%20de%20Cotonou!5e0!3m2!1sfr!2sfr!4v1672522600000"
+event_logo_url
+: 
+"/assets/images/logo.png"
+event_venue
+: 
+"Palais des Congrès de Cotonou"
+registration_end_date
+: 
+"2026-01-21"
+registration_start_date
+: 
+"2026-01-01"
+seo_meta_description_en
+: 
+"Join the premier summit dedicated to Microsoft Power Platform in West Africa. An event to educate, connect, and impact the Pan-African tech ecosystem."
+seo_meta_description_fr
+: 
+"Rejoignez le premier sommet dédié à Microsoft Power Platform en Afrique de l'Ouest. Un événement pour éduquer, connecter et impacter l'écosystème tech panafricain."
+seo_meta_keywords_en
+: 
+"Africa Power Platform, Microsoft Power Platform, Cotonou, Benin, Tech Summit, Innovation"
+seo_meta_keywords_fr
+: 
+"Africa Power Platform, Microsoft Power Platform, Cotonou, Bénin, Sommet Tech, Innovation"
+seo_meta_title_en
+: 
+"Africa Power Platform 2026"
+seo_meta_title_fr
+: 
+"Africa Power Platform 2026"
+social_facebook_url
+: 
+"#"
+social_linkedin_url
+: 
+"#"
+social_twitter_url
+: 
+"#"

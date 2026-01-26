@@ -75,6 +75,16 @@ router.post('/', upload.single('media_file'), async (req, res) => {
     }
 });
 
+// POST an about video file
+router.post('/upload-video', upload.single('video'), async (req, res) => {
+    const file = req.file;
+    if (!file) {
+        return res.status(400).json({ message: 'Aucun fichier vidéo téléchargé.' });
+    }
+    const videoUrl = `/uploads/${file.filename}`;
+    res.status(200).json({ message: 'Vidéo téléchargée avec succès', videoUrl });
+});
+
 // PUT update a media asset (metadata only)
 router.put('/:id', async (req, res) => {
     const { id } = req.params;

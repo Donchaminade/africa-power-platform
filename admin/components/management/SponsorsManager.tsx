@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../ui/Modal';
+import ImageUpload from '../ui/ImageUpload';
 import axios from 'axios'; // Import axios
 
 import { API_URL } from '../../../utils/config';
@@ -22,6 +23,7 @@ const SponsorsManager: React.FC = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSponsor, setEditingSponsor] = useState<Sponsor | null>(null);
+    const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>('');
 
     // State for delete confirmation modal
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
@@ -47,12 +49,14 @@ const SponsorsManager: React.FC = () => {
 
     const openModal = (sponsor: Sponsor | null = null) => {
         setEditingSponsor(sponsor);
+        setUploadedLogoUrl(sponsor?.logo_url || ''); // Initialize uploadedLogoUrl
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setEditingSponsor(null);
+        setUploadedLogoUrl(''); // Reset uploadedLogoUrl on close
     };
 
     // --- Delete confirmation modal functions ---
@@ -73,9 +77,16 @@ const SponsorsManager: React.FC = () => {
 
         const payload = {
             ...sponsorData,
+            logo_url: uploadedLogoUrl, // Use the URL from the state (updated by ImageUpload)
             display_order: Number(sponsorData.display_order),
             is_active: (e.currentTarget.elements.namedItem('is_active') as HTMLInputElement)?.checked || false, // Checkbox value
         };
+        
+        // Basic validation: ensure logo_url is not empty
+        if (!uploadedLogoUrl) {
+            setMessage({type: 'error', text: 'Veuillez télécharger un logo pour le sponsor.'});
+            return;
+        }
         
         const url = editingSponsor
             ? `${API_URL}/sponsors/${editingSponsor.id}`
@@ -191,7 +202,10 @@ const SponsorsManager: React.FC = () => {
             <Modal isOpen={isModalOpen} onClose={closeModal} title={editingSponsor ? 'Modifier le Sponsor' : 'Ajouter un Sponsor'}>
                 <form onSubmit={handleSave} className="space-y-4">
                     <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label><input name="name" defaultValue={editingSponsor?.name} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white" required/></div>
-                    <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL du Logo</label><input name="logo_url" defaultValue={editingSponsor?.logo_url} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white" required/></div>
+                    <ImageUpload 
+                        onUploadSuccess={setUploadedLogoUrl} 
+                        initialImageUrl={uploadedLogoUrl} 
+                    />
                     <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL du Site Web</label><input name="website_url" defaultValue={editingSponsor?.website_url} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white" /></div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Niveau</label>
