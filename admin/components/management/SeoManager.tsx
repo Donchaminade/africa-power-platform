@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../../utils/config';
 
 interface SeoSettings {
     seo_meta_title_fr: string;

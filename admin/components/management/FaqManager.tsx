@@ -4,7 +4,7 @@ import Modal from '../ui/Modal';
 import { AuthUser } from '../Dashboard';
 import axios from 'axios'; // Import axios
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../../utils/config';
 
 interface Faq {
     id: number;

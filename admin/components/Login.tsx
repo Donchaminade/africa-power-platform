@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../utils/config';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');

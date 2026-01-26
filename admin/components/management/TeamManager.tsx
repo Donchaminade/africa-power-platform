@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../../utils/config';
 
 interface TeamMember {
     id: number;

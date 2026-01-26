@@ -64,7 +64,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 
 
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../utils/config';
 
 
 

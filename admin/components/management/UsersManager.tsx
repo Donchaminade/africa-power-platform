@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../ui/Modal';
 import axios from 'axios'; // Import axios
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../../../utils/config';
 
 interface User {
     id: number;

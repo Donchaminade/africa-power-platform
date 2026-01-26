@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../utils/config';
 
 interface Testimonial {
     id: number;
