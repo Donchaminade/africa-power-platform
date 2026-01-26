@@ -1,11 +1,34 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
+import { API_URL } from '../utils/config';
+import axios from 'axios';
+
+interface SiteSettings {
+    about_video_url?: string;
+    [key: string]: any;
+}
 
 const About: React.FC = () => {
   const { t } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [settings, setSettings] = useState<SiteSettings>({});
+  const [loadingSettings, setLoadingSettings] = useState(true);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/settings`);
+            setSettings(response.data);
+        } catch (error) {
+            console.error("Failed to fetch settings:", error);
+        } finally {
+            setLoadingSettings(false);
+        }
+    };
+    fetchSettings();
+  }, []);
 
   const handlePlay = () => {
     if (videoRef.current) {
@@ -67,23 +90,19 @@ const About: React.FC = () => {
           </div>
           <div className="relative">
             <div className="aspect-video rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 shadow-2xl">
-              <video
-                ref={videoRef}
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
-                className="w-full h-full object-cover"
-                loop
-                playsInline
-                controls={isPlaying}
-              />
-              {!isPlaying && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer" onClick={handlePlay}>
-                  <button
-                    aria-label="Play video"
-                    className="play-button-animation w-20 h-20 bg-brand-green/80 rounded-full flex items-center justify-center text-white text-2xl backdrop-blur-sm transition-transform hover:scale-110 focus:outline-none"
-                  >
-                    <i className="fas fa-play ml-1"></i>
-                  </button>
-                </div>
+              {loadingSettings ? (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">Chargement de la vidéo...</div>
+              ) : settings.about_video_url ? (
+                <iframe
+                  src={settings.about_video_url}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full object-cover"
+                ></iframe>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">Vidéo non disponible</div>
               )}
             </div>
              <div className="absolute -bottom-6 -left-6 bg-brand-green p-6 rounded-xl shadow-xl text-white">

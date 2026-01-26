@@ -10,16 +10,20 @@
   },
   "dependencies": {
     "@google/genai": "latest",
+    "@types/react-router-dom": "^5.3.3",
+    "@yudiel/react-qr-scanner": "^2.5.1",
+    "axios": "^1.13.3",
     "bcrypt": "^6.0.0",
     "chart.js": "^4.5.1",
+    "invariant": "^2.2.4",
     "papaparse": "^5.5.3",
     "pdf-lib": "^1.17.1",
     "qrcode": "^1.5.4",
     "react": "^19.2.3",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.3",
-    "react-qr-reader": "^3.0.0-beta-1",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "swiper": "^12.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -22,6 +22,12 @@ import SeoManager from './management/SeoManager';
 import GalleryManager from './management/GalleryManager';
 import CheckinManager from './management/CheckinManager'; // Import the new CheckinManager
 import SettingsManager from './management/SettingsManager'; // Import the new SettingsManager
+import ContactManager from './management/ContactManager'; // Import the new ContactManager
+import NewsletterManager from './management/NewsletterManager'; // Import the new NewsletterManager
+import PassTypesManager from './management/PassTypesManager'; // Import the new PassTypesManager
+import PartnershipManager from './management/PartnershipManager'; // Import the new PartnershipManager
+import ContentBlocksManager from './management/ContentBlocksManager'; // Import the new ContentBlocksManager
+import MediaAssetsManager from './management/MediaAssetsManager'; // Import the new MediaAssetsManager
 
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 
@@ -481,63 +487,87 @@ const Dashboard: React.FC = () => {
 
         { id: 'faq', label: 'FAQ', icon: 'fa-question-circle', roles: ['admin', 'manager'], group: 'content' },
 
-        { id: 'testimonials', label: 'Témoignages', icon: 'fa-comment-dots', roles: ['admin', 'manager'], group: 'content' },
+                { id: 'testimonials', label: 'Témoignages', icon: 'fa-comment-dots', roles: ['admin', 'manager'], group: 'content' },
 
                 { id: 'team', label: 'Équipe', icon: 'fa-users-cog', roles: ['admin'], group: 'content' },
 
-                                { id: 'gallery', label: 'Galerie', icon: 'fa-images', roles: ['admin', 'manager'], group: 'content' },
+                { id: 'gallery', label: 'Galerie', icon: 'fa-images', roles: ['admin', 'manager'], group: 'content' },
 
-                                { id: 'checkin', label: 'Check-in', icon: 'fa-check-circle', roles: ['admin', 'manager'], group: 'content' }, // New Check-in item
+                        { id: 'checkin', label: 'Check-in', icon: 'fa-check-circle', roles: ['admin', 'manager'], group: 'content' }, // New Check-in item
 
-                                                                { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
+                        { id: 'contact', label: 'Messages', icon: 'fa-envelope', roles: ['admin'], group: 'content' },
 
-                                                                { id: 'seo', label: 'Paramètres SEO', icon: 'fa-chart-line', roles: ['admin'], group: 'admin' },
+                                { id: 'newsletter', label: 'Newsletter', icon: 'fa-newspaper', roles: ['admin'], group: 'content' },
 
-                                                                { id: 'settings', label: 'Paramètres du Site', icon: 'fa-cog', roles: ['admin'], group: 'admin' },
+                                        { id: 'passes', label: 'Types de Pass', icon: 'fa-ticket-alt', roles: ['admin'], group: 'content' },
 
-                                                            ];
+                                                { id: 'partnership', label: 'Partenariats', icon: 'fa-handshake', roles: ['admin'], group: 'content' },
 
-                                                        
+                                                        { id: 'content-blocks', label: 'Blocs de Contenu', icon: 'fa-cube', roles: ['admin'], group: 'content' },
 
-                                                            const navItems = allNavItems.filter(item => authUser && item.roles.includes(authUser.role));
+                                                        { id: 'media-assets', label: 'Actifs Médias', icon: 'fa-photo-video', roles: ['admin'], group: 'content' },
 
-                                                            
+                                                        { id: 'users', label: 'Utilisateurs', icon: 'fa-user-shield', roles: ['admin'], group: 'admin' },
 
-                                                            const renderContent = () => {
+                                                        { id: 'seo', label: 'Paramètres SEO', icon: 'fa-chart-line', roles: ['admin'], group: 'admin' },
 
-                                                                switch (activeView) {
+                                                        { id: 'settings', label: 'Paramètres du Site', icon: 'fa-cog', roles: ['admin'], group: 'admin' },
 
-                                                                    case 'dashboard': return <DashboardOverview />;
+                                                    ];
 
-                                                                    case 'registrations': return <RegistrationsManager />;
+                                                
 
-                                                                    case 'speakers': return <SpeakersManager authUser={authUser} />;
+                                                    const navItems = allNavItems.filter(item => authUser && item.roles.includes(authUser.role));
 
-                                                                    case 'program': return <ProgramManager authUser={authUser} />;
+                                                
 
-                                                                    case 'sponsors': return <SponsorsManager />;
+                                                    const renderContent = () => {
 
-                                                                    case 'faq': return <FaqManager authUser={authUser} />;
+                                                        switch (activeView) {
 
-                                                                    case 'testimonials': return <TestimonialsManager authUser={authUser} />;
+                                                            case 'dashboard': return <DashboardOverview />;
 
-                                                                    case 'team': return <TeamManager />;
+                                                            case 'registrations': return <RegistrationsManager />;
 
-                                                                    case 'gallery': return <GalleryManager authUser={authUser} />;
+                                                            case 'speakers': return <SpeakersManager authUser={authUser} />;
 
-                                                                    case 'checkin': return <CheckinManager />; // Render CheckinManager
+                                                            case 'program': return <ProgramManager authUser={authUser} />;
 
-                                                                    case 'users': return <UsersManager />;
+                                                            case 'sponsors': return <SponsorsManager />;
 
-                                                                    case 'seo': return <SeoManager />;
+                                                            case 'faq': return <FaqManager authUser={authUser} />;
 
-                                                                    case 'settings': return <SettingsManager />; // Render SettingsManager
+                                                            case 'testimonials': return <TestimonialsManager authUser={authUser} />;
 
-                                                                    default: return <div>Select a section</div>;
+                                                            case 'team': return <TeamManager />;
 
-                                                                }
+                                                            case 'gallery': return <GalleryManager authUser={authUser} />;
 
-                                                            };
+                                                            case 'checkin': return <CheckinManager />; // Render CheckinManager
+
+                                                            case 'contact': return <ContactManager />;
+
+                                                            case 'newsletter': return <NewsletterManager />;
+
+                                                            case 'passes': return <PassTypesManager />;
+
+                                                            case 'partnership': return <PartnershipManager />;
+
+                                                            case 'content-blocks': return <ContentBlocksManager />;
+
+                                                            case 'media-assets': return <MediaAssetsManager />;
+
+                                                                        case 'users': return <UsersManager />;
+
+                                                                        case 'seo': return <SeoManager />;
+
+                                                                        case 'settings': return <SettingsManager />; // Render SettingsManager
+
+                                                            default: return <div>Select a section</div>;
+
+                                                        }
+
+                                                    };
 
 
 
@@ -589,7 +619,7 @@ const Dashboard: React.FC = () => {
 
                                 <div className="p-4 text-center border-b border-gray-200 dark:border-gray-700">
 
-                                     <img src="/assets/images/logo.png" alt="Logo" className="h-35 w-auto mx-auto" />
+                                     <img src="/assets/images/logo.png" alt="Logo" className="h-15 w-auto mx-auto" />
 
                                 </div>
 

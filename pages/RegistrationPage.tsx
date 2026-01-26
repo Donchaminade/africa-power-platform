@@ -1,122 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import { API_URL } from '../utils/config';
+import { PassType } from '../utils/types';
 
-interface PassOption {
-    value: string;
-    titleKey: string;
-    subtitleKey: string;
-    tagKey?: string;
-    featuresKeys: string[];
-    price: string;
-    highlighted?: boolean;
-}
-
-interface PassCardProps {
-    option: PassOption;
-    isSelected: boolean;
-    onSelect: (value: string) => void;
-}
-
-const PassCard: React.FC<PassCardProps> = ({ option, isSelected, onSelect }) => {
-    const { t } = useTranslation();
-    return (
-        <div 
-            className={`relative flex flex-col p-6 rounded-2xl shadow-lg border-2 cursor-pointer 
-                        transition-all duration-300 ease-in-out 
-                        ${isSelected 
-                            ? 'border-brand-green bg-gradient-to-br from-brand-green/10 to-transparent scale-105' 
-                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:border-brand-green/50 hover:shadow-xl'
-                        }`}
-            onClick={() => onSelect(option.value)}
-        >
-            {option.tagKey && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-green text-white px-3 py-0.5 rounded-full text-xs font-bold shadow-md">
-                    {t(option.tagKey)}
-                </span>
-            )}
-            <div className="text-center">
-                <h3 className="text-xl font-bold mb-1">{t(option.titleKey)}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{t(option.subtitleKey)}</p>
-                <div className="mb-6">
-                    <span className={`text-5xl font-black ${isSelected ? 'text-brand-green' : 'text-gray-900 dark:text-white'}`}>{option.price}</span>
-                </div>
-            </div>
-            <ul className="space-y-3 mb-8 text-left flex-grow">
-                {option.featuresKeys.map((featureKey, index) => (
-                    <li key={index} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                        <i className="fas fa-check text-green-500"></i><span>{t(featureKey)}</span>
-                    </li>
-                ))}
-            </ul>
-            <button
-                type="button" // Important: type="button" to prevent form submission
-                className={`w-full py-3 rounded-full font-semibold transition-all duration-300
-                            ${isSelected 
-                                ? 'bg-brand-green text-white hover:bg-green-700' 
-                                : 'border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black'
-                            }`}
-                onClick={() => onSelect(option.value)}
-            >
-                {t(option.buttonKey)}
-            </button>
-            {isSelected && (
-                <div className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 rounded-full bg-brand-green text-white">
-                    <i className="fas fa-check text-xs"></i>
-                </div>
-            )}
-        </div>
-    );
-};
-
-const Registration: React.FC = () => {
-    const { t } = useTranslation();
+const RegistrationPage: React.FC = () => {
+    const { t, language } = useTranslation();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [company, setCompany] = useState('');
-    const [jobTitle, setJobTitle] = useState(''); // New state for jobTitle
-    const [country, setCountry] = useState('');   // New state for country
-    const [passType, setPassType] = useState('conference');
+    const [jobTitle, setJobTitle] = useState('');
+    const [country, setCountry] = useState('');
+    const [passTypeId, setPassTypeId] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [passTypes, setPassTypes] = useState<PassType[]>([]);
 
-    const passOptions: PassOption[] = [
-        {
-            value: 'conference',
-            titleKey: 'registration.pass1_title',
-            subtitleKey: 'registration.pass1_subtitle',
-            featuresKeys: ['registration.pass1_feature1', 'registration.pass1_feature2', 'registration.pass1_feature3'],
-            price: t('registration.price'),
-            buttonKey: 'registration.pass1_button',
-        },
-        {
-            value: 'full',
-            titleKey: 'registration.pass2_title',
-            subtitleKey: 'registration.pass2_subtitle',
-            tagKey: 'registration.pass2_tag',
-            featuresKeys: ['registration.pass2_feature1', 'registration.pass2_feature2', 'registration.pass2_feature3'],
-            price: t('registration.price'),
-            buttonKey: 'registration.pass2_button',
-            highlighted: true,
-        },
-        {
-            value: 'bootcamp',
-            titleKey: 'registration.pass3_title',
-            subtitleKey: 'registration.pass3_subtitle',
-            featuresKeys: ['registration.pass3_feature1', 'registration.pass3_feature2', 'registration.pass3_feature3'],
-            price: t('registration.price'),
-            buttonKey: 'registration.pass3_button',
-        },
-    ];
+    useEffect(() => {
+        const fetchPassTypes = async () => {
+            try {
+                const response = await fetch(`${API_URL}/passes`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch pass types');
+                }
+                const data: PassType[] = await response.json();
+                setPassTypes(data);
+                if (data.length > 0) {
+                    setPassTypeId(data[0].id); // Select the first pass by default
+                }
+            } catch (error) {
+                console.error(error);
+                setMessage({ type: 'error', text: 'Impossible de charger les types de pass.' });
+            }
+        };
+        fetchPassTypes();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (passTypeId === null) {
+            setMessage({ type: 'error', text: 'Veuillez sélectionner un type de pass.' });
+            return;
+        }
         setIsLoading(true);
         setMessage(null);
 
         try {
-            const response = await fetch(`${API_URL}/registrations`, { // Using /api/registrations POST endpoint
+            const selectedPass = passTypes.find(p => p.id === passTypeId);
+            if (!selectedPass) {
+                throw new Error('Invalid pass type selected.');
+            }
+
+            const response = await fetch(`${API_URL}/registrations`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -124,9 +59,9 @@ const Registration: React.FC = () => {
                     last_name: lastName,
                     email,
                     company,
-                    job_title: jobTitle, // New field
-                    country: country,     // New field
-                    pass_type: passType,
+                    job_title: jobTitle,
+                    country: country,
+                    pass_type: language === 'en' ? selectedPass.name_en : selectedPass.name_fr,
                 }),
             });
 
@@ -137,15 +72,12 @@ const Registration: React.FC = () => {
             }
 
             setMessage({ type: 'success', text: 'Inscription réussie ! Un e-mail de confirmation vous sera envoyé prochainement.' });
-            // Reset form
             setFirstName('');
             setLastName('');
             setEmail('');
             setCompany('');
-            setJobTitle(''); // Reset new field
-            setCountry('');   // Reset new field
-            setPassType('conference');
-
+            setJobTitle('');
+            setCountry('');
         } catch (err) {
             setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue lors de l\'inscription.' });
         } finally {
@@ -172,27 +104,59 @@ const Registration: React.FC = () => {
                     </div>
                 )}
 
-                <div className="grid lg:grid-cols-2 gap-12 items-start">
-                    {/* Pass Options Selection */}
-                    <div className="space-y-8">
+                <div className="grid lg:grid-cols-3 gap-12 items-start">
+                    <div className="lg:col-span-2 space-y-8">
                         <h3 className="text-2xl font-bold text-gray-800 dark:text-white">1. Choisissez votre Pass</h3>
-                        <div className="grid md:grid-cols-1 gap-6"> {/* Changed to 1 column for PassCard display */}
-                            {passOptions.map((option) => (
-                                <PassCard 
-                                    key={option.value}
-                                    option={option}
-                                    isSelected={passType === option.value}
-                                    onSelect={setPassType}
-                                />
-                            ))}
+                        <div className="overflow-x-auto bg-white dark:bg-gray-800/50 p-4 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                            <table className="w-full text-left">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="p-4"></th>
+                                        <th className="p-4">Pass</th>
+                                        <th className="p-4">Avantages</th>
+                                        <th className="p-4">Prix</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {passTypes.map((pass) => (
+                                        <tr key={pass.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                            <td className="p-4">
+                                                <input
+                                                    type="radio"
+                                                    name="passType"
+                                                    value={pass.id}
+                                                    checked={passTypeId === pass.id}
+                                                    onChange={() => setPassTypeId(pass.id)}
+                                                    className="h-5 w-5 text-brand-green focus:ring-brand-green border-gray-300"
+                                                />
+                                            </td>
+                                            <td className="p-4 font-semibold">
+                                                {language === 'fr' ? pass.name_fr : pass.name_en}
+                                                {pass.tag_fr && <span className="ml-2 text-xs bg-brand-green text-white px-2 py-0.5 rounded-full">{language === 'fr' ? pass.tag_fr : pass.tag_en}</span>}
+                                                <p className="font-normal text-sm text-gray-500">{language === 'fr' ? pass.description_fr : pass.description_en}</p>
+                                            </td>
+                                            <td className="p-4">
+                                                <ul className="space-y-1">
+                                                {(language === 'fr' ? pass.features_fr : pass.features_en).map((feature, index) => (
+                                                    <li key={index} className="text-sm flex items-center gap-2">
+                                                        <i className="fas fa-check-circle text-green-500 text-xs"></i>
+                                                        <span>{feature}</span>
+                                                    </li>
+                                                ))}
+                                                </ul>
+                                            </td>
+                                            <td className="p-4 font-bold text-lg">{language === 'fr' ? pass.price_fr : pass.price_en}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    {/* Registration Form */}
                     <div className="bg-white dark:bg-gray-800/50 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
                         <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">2. Vos Informations</h3>
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-4">
+                             <div className="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
                                     <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required 
@@ -214,12 +178,12 @@ const Registration: React.FC = () => {
                                 <input type="text" id="company" value={company} onChange={(e) => setCompany(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
                             </div>
-                            <div> {/* New field for Job Title */}
+                            <div>
                                 <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre du Poste (Optionnel)</label>
                                 <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
                             </div>
-                            <div> {/* New field for Country */}
+                            <div>
                                 <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pays (Optionnel)</label>
                                 <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
@@ -230,15 +194,7 @@ const Registration: React.FC = () => {
                                 disabled={isLoading}
                                 className="w-full bg-brand-green text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                             >
-                                {isLoading ? (
-                                    <>
-                                        <i className="fas fa-spinner fa-spin"></i> {t('registration.register_button')}
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="fas fa-ticket-alt"></i> {t('registration.register_button')}
-                                    </>
-                                )}
+                                {isLoading ? <><i className="fas fa-spinner fa-spin"></i> Inscription en cours...</> : <><i className="fas fa-ticket-alt"></i> S'inscrire</>}
                             </button>
                         </form>
                     </div>
@@ -248,4 +204,4 @@ const Registration: React.FC = () => {
     );
 };
 
-export default Registration;
+export default RegistrationPage;

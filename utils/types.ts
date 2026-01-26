@@ -100,3 +100,19 @@ export interface Registration {
     is_checked_in?: boolean; // New field
     check_in_time?: string;  // New field
 }
+
+export interface PassType {
+    id: number;
+    name_fr: string;
+    name_en: string;
+    description_fr: string;
+    description_en: string;
+    price_fr: string;
+    price_en: string;
+    features_fr: string[];
+    features_en: string[];
+    tag_fr?: string;
+    tag_en?: string;
+    is_active: boolean;
+    display_order: number;
+}

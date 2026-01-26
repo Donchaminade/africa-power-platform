@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from '../contexts/LanguageContext';
+import PageHero from '../components/ui/PageHero';
 import { TeamMember } from '../utils/types';
 import { API_URL } from '../utils/config';
 
 const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
-  const { t, language } = useTranslation();
   return (
     <div className="group relative bg-white/5 dark:bg-black/10 backdrop-blur-md border border-white/10 dark:border-black/20 rounded-2xl p-6 text-center shadow-lg transition-all duration-300 hover:bg-white/10 hover:dark:bg-black/20 hover:scale-105">
       <div className="relative w-32 h-32 mx-auto -mt-16 mb-4">
         <img src={member.image_url} alt={member.name} className="w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-800" />
       </div>
       <h3 className="text-xl font-bold">{member.name}</h3>
-      <p className="text-brand-green font-semibold mb-4">{language === 'fr' ? member.role_fr : member.role_en}</p>
+      <p className="text-brand-green font-semibold mb-4">{member.role_fr}</p>
       <div className="flex justify-center gap-4">
           {member.linkedin_url && (
               <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" aria-label={`${member.name}'s LinkedIn`} className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white hover:bg-brand-green transition-colors">
@@ -28,8 +27,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
   );
 }
 
-const Team: React.FC = () => {
-  const { t } = useTranslation();
+const TeamPage: React.FC = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,29 +52,28 @@ const Team: React.FC = () => {
   }, []);
 
   return (
-    <section id="team" className="py-24 bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="text-brand-green font-semibold text-sm tracking-widest uppercase">{t('team.pre_title')}</span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4">
-            {t('team.title_part1')} <span className="text-brand-green">{t('team.title_part2')}</span>
-          </h2>
-        </div>
-        
-        {isLoading && <div className="text-center">Chargement de l'équipe...</div>}
-        {error && <div className="text-center text-red-500">Erreur: {error}</div>}
-        
-        {!isLoading && !error && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20 pt-16">
-              {teamMembers.map((member) => <TeamMemberCard key={member.id} member={member} />)}
-            </div>
-        )}
-        {!isLoading && !error && teamMembers.length === 0 && (
-            <p className="text-center text-gray-500">L'équipe d'organisation sera bientôt présentée.</p>
-        )}
-      </div>
-    </section>
+    <div>
+        <PageHero
+            title={<>Notre <span className="text-brand-green">Équipe</span></>}
+            subtitle="Les visages derrière l'organisation de l'Africa Power Platform."
+        />
+        <section id="team" className="py-24 bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
+          <div className="max-w-7xl mx-auto px-6">
+            {isLoading && <div className="text-center">Chargement de l'équipe...</div>}
+            {error && <div className="text-center text-red-500">Erreur: {error}</div>}
+            
+            {!isLoading && !error && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20 pt-16">
+                  {teamMembers.map((member) => <TeamMemberCard key={member.id} member={member} />)}
+                </div>
+            )}
+            {!isLoading && !error && teamMembers.length === 0 && (
+                <p className="text-center text-gray-500">L'équipe d'organisation sera bientôt présentée.</p>
+            )}
+          </div>
+        </section>
+    </div>
   );
 };
 
-export default Team;
+export default TeamPage;

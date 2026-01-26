@@ -3,6 +3,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
+import PartnersPage from './pages/PartnersPage';
+import TeamPage from './pages/TeamPage';
+import SpeakersPage from './pages/SpeakersPage';
+import ProgramPage from './pages/ProgramPage';
+import ContactPage from './pages/ContactPage';
+import RegistrationPage from './pages/RegistrationPage';
+import FaqPage from './pages/FaqPage';
+import SponsorsPage from './pages/SponsorsPage';
+
 import { LanguageProvider, useTranslation } from './contexts/LanguageContext'; // Ensure LanguageProvider is imported
 import { SettingsProvider, useSettings } from './contexts/SettingsContext'; // Import SettingsProvider and useSettings
 import { SeoSettings } from './utils/types'; // Still used for type definition, though data comes from context
@@ -61,6 +70,14 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="gallery" element={<GalleryPage />} />
+          <Route path="partners" element={<PartnersPage />} />
+          <Route path="team" element={<TeamPage />} />
+          <Route path="speakers" element={<SpeakersPage />} />
+          <Route path="program" element={<ProgramPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="register" element={<RegistrationPage />} />
+          <Route path="faq" element={<FaqPage />} />
+          <Route path="sponsors" element={<SponsorsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

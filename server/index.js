@@ -46,6 +46,11 @@ const authRouter = require('./routes/auth');
 const galleryRouter = require('./routes/gallery');
 const chatbotRouter = require('./routes/chatbot'); // Import the new chatbot router
 const checkinRouter = require('./routes/checkin'); // Import the new checkin router
+const passesRouter = require('./routes/passes'); // Import the new passes router
+const partnershipRouter = require('./routes/partnership'); // Import the new partnership router
+const contactRouter = require('./routes/contact'); // Import the new contact router
+const contentBlocksRouter = require('./routes/content_blocks'); // Import the new content_blocks router
+const mediaAssetsRouter = require('./routes/media_assets'); // Import the new media_assets router
 
 // Utiliser les routes
 app.use('/api/speakers', speakersRouter);
@@ -65,6 +70,11 @@ app.use('/api/gallery', galleryRouter);
 app.use('/api/ticket', require('./routes/ticket'));
 app.use('/api/chatbot', chatbotRouter); // Use the new chatbot router
 app.use('/api', checkinRouter); // Use the new checkin router
+app.use('/api/passes', passesRouter); // Use the new passes router
+app.use('/api/partnership-requests', partnershipRouter); // Use the new partnership requests router
+app.use('/api/contact', contactRouter); // Use the new contact router
+app.use('/api/content-blocks', contentBlocksRouter); // Use the new content_blocks router
+app.use('/api/media-assets', mediaAssetsRouter); // Use the new media_assets router
 
 
 // ======= Démarrage du serveur =======

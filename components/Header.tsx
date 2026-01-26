@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from '../contexts/LanguageContext';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
@@ -19,19 +20,20 @@ const Header: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { href: '#about', label: t('nav.about') },
-    { href: '#speakers', label: t('nav.speakers') },
-    { href: '#program', label: t('nav.program') },
-    { href: '#register', label: t('nav.register') },
-    { href: '#team', label: t('nav.team') },
-    { href: '#gallery', label: "Galerie" }, // Added Gallery Link
-    { href: '#faq', label: t('nav.faq') },
+    { to: '/', label: t('nav.about') },
+    { to: '/speakers', label: t('nav.speakers') },
+    { to: '/program', label: t('nav.program') },
+    { to: '/register', label: t('nav.register') },
+    { to: '/team', label: t('nav.team') },
+    { to: '/gallery', label: "Galerie" },
+    { to: '/partners', label: t('nav.partners') },
+    { to: '/faq', label: t('nav.faq') },
   ];
 
   const renderNavLinks = (isMobile = false) => navLinks.map(link => (
-      <a key={link.href} href={link.href} className={`hover:text-brand-green transition-colors ${isMobile ? 'text-lg py-2' : ''}`} onClick={() => setIsMenuOpen(false)}>
+      <Link key={link.to} to={link.to} className={`hover:text-brand-green transition-colors ${isMobile ? 'text-lg py-2' : ''}`} onClick={() => setIsMenuOpen(false)}>
           {link.label}
-      </a>
+      </Link>
   ));
 
   const controlButtons = (
@@ -76,7 +78,7 @@ const Header: React.FC = () => {
         `}
       >
         <div className="flex items-center justify-between px-6 py-2">
-          <a href="#" className="flex-shrink-0" aria-label="Africa Power Platform Home">
+          <Link to="/" className="flex-shrink-0" aria-label="Africa Power Platform Home">
              {settings?.event_logo_url ? (
                  <img src={settings.event_logo_url} alt="Event Logo" className="h-10 w-auto" />
              ) : (
@@ -85,10 +87,10 @@ const Header: React.FC = () => {
                     <path d="M26 0C11.64 0 0 11.64 0 26s11.64 26 26 26 26-11.64 26-26S40.36 0 26 0zm-2 49.86C12.05 49.37 4 38.65 4 26S12.05 2.63 24 2.14v47.72zm4-47.72c11.95.49 20 11.21 20 23.86s-8.05 23.37-20 23.86V2.14z" fill="currentColor" className="text-brand-green"/>
                  </svg>
              )}
-          </a>
+          </Link>
           <div className="hidden md:flex items-center gap-8">
             {renderNavLinks()}
-            <a href="#contact" className="bg-brand-green text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition-colors">{t('nav.contact')}</a>
+            <Link to="/contact" className="bg-brand-green text-white px-6 py-2 rounded-full font-semibold hover:bg-green-700 transition-colors">{t('nav.contact')}</Link>
             {controlButtons}
           </div>
           <button id="mobile-menu-btn" className="md:hidden text-2xl ml-4" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -110,7 +112,7 @@ const Header: React.FC = () => {
         >
           <div className="px-6 py-4 flex flex-col items-center gap-6">
             {renderNavLinks(true)}
-            <a href="#contact" className="bg-brand-green text-white w-full mt-2 px-6 py-3 rounded-full font-semibold text-center" onClick={() => setIsMenuOpen(false)}>{t('nav.contact')}</a>
+            <Link to="/contact" className="bg-brand-green text-white w-full mt-2 px-6 py-3 rounded-full font-semibold text-center" onClick={() => setIsMenuOpen(false)}>{t('nav.contact')}</Link>
             <div className="self-center pt-2">
              {controlButtons}
             </div>

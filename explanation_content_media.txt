@@ -1,0 +1,24 @@
+
+Les tables `content_blocks` et `media_assets` sont généralement utilisées pour dynamiser et faciliter la gestion du contenu d'un site web, un peu comme un système de gestion de contenu (CMS).
+
+**`content_blocks` (Blocs de Contenu) :**
+Cette table est destinée à stocker des morceaux de contenu textuel ou HTML réutilisables qui peuvent apparaître à différents endroits du site. Au lieu de coder en dur le texte directement dans les composants React, vous le stockez ici et le chargez dynamiquement. Cela permet aux administrateurs de modifier facilement ces textes sans avoir à toucher au code source ou redéployer l'application.
+
+*   **Exemples d'utilisation :**
+    *   Les phrases d'accroche ou descriptions courtes sur la page d'accueil.
+    *   Les textes de pied de page (footer).
+    *   Des sections "À Propos" ou des introductions qui peuvent changer.
+    *   Des messages promotionnels.
+*   **Champs typiques :** `id`, `name` (un identifiant unique pour le bloc), `content_fr` (contenu en français), `content_en` (contenu en anglais), `type` (par exemple, 'text', 'html', 'markdown'), `is_active` (pour activer/désactiver le bloc), `last_updated`.
+
+**`media_assets` (Actifs Médias) :**
+Cette table sert à gérer les fichiers médias (images, vidéos, documents, etc.) qui sont téléchargés et utilisés sur le site. Plutôt que de simplement stocker les fichiers dans un dossier, cette table garde une trace de leurs métadonnées. Cela centralise la gestion des médias, facilite leur recherche, leur affichage et leur association à d'autres contenus (comme un bloc de contenu ou un speaker).
+
+*   **Exemples d'utilisation :**
+    *   Les images des speakers.
+    *   Les logos des sponsors.
+    *   Les images de la galerie.
+    *   Des documents à télécharger.
+*   **Champs typiques :** `id`, `file_name`, `file_url` (le chemin d'accès ou URL du fichier), `alt_text_fr` (texte alternatif pour l'accessibilité en français), `alt_text_en` (en anglais), `description_fr`, `description_en`, `type` (par exemple, 'image', 'video', 'document'), `uploaded_by`, `uploaded_at`.
+
+En résumé, ces tables offrent une flexibilité pour gérer le contenu et les médias du site via une interface d'administration, sans nécessiter de modifications directes du code pour chaque petite mise à jour.

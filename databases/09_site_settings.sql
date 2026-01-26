@@ -26,7 +26,8 @@ INSERT INTO `site_settings` (`setting_key`, `setting_value`, `setting_group`) VA
 ('seo_meta_keywords_en', 'Africa Power Platform, Microsoft Power Platform, Cotonou, Benin, Tech Summit, Innovation', 'seo'),
 ('event_logo_url', '/assets/images/logo.png', 'event'),
 ('event_date', '2026-03-15', 'event'),
-('event_venue', 'Palais des Congrès de Cotonou', 'event')
+('event_venue', 'Palais des Congrès de Cotonou', 'event'),
+('about_video_url', 'https://www.youtube.com/embed/your_video_id', 'event')
 ON DUPLICATE KEY UPDATE
     setting_value = VALUES(setting_value),
     setting_group = VALUES(setting_group);
