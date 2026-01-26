@@ -652,59 +652,339 @@ const Dashboard: React.FC = () => {
 
             {/* Sidebar */}
 
-            <aside className="w-64 bg-white dark:bg-gray-800 shadow-md flex flex-col">
+                        <aside className="w-64 bg-white dark:bg-gray-800 shadow-md flex flex-col">
 
-                                <div className="p-4 text-center border-b border-gray-200 dark:border-gray-700">
+                                            <div className="p-4 text-center border-b border-gray-200 dark:border-gray-700">
 
-                                     <img src="/assets/images/logo.png" alt="Logo" className="h-15 w-auto mx-auto" />
+                                                 <img src="/assets/images/logo.png" alt="Logo" className="h-15 w-auto mx-auto" />
 
-                                </div>
+                                            </div>
 
-                <nav className="flex-1 px-4 py-2">
+                            <nav className="flex-1 px-4 py-2 overflow-y-auto">
 
-                    {renderNavGroup('main')}
+                                {renderNavGroup('main')}
 
-                    {renderNavGroup('content', 'Gestion Contenu')}
+                                {renderNavGroup('content', 'Gestion Contenu')}
 
-                    {authUser?.role === 'admin' && renderNavGroup('admin', 'Administration')}
+                                {authUser?.role === 'admin' && renderNavGroup('admin', 'Administration')}
 
-                </nav>
+                            </nav>
 
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                            {/* User Info and Logout Button will be moved to the top navbar */}
 
-                    {authUser && (
-
-                        <div className="text-center mb-4 p-3 rounded-lg bg-gray-100 dark:bg-gray-900">
-
-                            <p className="font-bold text-sm">{authUser.name}</p>
-
-                            <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{authUser.role}</p>
-
-                        </div>
-
-                    )}
-
-                    <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors font-semibold">
-
-                       <i className="fas fa-sign-out-alt"></i>
-
-                       <span>Logout</span>
-
-                    </button>
-
-                </div>
-
-            </aside>
+                        </aside>
 
 
 
-            {/* Main Content */}
+                        {/* Main Content */}
 
-            <main className="flex-1 p-10 overflow-y-auto">
 
-               {renderContent()}
 
-            </main>
+                        <main className="flex-1 overflow-y-auto pt-16"> {/* Add pt-16 for navbar */}
+
+
+
+                                                                                                        {/* Top Navbar */}
+
+
+
+                                                    
+
+
+
+                                                                                                        <div className="fixed top-0 left-64 right-0 h-16 bg-white/30 dark:bg-gray-800/30 backdrop-blur-md flex items-center justify-between px-6 z-10">
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                            {authUser && (
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                <> {/* Use a fragment to group left and right parts if needed, or directly separate them */}
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    {/* User Info Left */}
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    <div className="flex items-center gap-2">
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                        <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center font-bold text-lg">
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                            {authUser.name ? authUser.name.charAt(0).toUpperCase() : ''}
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                        </div>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                        <span className="font-semibold text-gray-800 dark:text-white">Hey, {authUser.name}!</span>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    </div>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    {/* Logout Button Right */}
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-orange-500 hover:bg-red-500 dark:hover:bg-red-900/50 transition-colors font-semibold">
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                       <i className="fas fa-sign-out-alt"></i>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                       <span>Logout</span>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                    </button>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                                </>
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                            )}
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                    
+
+
+
+                                                                                                        </div>
+
+
+
+                            {/* Main Content Area */}
+
+
+
+                            <div className="p-10"> {/* Wrap existing content with padding */}
+
+
+
+                                {renderContent()}
+
+
+
+                            </div>
+
+
+
+                        </main>
 
         </div>
 
