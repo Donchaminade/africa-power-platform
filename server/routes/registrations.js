@@ -244,4 +244,21 @@ router.get('/export/pdf', async (req, res) => {
     }
 });
 
+// DELETE /api/registrations/:id - Supprimer une inscription
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await pool.query('DELETE FROM registrations WHERE id = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Inscription non trouvée.' });
+    }
+
+    res.status(200).json({ message: 'Inscription supprimée avec succès.' });
+  } catch (error) {
+    console.error(`Erreur lors de la suppression de l'inscription ${id} :`, error);
+    res.status(500).json({ message: 'Erreur serveur lors de la suppression de l\'inscription.', error: error.message });
+  }
+});
+
 module.exports = router;
