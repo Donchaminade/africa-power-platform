@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import { API_URL } from '../utils/config';
 import { PassType } from '../utils/types';
+import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
+import axios from 'axios'; // Ensure axios is imported
 
 const RegistrationPage: React.FC = () => {
     const { t, language } = useTranslation();
+    const { settings, isLoading: isLoadingSettings, error: settingsError } = useSettings(); // Get settings from context
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -16,14 +20,17 @@ const RegistrationPage: React.FC = () => {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [passTypes, setPassTypes] = useState<PassType[]>([]);
 
+    const [registrationStatus, setRegistrationStatus] = useState<'open' | 'closed' | 'closing_soon' | 'not_yet_open'>('closed');
+    const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
+
     useEffect(() => {
         const fetchPassTypes = async () => {
             try {
-                const response = await fetch(`${API_URL}/passes`);
-                if (!response.ok) {
+                const response = await axios.get(`${API_URL}/passes`); // Changed to axios
+                if (response.status !== 200) {
                     throw new Error('Failed to fetch pass types');
                 }
-                const data: PassType[] = await response.json();
+                const data: PassType[] = await response.data;
                 setPassTypes(data);
                 if (data.length > 0) {
                     setPassTypeId(data[0].id); // Select the first pass by default
@@ -35,6 +42,39 @@ const RegistrationPage: React.FC = () => {
         };
         fetchPassTypes();
     }, []);
+
+    useEffect(() => {
+        if (!isLoadingSettings && settings) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today's date
+
+            const startDate = settings.registration_start_date ? new Date(settings.registration_start_date) : null;
+            if (startDate) startDate.setHours(0, 0, 0, 0);
+
+            const endDate = settings.registration_end_date ? new Date(settings.registration_end_date) : null;
+            if (endDate) endDate.setHours(23, 59, 59, 999); // End of the day
+
+            if (startDate && endDate) {
+                if (today < startDate) {
+                    setRegistrationStatus('not_yet_open');
+                } else if (today > endDate) {
+                    setRegistrationStatus('closed');
+                } else {
+                    const diffTime = endDate.getTime() - today.getTime();
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    setDaysRemaining(diffDays);
+
+                    if (diffDays <= 7) { // Alert if 7 days or less remaining
+                        setRegistrationStatus('closing_soon');
+                    } else {
+                        setRegistrationStatus('open');
+                    }
+                }
+            } else {
+                setRegistrationStatus('closed'); // Default if dates are not set
+            }
+        }
+    }, [settings, isLoadingSettings]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,23 +91,19 @@ const RegistrationPage: React.FC = () => {
                 throw new Error('Invalid pass type selected.');
             }
 
-            const response = await fetch(`${API_URL}/registrations`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    first_name: firstName,
-                    last_name: lastName,
-                    email,
-                    company,
-                    job_title: jobTitle,
-                    country: country,
-                    pass_type: language === 'en' ? selectedPass.name_en : selectedPass.name_fr,
-                }),
+            const response = await axios.post(`${API_URL}/registrations`, { // Changed to axios
+                first_name: firstName,
+                last_name: lastName,
+                email,
+                company,
+                job_title: jobTitle,
+                country: country,
+                pass_type: language === 'en' ? selectedPass.name_en : selectedPass.name_fr,
             });
 
-            const data = await response.json();
+            const data = await response.data; // Changed for axios
 
-            if (!response.ok) {
+            if (response.status !== 201) { // Changed for axios
                 throw new Error(data.message || 'Registration failed.');
             }
 
@@ -85,6 +121,8 @@ const RegistrationPage: React.FC = () => {
         }
     };
 
+    const isFormDisabled = registrationStatus !== 'open' && registrationStatus !== 'closing_soon';
+
     return (
         <section id="register" className="py-24 bg-gradient-to-br from-white to-gray-100 dark:from-black dark:to-gray-900">
             <div className="max-w-7xl mx-auto px-6">
@@ -98,6 +136,29 @@ const RegistrationPage: React.FC = () => {
                     </p>
                 </div>
                 
+                {isLoadingSettings && <p className="text-center text-gray-500 mb-4">Chargement des paramètres d'inscription...</p>}
+                {settingsError && <p className="text-center text-red-500 mb-4">Erreur de chargement des paramètres d'inscription: {settingsError}</p>}
+
+                {!isLoadingSettings && !settingsError && (
+                    <>
+                        {registrationStatus === 'not_yet_open' && (
+                            <div className="p-4 rounded-md mb-8 max-w-2xl mx-auto bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                                <i className="fas fa-info-circle mr-2"></i> Les inscriptions ouvriront le {new Date(settings.registration_start_date).toLocaleDateString('fr-FR')}.
+                            </div>
+                        )}
+                        {registrationStatus === 'closed' && (
+                            <div className="p-4 rounded-md mb-8 max-w-2xl mx-auto bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">
+                                <i className="fas fa-exclamation-triangle mr-2"></i> Les inscriptions sont maintenant closes.
+                            </div>
+                        )}
+                        {registrationStatus === 'closing_soon' && daysRemaining !== null && (
+                            <div className="p-4 rounded-md mb-8 max-w-2xl mx-auto bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300">
+                                <i className="fas fa-exclamation-circle mr-2"></i> Dépêchez-vous ! Les inscriptions se clôturent dans {daysRemaining} jour(s) !
+                            </div>
+                        )}
+                    </>
+                )}
+
                 {message && (
                     <div className={`p-4 rounded-md mb-8 max-w-xl mx-auto ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {message.text}
@@ -128,6 +189,7 @@ const RegistrationPage: React.FC = () => {
                                                     checked={passTypeId === pass.id}
                                                     onChange={() => setPassTypeId(pass.id)}
                                                     className="h-5 w-5 text-brand-green focus:ring-brand-green border-gray-300"
+                                                    disabled={isFormDisabled}
                                                 />
                                             </td>
                                             <td className="p-4 font-semibold">
@@ -160,38 +222,44 @@ const RegistrationPage: React.FC = () => {
                                 <div>
                                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
                                     <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required 
-                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                        disabled={isFormDisabled} />
                                 </div>
                                 <div>
                                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
                                     <input type="text" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required 
-                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                        disabled={isFormDisabled} />
                                 </div>
                             </div>
                             <div>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                                 <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required 
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                    disabled={isFormDisabled} />
                             </div>
                             <div>
                                 <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entreprise (Optionnel)</label>
                                 <input type="text" id="company" value={company} onChange={(e) => setCompany(e.target.value)} 
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                    disabled={isFormDisabled} />
                             </div>
                             <div>
                                 <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre du Poste (Optionnel)</label>
                                 <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} 
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                    disabled={isFormDisabled} />
                             </div>
                             <div>
                                 <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pays (Optionnel)</label>
                                 <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} 
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all" />
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+                                    disabled={isFormDisabled} />
                             </div>
                             
                             <button
                                 type="submit"
-                                disabled={isLoading}
+                                disabled={isLoading || isFormDisabled}
                                 className="w-full bg-brand-green text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                             >
                                 {isLoading ? <><i className="fas fa-spinner fa-spin"></i> Inscription en cours...</> : <><i className="fas fa-ticket-alt"></i> S'inscrire</>}

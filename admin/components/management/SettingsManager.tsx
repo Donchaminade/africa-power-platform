@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import { API_URL } from '../../../utils/config';
 import ImageUpload from '../ui/ImageUpload'; // Assuming you have an ImageUpload component
 
@@ -6,6 +7,9 @@ interface SiteSettings {
     event_logo_url: string;
     event_date: string; // YYYY-MM-DD format
     event_venue: string;
+    registration_start_date: string; // New
+    registration_end_date: string; // New
+    about_video_url: string; // New
     // Add other settings you want to manage
     [key: string]: string; // For other dynamic settings
 }
@@ -24,12 +28,18 @@ const SettingsManager: React.FC = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_URL}/settings`);
-            if (!response.ok) throw new Error('Failed to fetch settings');
-            const data: SiteSettings = await response.json();
+            const response = await axios.get(`${API_URL}/settings`); // Changed to axios
+            const data: SiteSettings = await response.data; // Changed for axios
+            
             // Ensure date is in YYYY-MM-DD format for input type="date"
             if (data.event_date && data.event_date.includes('T')) {
                 data.event_date = data.event_date.split('T')[0];
+            }
+            if (data.registration_start_date && data.registration_start_date.includes('T')) {
+                data.registration_start_date = data.registration_start_date.split('T')[0];
+            }
+            if (data.registration_end_date && data.registration_end_date.includes('T')) {
+                data.registration_end_date = data.registration_end_date.split('T')[0];
             }
             setSettings(data);
         } catch (err) {
@@ -56,15 +66,10 @@ const SettingsManager: React.FC = () => {
         setMessage(null);
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/settings`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(settings),
-            });
+            const response = await axios.put(`${API_URL}/settings`, settings); // Changed to axios
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to save settings');
+            if (response.status < 200 || response.status >= 300) { // Changed for axios
+                throw new Error(response.data.message || 'Failed to save settings');
             }
 
             setMessage({ type: 'success', text: 'Paramètres mis à jour avec succès !' });
@@ -75,15 +80,15 @@ const SettingsManager: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div className="text-center p-8">Chargement des paramètres...</div>;
+    if (isLoading) return <div className="text-center p-8 text-gray-500">Chargement des paramètres...</div>;
     if (error) return <div className="text-center p-8 text-red-500">Erreur: {error}</div>;
 
     return (
-        <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Gestion des Paramètres du Site</h2>
+        <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Gestion des Paramètres du Site</h2>
 
             {message && (
-                <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                <div className={`p-4 rounded-md mb-4 ${message.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}`}>
                     {message.text}
                 </div>
             )}
@@ -91,7 +96,7 @@ const SettingsManager: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <form onSubmit={handleSaveSettings} className="space-y-6">
                     <div>
-                        <label htmlFor="event_logo_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Logo de l\'événement</label>
+                        <label htmlFor="event_logo_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Logo de l\'événement</label>
                         <div className="mt-1 flex items-center">
                             {settings?.event_logo_url && (
                                 <img src={settings.event_logo_url} alt="Event Logo" className="h-16 w-16 object-contain mr-4 rounded" />
@@ -102,46 +107,81 @@ const SettingsManager: React.FC = () => {
                                 currentImageUrl={settings?.event_logo_url}
                             />
                         </div>
-                        {/* Fallback to text input if ImageUpload is not functional or for direct URL */}
                         <input
                             type="text"
                             name="event_logo_url"
                             id="event_logo_url"
                             value={settings?.event_logo_url || ''}
                             onChange={handleInputChange}
-                            className="mt-2 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-2 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
                             placeholder="URL du logo de l\'événement"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="event_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date de l\'événement</label>
+                        <label htmlFor="event_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date de l\'événement</label>
                         <input
                             type="date"
                             name="event_date"
                             id="event_date"
                             value={settings?.event_date || ''}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
                             required
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="event_venue" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Lieu de l\'événement</label>
+                        <label htmlFor="event_venue" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lieu de l\'événement</label>
                         <input
                             type="text"
                             name="event_venue"
                             id="event_venue"
                             value={settings?.event_venue || ''}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
                             required
                         />
                     </div>
-                    
-                    {/* Add other settings fields here if needed */}
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label htmlFor="registration_start_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date de début des inscriptions</label>
+                            <input
+                                type="date"
+                                name="registration_start_date"
+                                id="registration_start_date"
+                                value={settings?.registration_start_date || ''}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="registration_end_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date de fin des inscriptions</label>
+                            <input
+                                type="date"
+                                name="registration_end_date"
+                                id="registration_end_date"
+                                value={settings?.registration_end_date || ''}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label htmlFor="about_video_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL de la vidéo "À Propos" (YouTube Embed)</label>
+                        <input
+                            type="text"
+                            name="about_video_url"
+                            id="about_video_url"
+                            value={settings?.about_video_url || ''}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-green focus:border-brand-green sm:text-sm dark:bg-gray-700 dark:text-gray-200"
+                            placeholder="Ex: https://www.youtube.com/embed/your_video_id"
+                        />
+                    </div>
+                    
                     <div className="flex justify-end">
                         <button
                             type="submit"

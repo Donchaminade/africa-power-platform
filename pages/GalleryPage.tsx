@@ -8,7 +8,7 @@ const GalleryPage: React.FC = () => {
 
   return (
     <div>
-      <PageHero 
+      <PageHero
         title={t('gallery.page_title', 'Galerie')}
         breadcrumbs={[
           { label: t('home', 'Accueil'), path: '/' },
