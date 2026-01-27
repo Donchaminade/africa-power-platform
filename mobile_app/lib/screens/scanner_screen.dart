@@ -357,7 +357,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                   await _performCheckIn(participant['id']);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: const Color(0xFF004D40),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -402,7 +402,7 @@ class _ScannerScreenState extends State<ScannerScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isSuccess ? Colors.green : Colors.red,
+        backgroundColor: isSuccess ? const Color.fromARGB(255, 25, 133, 28) : Colors.red,
         duration: const Duration(seconds: 5),
       ),
     );
@@ -422,7 +422,7 @@ class _ScannerScreenState extends State<ScannerScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scanner QR Code'),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xFF004D40),
         foregroundColor: Colors.white,
         actions: [
           IconButton(

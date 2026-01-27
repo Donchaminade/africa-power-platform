@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/screens/login_screen.dart'; // Import LoginScreen
-import 'package:mobile_app/screens/home_screen.dart'; // Import HomeScreen
-import 'package:mobile_app/screens/scanner_screen.dart'; // Import ScannerScreen
-import 'package:mobile_app/screens/history_screen.dart'; // Import HistoryScreen
+import 'package:mobile_app/screens/main_screen.dart'; // Import MainScreen
+import 'package:mobile_app/screens/scanner_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences for session check
+
 
 void main() {
   runApp(const MyApp());
@@ -13,18 +14,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'APP Check-in',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch:  Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const SplashScreen(),
       routes: {
         '/login': (context) => const LoginScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/scanner': (context) => const ScannerScreen(), // New route
-        '/history': (context) => const HistoryScreen(), // New route
+        '/main': (context) => const MainScreen(),
+        '/scanner': (context) => const ScannerScreen(),
       },
     );
   }
@@ -52,11 +54,20 @@ class _SplashScreenState extends State<SplashScreen> {
       _logoOpacity = 1.0;
     });
     await Future.delayed(const Duration(seconds: 2)); // Display logo for 2 seconds
-    _navigateToLogin();
+    _checkLoginStatus();
   }
 
-  void _navigateToLogin() {
-    Navigator.of(context).pushReplacementNamed('/login');
+  void _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString('userName');
+
+    if (mounted) {
+      if (userName != null && userName.isNotEmpty) {
+        Navigator.of(context).pushReplacementNamed('/main');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    }
   }
 
   @override
