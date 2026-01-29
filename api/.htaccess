@@ -1,0 +1,97 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirige toutes les requêtes vers index.php (ou un routeur principal)
+    # Nous allons commencer par gérer chaque route dans son propre fichier.
+    # Par exemple, /api/speakers sera géré par speakers.php
+    
+    # Redirection pour les speakers
+    RewriteRule ^speakers/?$ speakers.php [L]
+    RewriteRule ^speakers/([0-9]+)/?$ speakers.php?id=$1 [L]
+
+    # Redirection pour les sponsors
+    RewriteRule ^sponsors/?$ sponsors.php [L]
+    RewriteRule ^sponsors/([0-9]+)/?$ sponsors.php?id=$1 [L]
+
+    # Redirection pour les faq
+    RewriteRule ^faq/?$ faq.php [L]
+    RewriteRule ^faq/([0-9]+)/?$ faq.php?id=$1 [L]
+
+    # Redirection pour les testimonials
+    RewriteRule ^testimonials/?$ testimonials.php [L]
+    RewriteRule ^testimonials/([0-9]+)/?$ testimonials.php?id=$1 [L]
+
+    # Redirection pour les team
+    RewriteRule ^team/?$ team.php [L]
+    RewriteRule ^team/([0-9]+)/?$ team.php?id=$1 [L]
+
+    # Redirection pour les gallery
+    RewriteRule ^gallery/?$ gallery.php [L]
+    RewriteRule ^gallery/([0-9]+)/?$ gallery.php?id=$1 [L]
+
+    # Redirection pour les passes
+    RewriteRule ^passes/?$ passes.php [L]
+    RewriteRule ^passes/([0-9]+)/?$ passes.php?id=$1 [L]
+
+    # Redirection pour les program
+    RewriteRule ^program/?$ program.php [L]
+    RewriteRule ^program/([0-9]+)/?$ program.php?id=$1 [L]
+
+    # Redirection pour les content_blocks
+    RewriteRule ^content-blocks/?$ content_blocks.php [L]
+    RewriteRule ^content-blocks/([0-9]+)/?$ content_blocks.php?id=$1 [L]
+
+    # Redirection pour les users
+    RewriteRule ^users/?$ users.php [L]
+    RewriteRule ^users/([0-9]+)/?$ users.php?id=$1 [L]
+
+    # Redirection pour les settings
+    RewriteRule ^settings/?$ settings.php [L]
+
+    # Redirection pour les registrations
+    RewriteRule ^registrations/?$ registrations.php [L]
+    RewriteRule ^registrations/([0-9]+)/?$ registrations.php?id=$1 [L]
+    RewriteRule ^registrations/export/pdf/?$ registrations.php?export_pdf=true [L]
+
+    # Redirection pour les contact
+    RewriteRule ^contact/?$ contact.php [L]
+    RewriteRule ^contact/([0-9]+)/?$ contact.php?id=$1 [L]
+
+    # Redirection pour les newsletter
+    RewriteRule ^newsletter/?$ newsletter.php [L]
+    RewriteRule ^newsletter/([0-9]+)/?$ newsletter.php?id=$1 [L]
+
+    # Redirection pour les partnership-requests
+    RewriteRule ^partnership-requests/?$ partnership.php [L]
+    RewriteRule ^partnership-requests/([0-9]+)/?$ partnership.php?id=$1 [L]
+
+    # Redirection pour les stats
+    RewriteRule ^stats/?$ stats.php [L]
+    RewriteRule ^stats/registrations-by-day/?$ stats.php?endpoint=registrations-by-day [L]
+    RewriteRule ^stats/registrations-by-type/?$ stats.php?endpoint=registrations-by-type [L]
+    RewriteRule ^stats/speakers-by-category/?$ stats.php?endpoint=speakers-by-category [L]
+
+    # Redirection pour les checkin
+    RewriteRule ^checkin/([0-9]+)/?$ checkin.php?id=$1 [L]
+    RewriteRule ^checkin/history/?$ checkin.php?endpoint=history [L]
+
+    # Redirection pour l'authentification (login)
+    RewriteRule ^login/?$ auth.php [L]
+
+    # Redirection pour les upload de fichiers
+    RewriteRule ^upload/?$ upload.php [L]
+
+    # Redirection pour les media-assets
+    RewriteRule ^media-assets/?$ media_assets.php [L]
+    RewriteRule ^media-assets/([0-9]+)/?$ media_assets.php?id=$1 [L]
+    RewriteRule ^media-assets/upload-video/?$ media_assets.php?upload_video=true [L]
+
+    # Redirection pour les tickets
+    RewriteRule ^ticket/([0-9]+)/?$ ticket.php?id=$1 [L]
+
+    # Redirection pour le chatbot
+    RewriteRule ^chatbot/?$ chatbot.php [L]
+
+    # ... autres règles à ajouter pour les autres endpoints ...
+
+</IfModule>
