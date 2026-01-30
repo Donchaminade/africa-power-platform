@@ -100,8 +100,7 @@ const AboutComponent: React.FC = () => {
                   <div 
                     className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center cursor-pointer relative"
                     onClick={() => setIsVideoModalOpen(true)}
-                  
-                    {/* You might want a proper thumbnail here if available. For now, a generic play icon on a dark background */}
+                  > {/* You might want a proper thumbnail here if available. For now, a generic play icon on a dark background */}
                     <i className="fas fa-play-circle text-brand-green text-7xl relative z-10 play-button-animation"></i>
                     {/* Optional: if there's an image for the video thumbnail, use it here */}
                     {/* <img src="URL_TO_VIDEO_THUMBNAIL" alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover"/> */}
