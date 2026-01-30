@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 
@@ -25,9 +26,9 @@ const Footer: React.FC = () => {
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-4 gap-12 mb-12">
                     <div>
-                        <a href="#" className="flex items-center gap-2 mb-4">
+                        <Link to="/" className="flex items-center gap-2 mb-4">
                            <span className="text-xl font-bold tracking-tight">Africa Power <span className="text-brand-green">Platform</span></span>
-                        </a>
+                        </Link>
                         <p className="text-gray-500 dark:text-gray-400 text-sm">
                             {t('footer.tagline')}
                         </p>
@@ -35,12 +36,12 @@ const Footer: React.FC = () => {
                     <div>
                         <h4 className="font-bold mb-4">{t('footer.nav_title')}</h4>
                         <ul className="space-y-2 text-gray-500 dark:text-gray-400">
-                            <li><a href="#about" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.about')}</a></li>
-                            <li><a href="#speakers" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.speakers')}</a></li>
-                            <li><a href="#program" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.program')}</a></li>
-                            <li><a href="#register" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.register')}</a></li>
-                            <li><a href="#team" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.team')}</a></li>
-                            <li><a href="#faq" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.faq')}</a></li>
+                            <li><Link to="/" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.about')}</Link></li>
+                            <li><Link to="/speakers" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.speakers')}</Link></li>
+                            <li><Link to="/program" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.program')}</Link></li>
+                            <li><Link to="/register" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.register')}</Link></li>
+                            <li><Link to="/team" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.team')}</Link></li>
+                            <li><Link to="/faq" className="hover:text-black dark:hover:text-white transition-colors">{t('nav.faq')}</Link></li>
                         </ul>
                     </div>
                     <div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageHero from '../components/ui/PageHero';
-import { API_URL } from '../utils/config';
+import { API_URL } from '../admin/config';
 
 const PartnersPage: React.FC = () => {
     const [companyName, setCompanyName] = useState('');

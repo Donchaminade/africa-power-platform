@@ -12,7 +12,7 @@ const Contact: React.FC = () => {
         e.preventDefault();
         setStatus('sending');
         try {
-            await axios.post('http://localhost:4000/api/newsletter', { email });
+            await axios.post('http://localhost/africa-power-platform/api/newsletter', { email });
             setStatus('success');
             setEmail('');
         } catch (error) {

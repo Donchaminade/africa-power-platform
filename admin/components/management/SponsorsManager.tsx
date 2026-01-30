@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 import axios from 'axios'; // Import axios
 
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 
 interface Sponsor {
     id: number;

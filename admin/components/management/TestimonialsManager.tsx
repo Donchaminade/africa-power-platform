@@ -4,7 +4,7 @@ import Modal from '../ui/Modal';
 import { AuthUser } from '../Dashboard';
 import axios from 'axios'; // Import axios
 
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 
 interface Testimonial {
     id: number;

@@ -64,7 +64,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 
 
 
-import { API_URL } from '../../utils/config';
+import { API_URL } from '../config';
 
 
 

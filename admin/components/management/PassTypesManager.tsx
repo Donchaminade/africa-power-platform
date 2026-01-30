@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-
+import { API_URL } from '../../config';
 import axios from 'axios';
-
 import { PassType } from '../../../utils/types';
 
 
@@ -33,7 +32,7 @@ const PassTypesManager: React.FC = () => {
 
     try {
 
-      const response = await axios.get('http://localhost:4000/api/passes?all=true');
+      const response = await axios.get('${API_URL}/passes?all=true');
 
       setPassTypes(response.data);
 
@@ -69,7 +68,7 @@ const PassTypesManager: React.FC = () => {
 
       try {
 
-        await axios.delete(`http://localhost:4000/api/passes/${id}`);
+        await axios.delete(`${API_URL}/passes/${id}`);
 
         fetchPassTypes();
 
@@ -131,11 +130,11 @@ const PassTypesManager: React.FC = () => {
 
       if (editingPass.id) {
 
-        await axios.put(`http://localhost:4000/api/passes/${editingPass.id}`, editingPass);
+        await axios.put(`${API_URL}/passes/${editingPass.id}`, editingPass);
 
       } else {
 
-        await axios.post('http://localhost:4000/api/passes', editingPass);
+        await axios.post('${API_URL}/passes', editingPass);
 
       }
 

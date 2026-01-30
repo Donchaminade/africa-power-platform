@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 interface MediaAsset {
   id: number;
@@ -36,7 +37,7 @@ const MediaAssetsManager: React.FC = () => {
   const fetchMediaAssets = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4000/api/media-assets');
+      const response = await axios.get(`${API_URL}/media-assets`);
       setAssets(response.data);
       setError(null);
     } catch (err) {
@@ -77,7 +78,7 @@ const MediaAssetsManager: React.FC = () => {
     });
 
     try {
-      await axios.post('http://localhost:4000/api/media-assets', formData, {
+      await axios.post(`${API_URL}/media-assets`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -98,7 +99,7 @@ const MediaAssetsManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet actif média ?')) {
       try {
-        await axios.delete(`http://localhost:4000/api/media-assets/${id}`);
+        await axios.delete(`${API_URL}/media-assets/${id}`);
         fetchMediaAssets();
       } catch (err) {
         setError('Impossible de supprimer l\'actif média.');

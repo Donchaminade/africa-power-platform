@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 interface PartnershipRequest {
   id: number;
@@ -25,7 +26,7 @@ const PartnershipManager: React.FC = () => {
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4000/api/partnership-requests');
+      const response = await axios.get(`${API_URL}/partnership-requests`);
       setRequests(response.data);
       setError(null);
     } catch (err) {
@@ -39,7 +40,7 @@ const PartnershipManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) {
       try {
-        await axios.delete(`http://localhost:4000/api/partnership-requests/${id}`);
+        await axios.delete(`${API_URL}/partnership-requests/${id}`);
         setRequests(requests.filter(req => req.id !== id));
       } catch (err) {
         setError('Impossible de supprimer la demande.');

@@ -210,7 +210,7 @@ Les scripts SQL dans `databases/` définissent les tables pour :
 
 ## API Endpoints (Aperçu)
 
-Le backend expose une API RESTful accessible via `http://localhost:4000/api/`.
+Le backend expose une API RESTful accessible via `http://localhost/africa-power-platform/api/`.
 Quelques endpoints clés :
 *   `/api/settings` : GET/PUT pour les paramètres globaux du site.
 *   `/api/speakers` : CRUD pour les intervenants.

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 interface Subscriber {
   id: number;
@@ -20,7 +21,7 @@ const NewsletterManager: React.FC = () => {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4000/api/newsletter?all=true');
+      const response = await axios.get(`${API_URL}/newsletter?all=true`);
       setSubscribers(response.data);
       setError(null);
     } catch (err) {
@@ -34,7 +35,7 @@ const NewsletterManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet abonné ?')) {
       try {
-        await axios.delete(`http://localhost:4000/api/newsletter/${id}`);
+        await axios.delete(`${API_URL}/newsletter/${id}`);
         setSubscribers(subscribers.filter(sub => sub.id !== id));
       } catch (err) {
         setError('Impossible de supprimer l\'abonné.');

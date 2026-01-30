@@ -90,6 +90,8 @@ export interface SeoSettings {
 }
 
 export interface Registration {
+    job_title: string;
+    country: string;
     id: number;
     first_name: string;
     last_name: string;

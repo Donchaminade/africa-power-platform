@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 interface ContactMessage {
   id: number;
@@ -24,7 +25,7 @@ const ContactManager: React.FC = () => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4000/api/contact');
+      const response = await axios.get('`${API_URL}/contact`');
       setMessages(response.data);
       setError(null);
     } catch (err) {
@@ -38,7 +39,7 @@ const ContactManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) {
       try {
-        await axios.delete(`http://localhost:4000/api/contact/${id}`);
+        await axios.delete(`${API_URL}/contact/${id}`);
         setMessages(messages.filter(msg => msg.id !== id));
       } catch (err) {
         setError('Impossible de supprimer le message.');

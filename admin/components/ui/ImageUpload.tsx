@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 
 interface ImageUploadProps {
     onUploadSuccess: (filePath: string) => void;

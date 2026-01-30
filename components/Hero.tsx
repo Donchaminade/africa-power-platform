@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 
@@ -94,9 +95,9 @@ const Hero: React.FC = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#register" className="bg-brand-green text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-green-700 transition-all hover:scale-105">
+          <Link to="/register" className="bg-brand-green text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-green-700 transition-all hover:scale-105">
             <i className="fas fa-ticket-alt mr-2"></i>{t('hero.register_button')}
-          </a>
+          </Link>
           <a href="#about" className="border-2 border-white text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-black transition-all">
             <i className="fas fa-info-circle mr-2"></i>{t('hero.discover_button')}
           </a>

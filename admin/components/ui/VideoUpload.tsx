@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 
 interface VideoUploadProps {
     onUploadSuccess: (videoUrl: string) => void;

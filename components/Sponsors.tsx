@@ -4,6 +4,7 @@ import { Sponsor } from '../utils/types';
 import { API_URL } from '../utils/config';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Link } from 'react-router-dom';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -99,9 +100,9 @@ const Sponsors: React.FC = () => {
                 )}
 
                 <div className="text-center mt-20">
-                    <a href="#contact" className="inline-flex items-center justify-center border-2 border-brand-green text-brand-green px-8 py-3 rounded-full font-semibold hover:bg-brand-green hover:text-white transition-all duration-300 transform hover:scale-105">
+                    <Link to="/contact" className="inline-flex items-center justify-center border-2 border-brand-green text-brand-green px-8 py-3 rounded-full font-semibold hover:bg-brand-green hover:text-white transition-all duration-300 transform hover:scale-105">
                         {t('sponsors.button')} <i className="fas fa-arrow-right ml-2"></i>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

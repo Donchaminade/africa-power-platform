@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { ProgramItem } from '../utils/types';
-import { API_URL } from '../utils/config';
+import { API_URL } from '../admin/config';
 
 const Timeline: React.FC<{ items: ProgramItem[] }> = ({ items }) => (
     <div className="relative border-l-2 border-brand-green/30 pl-8 space-y-12">

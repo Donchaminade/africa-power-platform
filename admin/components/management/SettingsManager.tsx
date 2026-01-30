@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 import ImageUpload from '../ui/ImageUpload'; // Assuming you have an ImageUpload component
 import VideoUpload from '../ui/VideoUpload'; // Import VideoUpload component
 import { useTranslation } from '../../../contexts/LanguageContext'; // Import useTranslation

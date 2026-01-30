@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../config';
 
 interface ContentBlock {
   id: number;
@@ -24,7 +25,7 @@ const ContentBlocksManager: React.FC = () => {
   const fetchContentBlocks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4000/api/content-blocks');
+      const response = await axios.get(`${API_URL}/content-blocks`);
       setContentBlocks(response.data);
       setError(null);
     } catch (err) {
@@ -42,7 +43,7 @@ const ContentBlocksManager: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce bloc de contenu ?')) {
       try {
-        await axios.delete(`http://localhost:4000/api/content-blocks/${id}`);
+        await axios.delete(`${API_URL}/content-blocks/${id}`);
         fetchContentBlocks();
       } catch (err) {
         setError('Impossible de supprimer le bloc de contenu.');
@@ -67,9 +68,9 @@ const ContentBlocksManager: React.FC = () => {
 
     try {
       if (editingBlock.id) {
-        await axios.put(`http://localhost:4000/api/content-blocks/${editingBlock.id}`, editingBlock);
+        await axios.put(`${API_URL}/content-blocks/${editingBlock.id}`, editingBlock);
       } else {
-        await axios.post('http://localhost:4000/api/content-blocks', editingBlock);
+        await axios.post(`${API_URL}/content-blocks`, editingBlock);
       }
       setEditingBlock(null);
       fetchContentBlocks();

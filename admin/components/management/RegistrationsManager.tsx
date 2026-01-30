@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import Pagination from '../ui/Pagination';
 import Modal from '../ui/Modal'; // Import the Modal component
-import { API_URL } from "../../../utils/config";
+import { API_URL } from "../../config";
 import { Registration } from '../../../utils/types'; // Use shared Registration interface
 import axios from 'axios'; // Import axios
+import { generateClientSideTicketPdf } from '@/src/utils/generateTicketPdf';
 
 // Custom hook for debouncing
 export const useDebounce = (value: string, delay: number) => {
@@ -49,15 +50,25 @@ const RegistrationsManager: React.FC = () => {
                 url.searchParams.append('search', search);
             }
             
-            const response = await axios.get(url.toString()); // Changed to axios
-            const result = await response.data; // Changed for axios
+            const response = await axios.get(url.toString());
+            const result = response.data;
+
+            // --- START DEBUGGING LOG ---
+            console.log("API Response:", response);
+            console.log("Response Data:", result);
+            // --- END DEBUGGING LOG ---
+
+            if (!result || typeof result !== 'object' || !result.pagination) {
+                throw new Error("API response is not in the expected format. Received: " + JSON.stringify(result));
+            }
             
-            setRegistrations(result.data);
+            setRegistrations(result.data || []);
             setTotalPages(result.pagination.totalPages);
             setTotalItems(result.pagination.totalItems);
             setCurrentPage(result.pagination.currentPage);
 
         } catch (err) {
+            console.error("Error fetching registrations:", err);
             setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue lors du chargement des inscriptions.');
         } finally {
             setIsLoading(false);
@@ -83,19 +94,9 @@ const RegistrationsManager: React.FC = () => {
             setMessage({ type: 'error', text: 'Aucun ID d\'inscription disponible pour le téléchargement du ticket.' });
             return;
         }
+        console.log("Downloading ticket for ID:", registrationId); // Added for diagnosis
         try {
-            const response = await axios.get(`${API_URL}/ticket/${registrationId}`, {
-                responseType: 'blob', // Important for downloading files
-            });
-
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `ticket-${registrationId}.pdf`); // Or whatever filename you want
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode?.removeChild(link);
-            window.URL.revokeObjectURL(url); // Clean up the URL
+            await generateClientSideTicketPdf(registrationId); // Call the new utility function
 
             setMessage({ type: 'success', text: 'Le ticket a été téléchargé avec succès !' });
         } catch (err) {
@@ -361,7 +362,7 @@ const RegistrationsManager: React.FC = () => {
                         <select name="pass_type" defaultValue={editingRegistration?.pass_type || 'conference'} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white" required>
                             <option value="conference">Pass Conférence</option>
                             <option value="full">Pass Complet</option>
-                            <option value="bootcamp">Pass Bootcamp</option>
+                            <option value="bootcamp_applicant">Pass Bootcamp</option>
                         </select>
                     </div>
                     {editingRegistration && ( // Only show on edit

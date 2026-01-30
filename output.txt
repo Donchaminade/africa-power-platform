@@ -1,0 +1,6 @@
+
+Mettez le fichier `qrlib.php` téléchargé dans le répertoire suivant :
+
+`api/fpdf/qrcode/qrlib.php`
+
+Il remplacera le fichier *placeholder* que j'ai créé. Assurez-vous d'avoir le contenu complet et correct de la bibliothèque `phpqrcode` dans ce fichier.

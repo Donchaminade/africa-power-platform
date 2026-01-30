@@ -1,10 +1,8 @@
-
-
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dashboard from './components/Dashboard';
-import { LanguageProvider } from '../contexts/LanguageContext'; // Import LanguageProvider
-import { translations } from '../locales/translations'; // Import translations
+import { LanguageProvider } from '../contexts/LanguageContext';
+import { translations } from '../locales/translations';
 
 const AppGate: React.FC = () => {
     useEffect(() => {
@@ -22,7 +20,7 @@ const AppGate: React.FC = () => {
     }
 
     return <Dashboard />;
-}
+};
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 import { Registration } from '../../../utils/types'; // Using the shared Registration interface
 import { useDebounce } from './RegistrationsManager'; // Re-use the debounce hook
 import Modal from '../ui/Modal'; // Import Modal for potential future use or consistency
@@ -24,7 +24,7 @@ export const CheckinManager: React.FC = () => {
             }
             const response = await axios.get(url.toString()); // Changed to axios
             const result = await response.data; // Changed for axios
-            setRegistrations(result.data || result); 
+            setRegistrations(result.data || []); 
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue.');
         } finally {

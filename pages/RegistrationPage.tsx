@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
-import { API_URL } from '../utils/config';
 import { PassType } from '../utils/types';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 import axios from 'axios'; // Ensure axios is imported
 import Modal from '../components/ui/Modal'; // Import the Modal component
+import { API_URL } from '../admin/config'; // Import API_URL from config
+import { generateClientSideTicketPdf } from '@/src/utils/generateTicketPdf'; // Import the new utility
 
 const RegistrationPage: React.FC = () => {
     const { t, language } = useTranslation();
@@ -143,18 +144,8 @@ const RegistrationPage: React.FC = () => {
         }
         console.log("Downloading ticket for ID:", ticketId); // Added for diagnosis
         try {
-            const response = await axios.get(`${API_URL}/ticket/${ticketId}`, {
-                responseType: 'blob', // Important for downloading files
-            });
+            await generateClientSideTicketPdf(ticketId!); // Call the new utility function
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `ticket-${ticketId}.pdf`); // Or whatever filename you want
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode?.removeChild(link);
-            window.URL.revokeObjectURL(url); // Clean up the URL
 
             setHasDownloadedTicket(true);
             setMessage({ type: 'success', text: 'Votre ticket a été téléchargé avec succès !' });
@@ -306,19 +297,19 @@ const RegistrationPage: React.FC = () => {
                                     disabled={isFormDisabled} />
                             </div>
                             <div>
-                                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entreprise (Optionnel)</label>
+                                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entreprise (ou Etudiant?)</label>
                                 <input type="text" id="company" value={company} onChange={(e) => setCompany(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
                                     disabled={isFormDisabled} />
                             </div>
                             <div>
-                                <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre du Poste (Optionnel)</label>
+                                <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Profession (Optionnel)</label>
                                 <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
                                     disabled={isFormDisabled} />
                             </div>
                             <div>
-                                <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pays (Optionnel)</label>
+                                <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pays</label>
                                 <input type="text" id="country" value={country} onChange={(e) => setCountry(e.target.value)} 
                                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
                                     disabled={isFormDisabled} />

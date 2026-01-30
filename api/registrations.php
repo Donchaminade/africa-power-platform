@@ -1,30 +1,26 @@
 <?php
 require_once 'db.php';
-require_once 'pdf_generator.php'; // Will create this later for PDF generation
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 $id = null;
-$export_pdf = false;
+$request_uri_parts = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
-// Determine if it's an /api/registrations/{id} or /api/registrations/export/pdf
-if (isset($request_uri[count($request_uri) - 1]) && is_numeric($request_uri[count($request_uri) - 1])) {
-    $id = (int)$request_uri[count($request_uri) - 1];
-} elseif (isset($request_uri[count($request_uri) - 2]) && $request_uri[count($request_uri) - 2] === 'export' && $request_uri[count($request_uri) - 1] === 'pdf') {
-    $export_pdf = true;
+// Determine if it's an /api/registrations/{id}
+if (isset($request_uri_parts[count($request_uri_parts) - 1]) && is_numeric($request_uri_parts[count($request_uri_parts) - 1])) {
+    $id = (int)$request_uri_parts[count($request_uri_parts) - 1];
 }
-
 
 switch ($method) {
     case 'GET':
-        if ($export_pdf) {
-            handle_export_pdf($mysqli); // Will implement this function
-        } else {
-            handle_get($mysqli, $id);
-        }
+        handle_get($mysqli, $id);
         break;
     case 'POST':
         handle_post($mysqli);
+        break;
+    case 'PUT':
+        handle_put($mysqli, $id);
         break;
     case 'DELETE':
         handle_delete($mysqli, $id);
@@ -114,11 +110,30 @@ function handle_post($mysqli) {
     $company = $data['company'] ?? '';
     $job_title = $data['job_title'] ?? '';
     $country = $data['country'] ?? '';
-    $pass_type = $data['pass_type'] ?? 'conference';
+    $pass_type_input = $data['pass_type'] ?? '';
+
+    $pass_type = '';
+    $valid_pass_types = ['conference', 'full', 'bootcamp_applicant'];
+
+    // Case 1: Input is already the correct enum value (from admin panel)
+    if (in_array($pass_type_input, $valid_pass_types)) {
+        $pass_type = $pass_type_input;
+    } 
+    // Case 2: Input is a display name (from public form), map it
+    else {
+        $pass_type_name_lower = strtolower($pass_type_input);
+        if (in_array($pass_type_name_lower, ['pass conférence', 'conference pass'])) {
+            $pass_type = 'conference';
+        } elseif (in_array($pass_type_name_lower, ['pass complet', 'full pass'])) {
+            $pass_type = 'full';
+        } elseif (in_array(strtolower($pass_type_name_lower), ['pass bootcamp', 'bootcamp pass'])) {
+            $pass_type = 'bootcamp_applicant';
+        }
+    }
 
     if (empty($first_name) || empty($last_name) || empty($email) || empty($pass_type)) {
         http_response_code(400);
-        echo json_encode(['message' => 'Certains champs obligatoires n\'ont pas été remplis.']);
+        echo json_encode(['message' => 'Certains champs obligatoires n\'ont pas été remplis ou le type de pass est invalide.']);
         return;
     }
 
@@ -157,6 +172,71 @@ function handle_post($mysqli) {
     }
 }
 
+function handle_put($mysqli, $id) {
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(['message' => 'Registration ID is required']);
+        return;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $first_name = $data['first_name'] ?? null;
+    $last_name = $data['last_name'] ?? null;
+    $email = $data['email'] ?? null;
+    $company = $data['company'] ?? '';
+    $job_title = $data['job_title'] ?? '';
+    $country = $data['country'] ?? '';
+    $pass_type = $data['pass_type'] ?? null;
+    $is_checked_in = isset($data['is_checked_in']) ? ($data['is_checked_in'] ? 1 : 0) : 0;
+    
+    if (empty($first_name) || empty($last_name) || empty($email) || empty($pass_type)) {
+        http_response_code(400);
+        echo json_encode(['message' => 'Certains champs obligatoires n\'ont pas été remplis.']);
+        return;
+    }
+
+    try {
+        $stmt = $mysqli->prepare(
+            'UPDATE registrations SET first_name = ?, last_name = ?, email = ?, company = ?, job_title = ?, country = ?, pass_type = ?, is_checked_in = ? WHERE id = ?'
+        );
+        $stmt->bind_param(
+            "sssssssii",
+            $first_name,
+            $last_name,
+            $email,
+            $company,
+            $job_title,
+            $country,
+            $pass_type,
+            $is_checked_in,
+            $id
+        );
+
+        if ($stmt->execute()) {
+            if ($stmt->affected_rows > 0) {
+                http_response_code(200);
+                echo json_encode(['message' => 'Inscription mise à jour avec succès.']);
+            } else {
+                http_response_code(404);
+                echo json_encode(['message' => 'Inscription non trouvée ou aucune modification effectuée.']);
+            }
+        } else {
+            if ($mysqli->errno == 1062) {
+                http_response_code(409);
+                echo json_encode(['message' => 'Cette adresse e-mail est déjà utilisée par un autre participant.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Erreur serveur lors de la mise à jour de l\'inscription.']);
+            }
+        }
+        $stmt->close();
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['message' => 'Erreur serveur lors de la mise à jour de l\'inscription.', 'error' => $e->getMessage()]);
+    }
+}
+
 function handle_delete($mysqli, $id) {
     if (!$id) {
         http_response_code(400);
@@ -187,12 +267,7 @@ function handle_delete($mysqli, $id) {
     }
 }
 
-function handle_export_pdf($mysqli) {
-    // This function will be implemented later, requiring a PHP PDF library.
-    // For now, it's a placeholder.
-    http_response_code(501); // Not Implemented
-    echo json_encode(['message' => 'PDF export not yet implemented in PHP.']);
-}
+
 
 $mysqli->close();
 ?>

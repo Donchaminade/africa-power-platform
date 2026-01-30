@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 import { AuthUser } from '../Dashboard';
 
-import { API_URL } from '../../../utils/config';
+import { API_URL } from '../../config';
 
 interface GalleryImage {
     id: number;
