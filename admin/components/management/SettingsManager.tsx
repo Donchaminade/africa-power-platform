@@ -187,6 +187,7 @@ const SettingsManager: React.FC = () => {
                          }
              
                          setMessage({ type: 'success', text: 'Paramètres mis à jour avec succès !' });
+             setIsFormVisible(false); // New: Close form on successful save
                      } catch (err) {
                                      setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue.' });
                                  } finally {
