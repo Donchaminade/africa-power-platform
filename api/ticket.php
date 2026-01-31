@@ -83,7 +83,7 @@ try {
     $pdf->SetAutoPageBreak(false);
     $pdf->SetMargins(10, 10, 10);
 
-    $logo_path = realpath(dirname(dirname(__FILE__)) . $logo_image_url);
+    $logo_path = realpath(dirname(dirname(__FILE__)) . '/public' . $logo_image_url);
     if ($logo_path && file_exists($logo_path) && !is_dir($logo_path)) {
         $pdf->Image($logo_path, 10, 10, 30);
         $pdf->SetY(20);

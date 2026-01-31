@@ -206,7 +206,7 @@ export const RegistrationsManager: React.FC = () => {
                 header: true,
                 delimiter: ';' // Use semicolon for better Excel compatibility in French locales
             });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
