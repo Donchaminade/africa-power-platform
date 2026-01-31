@@ -12,24 +12,24 @@ if (isset($_GET['export_pdf'])) {
             $this->logoPath = $path;
         }
 
-        function Header() {
-            if ($this->logoPath && file_exists($this->logoPath)) {
-                $this->Image($this->logoPath, 10, 6, 30);
-                $this->Ln(5);
-            }
-            $this->SetFont('Arial', 'B', 12);
-            $this->Cell(0, 10, 'Liste des Inscriptions - Africa Power Platform', 0, 1, 'C');
-            $this->Ln(5);
-
-            $this->SetFont('Arial', 'B', 8);
-            $this->SetFillColor(230, 230, 230);
-            $this->Cell(10, 7, 'ID', 1, 0, 'C', true);
-            $this->Cell(50, 7, 'Nom', 1, 0, 'C', true);
-            $this->Cell(65, 7, 'Email', 1, 0, 'C', true);
-            $this->Cell(40, 7, 'Pass', 1, 0, 'C', true);
-            $this->Cell(20, 7, 'Check-in', 1, 0, 'C', true);
-            $this->Cell(30, 7, 'Date Check-in', 1, 1, 'C', true);
+function Header() {
+        if ($this->logoPath && file_exists($this->logoPath)) {
+            $this->Image($this->logoPath, 10, 8, 15);
         }
+        $this->SetY(15);
+        $this->SetFont('Arial', 'B', 16);
+        $this->Cell(0, 10, 'Liste des Inscriptions - Africa Power Platform', 0, 1, 'C');
+        $this->Ln(5);
+
+        $this->SetFont('Arial', 'B', 8);
+        $this->SetFillColor(230, 230, 230); // Light gray background for header
+        $this->Cell(10, 7, 'ID', 1, 0, 'C', true);
+        $this->Cell(50, 7, 'Nom', 1, 0, 'C', true);
+        $this->Cell(65, 7, 'Email', 1, 0, 'C', true);
+        $this->Cell(40, 7, 'Pass', 1, 0, 'C', true);
+        $this->Cell(20, 7, 'Check-in', 1, 0, 'C', true);
+        $this->Cell(30, 7, 'Date Check-in', 1, 1, 'C', true);
+    }
 
         function Footer() {
             $this->SetY(-15);

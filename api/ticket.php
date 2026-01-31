@@ -84,9 +84,9 @@ try {
     $pdf->SetMargins(10, 10, 10);
 
     $logo_path = realpath(dirname(dirname(__FILE__)) . '/public' . $logo_image_url);
-    if ($logo_path && file_exists($logo_path) && !is_dir($logo_path)) {
-        $pdf->Image($logo_path, 10, 10, 30);
-        $pdf->SetY(20);
+    if ($logo_path) {
+        $pdf->Image($logo_path, 10, 10, 20);
+        $pdf->SetY(15);
     }
 
     // -- PDF Header --
