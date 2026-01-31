@@ -48,18 +48,47 @@ function handle_put($mysqli) {
     try {
         $mysqli->begin_transaction();
         foreach ($updatedSettings as $key => $value) {
+            // Debugging: Log key and value being processed
+            error_log("Processing setting: Key=" . $key . ", Value=" . $value);
+
             $stmt = $mysqli->prepare(
                 'INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'
             );
-            $stmt->bind_param("ss", $key, $value);
-            $stmt->execute();
+            if (!$stmt) {
+                // Debugging: Log prepare error
+                error_log("Prepare failed: " . $mysqli->error);
+                throw new Exception("Prepare failed: " . $mysqli->error . " Query: " . 
+                    'INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'); // Added query to error
+            }
+            // Ensure value is correctly cast to string if it might be non-string (e.g. null, boolean)
+            $bind_value = (string)$value; 
+            $stmt->bind_param("ss", $key, $bind_value);
+            if (!$stmt->execute()) {
+                // Debugging: Log execute error
+                error_log("Execute failed for key " . $key . ": " . $stmt->error);
+                throw new Exception("Execute failed for key " . $key . ": " . $stmt->error);
+            }
             $stmt->close();
         }
         $mysqli->commit();
+        error_log("Transaction committed successfully."); // New log after commit
+
+        // --- NEW: Add a SELECT to verify from PHP's perspective ---
+        $verify_result = $mysqli->query("SELECT setting_key, setting_value FROM site_settings WHERE setting_key = 'speaker_form_link'");
+        if ($verify_result && $verify_result->num_rows > 0) {
+            $verified_setting = $verify_result->fetch_assoc();
+            error_log("PHP verified setting: Key=" . $verified_setting['setting_key'] . ", Value=" . $verified_setting['setting_value']);
+        } else {
+            error_log("PHP could not verify setting 'speaker_form_link' immediately after commit.");
+        }
+        // --- END NEW ---
+
         http_response_code(200);
         echo json_encode(['message' => 'Paramètres mis à jour avec succès.']);
     } catch (Exception $e) {
         $mysqli->rollback();
+        // Debugging: Log transaction or general exception error
+        error_log("Transaction failed: " . $e->getMessage());
         http_response_code(500);
         echo json_encode(['message' => 'Erreur serveur lors de la mise à jour des paramètres.', 'error' => $e->getMessage()]);
     }

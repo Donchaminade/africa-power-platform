@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { Speaker } from '../utils/types';
 import { API_URL, UPLOADS_URL } from '../utils/config';
+import { useSettings } from '../contexts/SettingsContext'; // New import
 
 const SpeakerCard: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
     const getFullImageUrl = (path: string) => {
@@ -38,6 +39,7 @@ const SpeakersPage: React.FC = () => {
     const [speakers, setSpeakers] = useState<Speaker[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { settings, isLoading: settingsLoading } = useSettings(); // New: Get settings and their loading state
 
     useEffect(() => {
         const fetchSpeakers = async () => {
@@ -58,12 +60,33 @@ const SpeakersPage: React.FC = () => {
         fetchSpeakers();
     }, []);
 
+    // New: Define descriptive text and button content for Speaker
+    const speakerText = "Vous êtes un expert de la Power Platform et souhaitez partager votre expérience lors de l'événement ? Proposez votre intervention !";
+    const speakerButton = settings.speaker_form_link ? (
+      <a 
+        href={settings.speaker_form_link} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="mt-6 inline-block bg-brand-green text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105"
+      >
+        Devenir Intervenant
+      </a>
+    ) : null;
+
     return (
         <div>
             <PageHero
                 title={<>Nos <span className="text-brand-green">Intervenants</span></>}
                 subtitle="Découvrez les experts qui façonneront l'avenir de la technologie en Afrique."
-            />
+            > {/* Children for PageHero */}
+                {/* Display button always for diagnosis */}
+                <div className="mt-8">
+                    <p className="text-lg md:text-xl text-gray-300 mb-4 px-4 max-w-2xl mx-auto">
+                        {speakerText}
+                    </p>
+                    {speakerButton || <p className="text-red-300">Lien Speaker non configuré dans l'administration.</p>}
+                </div>
+            </PageHero>
             <section className="py-24 bg-white dark:bg-black">
                 <div className="max-w-7xl mx-auto px-6">
                     {isLoading && <div className="text-center">Chargement des speakers...</div>}

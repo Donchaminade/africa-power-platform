@@ -17,6 +17,9 @@ interface SiteSettings {
     event_participants_count: string; // New Stat
     event_days_count: string; // New Stat
     event_workshops_count: string; // New Stat
+    speaker_form_link: string; // New
+    volunteer_form_link: string; // New
+    sponsor_form_link: string; // New
     // Add other settings you want to manage
     [key: string]: string; // For other dynamic settings
 }
@@ -30,10 +33,26 @@ const SettingsManager: React.FC = () => {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null); // For general messages
     const [isFormVisible, setIsFormVisible] = useState(false); // New state for form visibility
     const [originalSettings, setOriginalSettings] = useState<SiteSettings | null>(null); // To revert changes on cancel
+    const [dynamicSettings, setDynamicSettings] = useState<{ key: string, value: string }[]>([]); // New state for dynamic settings
 
     useEffect(() => {
         fetchSettings();
     }, []);
+
+    // Define fixed settings keys
+    const fixedSettingKeys = [
+        'event_logo_url', 'event_date', 'event_venue', 'registration_start_date', 
+        'registration_end_date', 'about_video_url', 'event_edition_number',
+        'event_speakers_count', 'event_participants_count', 'event_days_count',
+        'event_workshops_count', 'speaker_form_link', 'volunteer_form_link', 'sponsor_form_link',
+        'contact_email', 'contact_phone', 'contact_address',
+        'social_linkedin_url', 'social_facebook_url', 'social_twitter_url',
+        'event_location_google_maps_embed',
+        // SEO settings keys
+        'seo_meta_title_fr', 'seo_meta_title_en',
+        'seo_meta_description_fr', 'seo_meta_description_en',
+        'seo_meta_keywords_fr', 'seo_meta_keywords_en',
+    ];
 
     const fetchSettings = async () => {
         setIsLoading(true);
@@ -73,8 +92,38 @@ const SettingsManager: React.FC = () => {
             if (!data.event_workshops_count) {
                 data.event_workshops_count = '';
             }
+            if (!data.speaker_form_link) {
+                data.speaker_form_link = '';
+            }
+            if (!data.volunteer_form_link) {
+                data.volunteer_form_link = '';
+            }
+            if (!data.sponsor_form_link) {
+                data.sponsor_form_link = '';
+            }
+            // Initialize other fixed settings
+            if (!data.contact_email) data.contact_email = '';
+            if (!data.contact_phone) data.contact_phone = '';
+            if (!data.contact_address) data.contact_address = '';
+            if (!data.social_linkedin_url) data.social_linkedin_url = '';
+            if (!data.social_facebook_url) data.social_facebook_url = '';
+            if (!data.social_twitter_url) data.social_twitter_url = '';
+            if (!data.event_location_google_maps_embed) data.event_location_google_maps_embed = '';
+            if (!data.seo_meta_title_fr) data.seo_meta_title_fr = '';
+            if (!data.seo_meta_title_en) data.seo_meta_title_en = '';
+            if (!data.seo_meta_description_fr) data.seo_meta_description_fr = '';
+            if (!data.seo_meta_description_en) data.seo_meta_description_en = '';
+            if (!data.seo_meta_keywords_fr) data.seo_meta_keywords_fr = '';
+            if (!data.seo_meta_keywords_en) data.seo_meta_keywords_en = '';
+
+
+            const dynamic = Object.entries(data)
+                .filter(([key]) => !fixedSettingKeys.includes(key))
+                .map(([key, value]) => ({ key, value: String(value) }));
+
             setSettings(data);
             setOriginalSettings(data); // Save original settings to revert
+            setDynamicSettings(dynamic);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue.');
         } finally {
@@ -97,6 +146,25 @@ const SettingsManager: React.FC = () => {
                      setMessage({ type: 'success', text: 'Vidéo téléchargée avec succès ! N\'oubliez pas de sauvegarder les paramètres.' });
                  };
              
+                // New: Handle dynamic settings changes
+                const handleDynamicSettingChange = (index: number, field: 'key' | 'value', newValue: string) => {
+                    setDynamicSettings(prev => {
+                        const newDynamicSettings = [...prev];
+                        newDynamicSettings[index] = { ...newDynamicSettings[index], [field]: newValue };
+                        return newDynamicSettings;
+                    });
+                };
+
+                // New: Add a new dynamic setting field
+                const handleAddDynamicField = () => {
+                    setDynamicSettings(prev => [...prev, { key: '', value: '' }]);
+                };
+
+                // New: Remove a dynamic setting field
+                const handleRemoveDynamicField = (index: number) => {
+                    setDynamicSettings(prev => prev.filter((_, i) => i !== index));
+                };
+
                  const handleSaveSettings = async (e: React.FormEvent) => {
                      e.preventDefault();
                      if (!settings) return;
@@ -104,7 +172,15 @@ const SettingsManager: React.FC = () => {
                      setMessage(null);
                      setIsSaving(true);
                      try {
-                         const response = await axios.put(`${API_URL}/settings`, settings); // Changed to axios
+                        // Combine fixed and dynamic settings
+                        const combinedSettings: { [key: string]: string } = { ...settings };
+                        dynamicSettings.forEach(dynamic => {
+                            if (dynamic.key.trim() !== '') { // Only add if key is not empty
+                                combinedSettings[dynamic.key] = dynamic.value;
+                            }
+                        });
+
+                         const response = await axios.put(`${API_URL}/settings`, combinedSettings); // Send combined settings
              
                          if (response.status < 200 || response.status >= 300) { // Changed for axios
                              throw new Error(response.data.message || 'Échec de la sauvegarde des paramètres.');
@@ -208,6 +284,44 @@ const SettingsManager: React.FC = () => {
                             />
                         </div>
 
+                        {/* New fields for form links */}
+                        <div>
+                            <label htmlFor="speaker_form_link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lien formulaire Speaker</label>
+                            <input
+                                type="url"
+                                name="speaker_form_link"
+                                id="speaker_form_link"
+                                value={settings?.speaker_form_link || ''}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
+                                placeholder="URL du formulaire Speaker"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="volunteer_form_link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lien formulaire Volontaire</label>
+                            <input
+                                type="url"
+                                name="volunteer_form_link"
+                                id="volunteer_form_link"
+                                value={settings?.volunteer_form_link || ''}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
+                                placeholder="URL du formulaire Volontaire"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="sponsor_form_link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lien formulaire Sponsor</label>
+                            <input
+                                type="url"
+                                name="sponsor_form_link"
+                                id="sponsor_form_link"
+                                value={settings?.sponsor_form_link || ''}
+                                onChange={handleInputChange}
+                                className="mt-1 block w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
+                                placeholder="URL du formulaire Sponsor"
+                            />
+                        </div>
+                        {/* End new fields for form links */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label htmlFor="registration_start_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('settings.registration_start_date')}</label>
@@ -232,6 +346,51 @@ const SettingsManager: React.FC = () => {
                                 />
                             </div>
                         </div>
+
+                        {/* Section for dynamic settings */}
+                        <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Autres Paramètres Personnalisés</h3>
+                            {dynamicSettings.length === 0 && (
+                                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                                    Aucun paramètre personnalisé ajouté. Cliquez sur le bouton "+" pour en ajouter.
+                                </p>
+                            )}
+                            <div className="space-y-4">
+                                {dynamicSettings.map((dynamic, index) => (
+                                    <div key={index} className="flex flex-col md:flex-row gap-2">
+                                        <input
+                                            type="text"
+                                            value={dynamic.key}
+                                            onChange={(e) => handleDynamicSettingChange(index, 'key', e.target.value)}
+                                            className="w-full md:w-1/3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-900 dark:text-white"
+                                            placeholder="Clé (ex: my_custom_setting)"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={dynamic.value}
+                                            onChange={(e) => handleDynamicSettingChange(index, 'value', e.target.value)}
+                                            className="w-full md:w-2/3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-green text-gray-900 dark:text-white"
+                                            placeholder="Valeur"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveDynamicField(index)}
+                                            className="p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                                        >
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleAddDynamicField}
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition flex items-center"
+                            >
+                                <i className="fas fa-plus mr-2"></i> Ajouter un paramètre personnalisé
+                            </button>
+                        </div>
+                        {/* End section for dynamic settings */}
 
                         {/* Nouvelle section pour les statistiques de l'événement */}
                         <div className="pt-6 border-t border-gray-200 dark:border-gray-700">

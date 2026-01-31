@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { TeamMember } from '../utils/types';
 import { API_URL, UPLOADS_URL } from '../utils/config';
+import { useSettings } from '../contexts/SettingsContext'; // New import
 
 const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
   const getFullImageUrl = (path: string) => {
@@ -37,6 +38,8 @@ const TeamPage: React.FC = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { settings, isLoading: settingsLoading } = useSettings(); // New: Get settings and their loading state
+
 
   useEffect(() => {
       const fetchTeam = async () => {
@@ -57,12 +60,33 @@ const TeamPage: React.FC = () => {
       fetchTeam();
   }, []);
 
+  const volunteerText = "Vous souhaitez faire partie de notre équipe de bénévoles et contribuer au succès de l'Africa Power Platform ? Rejoignez-nous !";
+  const volunteerButton = settings.volunteer_form_link ? (
+    <a 
+      href={settings.volunteer_form_link} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="mt-6 inline-block bg-brand-green text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
+    >
+      Devenir bénévole
+    </a>
+  ) : null;
+
+
   return (
     <div>
         <PageHero
             title={<>Notre <span className="text-brand-green">Équipe</span></>}
             subtitle="Les visages derrière l'organisation de l'Africa Power Platform."
-        />
+        > {/* Children for PageHero */}
+            {/* Display button always for diagnosis */}
+            <div className="mt-8">
+                <p className="text-lg md:text-xl text-gray-300 mb-4 px-4 max-w-2xl mx-auto">
+                    {volunteerText}
+                </p>
+                {volunteerButton || <p className="text-red-300">Lien Volontaire non configuré dans l'administration.</p>}
+            </div>
+        </PageHero>
         <section id="team" className="py-24 bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
           <div className="max-w-7xl mx-auto px-6">
             {isLoading && <div className="text-center">Chargement de l'équipe...</div>}

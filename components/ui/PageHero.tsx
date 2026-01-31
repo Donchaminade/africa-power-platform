@@ -10,15 +10,18 @@ interface PageHeroProps {
     title: React.ReactNode;
     subtitle?: string; // Subtitle is optional now
     breadcrumbs?: Breadcrumb[]; // Added breadcrumbs
+    children?: React.ReactNode; // New: Allows passing child elements
 }
 
-const PageHero: React.FC<PageHeroProps> = ({ title, subtitle, breadcrumbs }) => {
+const PageHero: React.FC<PageHeroProps> = ({ title, subtitle, breadcrumbs, children }) => { // Added children
     return (
         <section className="py-20 md:py-32 bg-gradient-to-br from-gray-900 to-black text-white text-center relative overflow-hidden">
             <div className="absolute inset-0 grid-bg opacity-30"></div>
             <div className="relative z-10 max-w-4xl mx-auto px-6">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">{title}</h1>
                 {subtitle && <p className="text-lg md:text-xl text-gray-300 mb-4">{subtitle}</p>}
+
+                {children} {/* New: Render children here */}
 
                 {breadcrumbs && breadcrumbs.length > 0 && (
                     <nav className="flex justify-center text-sm" aria-label="Breadcrumb">

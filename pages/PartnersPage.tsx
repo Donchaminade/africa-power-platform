@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { API_URL } from '../admin/config';
+import { useSettings } from '../contexts/SettingsContext'; // New import
 
 const PartnersPage: React.FC = () => {
     const [companyName, setCompanyName] = useState('');
@@ -10,6 +11,8 @@ const PartnersPage: React.FC = () => {
     const [message, setMessageContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    const { settings, isLoading: settingsLoading } = useSettings(); // New: Get settings and their loading state
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,12 +51,34 @@ const PartnersPage: React.FC = () => {
         }
     };
 
+    // New: Define descriptive text and button content for Sponsor
+    const sponsorText = "Votre entreprise souhaite s'associer à l'Africa Power Platform et bénéficier d'une visibilité unique auprès de professionnels ? Devenez sponsor !";
+    const sponsorButton = settings.sponsor_form_link ? (
+      <a 
+        href={settings.sponsor_form_link} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="mt-6 inline-block bg-white text-brand-green font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105"
+      >
+        Devenir Sponsor
+      </a>
+    ) : null;
+
+
     return (
         <div>
             <PageHero
                 title={<>Devenez <span className="text-brand-green">Partenaire</span></>}
                 subtitle="Associez votre marque à l'innovation et au leadership technologique en Afrique."
-            />
+            > {/* Children for PageHero */}
+                {/* Display button always for diagnosis */}
+                <div className="mt-8">
+                    <p className="text-lg md:text-xl text-gray-300 mb-4 px-4 max-w-2xl mx-auto">
+                        {sponsorText}
+                    </p>
+                    {sponsorButton || <p className="text-red-300">Lien Sponsor non configuré dans l'administration.</p>}
+                </div>
+            </PageHero>
             <section className="py-24 bg-white dark:bg-black">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">

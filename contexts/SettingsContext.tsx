@@ -13,6 +13,9 @@ interface SiteSettings {
     social_facebook_url: string;
     social_twitter_url: string;
     event_location_google_maps_embed: string;
+    speaker_form_link: string; // New
+    volunteer_form_link: string; // New
+    sponsor_form_link: string; // New
     seo_meta_title_fr: string;
     seo_meta_title_en: string;
     seo_meta_description_fr: string;
@@ -34,6 +37,9 @@ const defaultSettings: SiteSettings = {
     social_facebook_url: '',
     social_twitter_url: '',
     event_location_google_maps_embed: '',
+    speaker_form_link: '', // New
+    volunteer_form_link: '', // New
+    sponsor_form_link: '', // New
     seo_meta_title_fr: '',
     seo_meta_title_en: '',
     seo_meta_description_fr: '',

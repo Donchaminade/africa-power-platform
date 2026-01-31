@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from '../contexts/LanguageContext';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 
-const Hero: React.FC = () => {
+interface HeroProps {
+    children?: React.ReactNode; // New: Allows passing child elements
+}
+
+const Hero: React.FC<HeroProps> = ({ children }) => { // Added children as prop
   const { t, language } = useTranslation();
   const { settings, isLoading: settingsLoading, error: settingsError } = useSettings(); // Get settings from context
 
@@ -93,6 +97,8 @@ const Hero: React.FC = () => {
             </div>
           ))}
         </div>
+
+        {children} {/* New: Render children here */}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/register" className="bg-brand-green text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-green-700 transition-all hover:scale-105">
