@@ -84,6 +84,12 @@ function handle_post($mysqli) {
         $stmt = $mysqli->prepare(
             'INSERT INTO media_assets (file_name, file_url, title_fr, title_en, alt_text_fr, alt_text_en, description_fr, description_en, type, mime_type, file_size, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
+        
+        $is_active = 0;
+        if (isset($data['is_active'])) {
+            $is_active = ($data['is_active'] === 'true' || $data['is_active'] === '1' || $data['is_active'] === 1) ? 1 : 0;
+        }
+
         $stmt->bind_param(
             "ssssssssssii",
             $unique_filename,
@@ -97,7 +103,7 @@ function handle_post($mysqli) {
             $data['type'] ?? 'image',
             $file['type'],
             $file['size'],
-            $data['is_active'] ?? 1
+            $is_active
         );
 
         if ($stmt->execute()) {
@@ -107,7 +113,7 @@ function handle_post($mysqli) {
             // If DB insert fails, delete the uploaded file
             unlink($target_file_path);
             http_response_code(500);
-            echo json_encode(['error' => 'Error creating media asset record in DB.']);
+            echo json_encode(['error' => 'Error creating media asset record in DB: ' . $stmt->error]);
         }
         $stmt->close();
     } else {
@@ -156,6 +162,11 @@ function handle_put($mysqli, $id) {
     
     $data = json_decode(file_get_contents('php://input'), true);
 
+    $is_active = 0;
+    if (isset($data['is_active'])) {
+        $is_active = ($data['is_active'] === true || $data['is_active'] === 1 || $data['is_active'] === 'true') ? 1 : 0;
+    }
+
     $stmt = $mysqli->prepare("UPDATE media_assets SET title_fr = ?, title_en = ?, alt_text_fr = ?, alt_text_en = ?, description_fr = ?, description_en = ?, type = ?, is_active = ? WHERE id = ?");
     $stmt->bind_param(
         "sssssssii",
@@ -166,7 +177,7 @@ function handle_put($mysqli, $id) {
         $data['description_fr'] ?? null,
         $data['description_en'] ?? null,
         $data['type'] ?? 'image',
-        $data['is_active'] ?? 1,
+        $is_active,
         $id
     );
 
@@ -174,12 +185,24 @@ function handle_put($mysqli, $id) {
         if ($stmt->affected_rows > 0) {
             echo json_encode(['id' => $id] + $data);
         } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Media asset not found']);
+            // If no rows were affected, it could be that the data was the same, or the asset was not found.
+            // We can add a check to be sure.
+            $check_stmt = $mysqli->prepare("SELECT id FROM media_assets WHERE id = ?");
+            $check_stmt->bind_param("i", $id);
+            $check_stmt->execute();
+            $check_result = $check_stmt->get_result();
+            if ($check_result->num_rows === 0) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Media asset not found']);
+            } else {
+                 // The data was the same, so we can return a success message
+                echo json_encode(['id' => $id] + $data);
+            }
+            $check_stmt->close();
         }
     } else {
         http_response_code(500);
-        echo json_encode(['error' => 'Error updating media asset']);
+        echo json_encode(['error' => 'Error updating media asset: ' . $stmt->error]);
     }
     $stmt->close();
 }

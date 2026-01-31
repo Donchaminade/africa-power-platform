@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 import axios from 'axios'; // Import axios
 
-import { API_URL } from '../../config';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface Sponsor {
     id: number;
@@ -131,6 +131,12 @@ const SponsorsManager: React.FC = () => {
         }
     };
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
+
     const renderContent = () => {
         if (isLoading) return <div className="text-center p-8 text-gray-500">Chargement des sponsors...</div>;
         if (error) return <div className="text-center p-8 text-red-500">Erreur: {error}</div>;
@@ -153,7 +159,7 @@ const SponsorsManager: React.FC = () => {
                         <tr key={sponsor.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                             <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">{sponsor.name}</td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <img src={sponsor.logo_url} alt={sponsor.name} className="h-10 w-auto object-contain" />
+                                <img src={getFullImageUrl(sponsor.logo_url)} alt={sponsor.name} className="h-10 w-auto object-contain" />
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 capitalize">{sponsor.tier}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500 dark:text-blue-400">

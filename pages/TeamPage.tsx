@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { TeamMember } from '../utils/types';
-import { API_URL } from '../utils/config';
+import { API_URL, UPLOADS_URL } from '../utils/config';
 
 const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => {
+  const getFullImageUrl = (path: string) => {
+      if (!path) return ''; // or a placeholder image
+      if (path.startsWith('http')) return path;
+      return `${UPLOADS_URL}${path}`;
+  };
+  
   return (
     <div className="group relative bg-white/5 dark:bg-black/10 backdrop-blur-md border border-white/10 dark:border-black/20 rounded-2xl p-6 text-center shadow-lg transition-all duration-300 hover:bg-white/10 hover:dark:bg-black/20 hover:scale-105">
       <div className="relative w-32 h-32 mx-auto -mt-16 mb-4">
-        <img src={member.image_url} alt={member.name} className="w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-800" />
+        <img src={getFullImageUrl(member.image_url)} alt={member.name} className="w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-800" />
       </div>
       <h3 className="text-xl font-bold">{member.name}</h3>
       <p className="text-brand-green font-semibold mb-4">{member.role_fr}</p>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import { Sponsor } from '../utils/types';
-import { API_URL } from '../utils/config';
+import { API_URL, UPLOADS_URL } from '../utils/config';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
@@ -34,6 +34,12 @@ const Sponsors: React.FC = () => {
 
         fetchSponsors();
     }, []);
+
+    const getFullImageUrl = (path: string) => {
+        if (!path) return ''; // or a placeholder image
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
 
     return (
         <section id="sponsors" className="py-24 bg-gray-50 dark:bg-gray-900/50">
@@ -84,7 +90,7 @@ const Sponsors: React.FC = () => {
                                 <SwiperSlide key={`${sponsor.id}-${index}`}>
                                     <a href={sponsor.website_url || '#'} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center h-40">
                                         <img 
-                                            src={sponsor.logo_url} 
+                                            src={getFullImageUrl(sponsor.logo_url)} 
                                             alt={`${sponsor.name} logo`}
                                             className="max-h-28 max-w-full object-contain"
                                         />

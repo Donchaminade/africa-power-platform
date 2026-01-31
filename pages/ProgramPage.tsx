@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { ProgramItem } from '../utils/types';
-import { API_URL } from '../admin/config';
+import { API_URL } from '../utils/config';
 
 const Timeline: React.FC<{ items: ProgramItem[] }> = ({ items }) => (
     <div className="relative border-l-2 border-brand-green/30 pl-8 space-y-12">
@@ -34,12 +34,17 @@ const ProgramPage: React.FC = () => {
             try {
                 const response = await fetch(`${API_URL}/program`);
                 if (!response.ok) {
-                    throw new Error('Failed to fetch program data.');
+                    const errorData = await response.text();
+                    console.error('Failed to fetch program data:', response.status, errorData);
+                    throw new Error(`Failed to fetch program data. Status: ${response.status}. Body: ${errorData}`);
                 }
                 const data: ProgramItem[] = await response.json();
                 setProgramItems(data.filter(item => item.is_active));
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'An unknown error occurred');
+                console.error(err);
+                // More detailed error for on-screen display
+                const detailedError = err instanceof Error ? `${err.message}\n${err.stack}` : 'An unknown error occurred';
+                setError(detailedError);
             } finally {
                 setIsLoading(false);
             }
@@ -57,7 +62,7 @@ const ProgramPage: React.FC = () => {
             <section className="py-24 bg-white dark:bg-black">
                 <div className="max-w-7xl mx-auto px-6">
                     {isLoading && <div className="text-center">Chargement du programme...</div>}
-                    {error && <div className="text-center text-red-500">Erreur: {error}</div>}
+                    {error && <div className="text-center text-red-500 bg-red-100 dark:bg-red-900/20 p-4 rounded-md"><h3 className='font-bold text-lg mb-2'>Une erreur est survenue :</h3><pre className="whitespace-pre-wrap text-left">{error}</pre></div>}
 
                     {!isLoading && !error && (
                         <div className="grid md:grid-cols-2 gap-x-16 gap-y-8">
@@ -65,14 +70,13 @@ const ProgramPage: React.FC = () => {
                                 <h3 className="text-3xl font-bold text-center mb-8">
                                     <span className="text-brand-green">Jour 1:</span> Conférence
                                 </h3>
-                                <Timeline items={programItems.filter(i => i.day === 1)} />
+                                <Timeline items={programItems.filter(i => parseInt(i.day as any) === 1)} />
                             </div>
                             <div>
                                  <h3 className="text-3xl font-bold text-center mb-8">
                                     <span className="text-brand-green">Jour 2:</span> Bootcamp
                                 </h3>
-                                <Timeline items={programItems.filter(i => i.day === 2)} />
-                            </div>
+                                                                 <Timeline items={programItems.filter(i => parseInt(i.day as any) === 2)} />                            </div>
                         </div>
                     )}
                 </div>

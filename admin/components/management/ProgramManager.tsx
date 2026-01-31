@@ -15,6 +15,7 @@ interface ProgramItem {
     description_fr?: string;
     description_en?: string;
     icon_class?: string;
+    is_active: boolean;
 }
 
 interface ProgramManagerProps {
@@ -78,6 +79,12 @@ const ProgramManager: React.FC<ProgramManagerProps> = ({ authUser }) => {
         const formData = new FormData(e.currentTarget);
         const itemData = Object.fromEntries(formData.entries());
 
+        const payload = {
+            ...itemData,
+            day: Number(itemData.day),
+            is_active: (itemData.is_active === 'on' || itemData.is_active === '1') ? 1 : 0
+        };
+
         const url = editingItem
             ? `${API_URL}/program/${editingItem.id}`
             : `${API_URL}/program`;
@@ -88,7 +95,7 @@ const ProgramManager: React.FC<ProgramManagerProps> = ({ authUser }) => {
             const response = await axios({ // Changed to axios
                 method,
                 url,
-                data: { ...itemData, day: Number(itemData.day) },
+                data: payload,
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -133,6 +140,7 @@ const ProgramManager: React.FC<ProgramManagerProps> = ({ authUser }) => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jour</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Heure</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Titre (FR)</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actif</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -142,6 +150,7 @@ const ProgramManager: React.FC<ProgramManagerProps> = ({ authUser }) => {
                             <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-white">{item.day}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{item.start_time.substring(0,5)} - {item.end_time.substring(0,5)}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{item.title_fr}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">{item.is_active ? 'Oui' : 'Non'}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div className="flex justify-end gap-2">
                                     <button onClick={() => openModal(item)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200" title="Modifier">
@@ -191,6 +200,10 @@ const ProgramManager: React.FC<ProgramManagerProps> = ({ authUser }) => {
                         <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (Anglais)</label><textarea name="description_en" defaultValue={editingItem?.description_en} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"></textarea></div>
                     </div>
                     <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Classe d'icône (ex: fas fa-bullhorn)</label><input name="icon_class" defaultValue={editingItem?.icon_class} className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"/></div>
+                    <div className="flex items-center gap-2">
+                        <input type="checkbox" name="is_active" defaultChecked={editingItem?.is_active ?? true} className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"/>
+                        <label className="text-sm font-medium">Est Actif</label>
+                    </div>
                     <div className="flex justify-end gap-4 pt-4">
                         <button type="button" onClick={closeModal} className="px-5 py-2 rounded-md bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200">Annuler</button>
                         <button type="submit" className="px-5 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors duration-200">

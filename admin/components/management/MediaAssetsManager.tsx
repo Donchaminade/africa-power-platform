@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_URL } from '../../config';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface MediaAsset {
   id: number;
@@ -33,6 +33,12 @@ const MediaAssetsManager: React.FC = () => {
   useEffect(() => {
     fetchMediaAssets();
   }, []);
+
+  const getFullAssetUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${UPLOADS_URL}${path}`;
+  };
 
   const fetchMediaAssets = async () => {
     setLoading(true);
@@ -207,8 +213,8 @@ const MediaAssetsManager: React.FC = () => {
                 {assets.map((asset) => (
                   <tr key={asset.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {asset.type === 'image' && <img src={asset.file_url} alt={asset.alt_text_fr} className="h-16 w-16 object-cover rounded-md" />}
-                      {asset.type === 'video' && <video src={asset.file_url} controls className="h-16 w-16 object-cover rounded-md" />}
+                      {asset.type === 'image' && <img src={getFullAssetUrl(asset.file_url)} alt={asset.alt_text_fr} className="h-16 w-16 object-cover rounded-md" />}
+                      {asset.type === 'video' && <video src={getFullAssetUrl(asset.file_url)} controls className="h-16 w-16 object-cover rounded-md" />}
                       {asset.type === 'document' && <i className="fas fa-file-alt text-4xl text-gray-400"></i>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{asset.title_fr}</td>
@@ -230,7 +236,7 @@ const MediaAssetsManager: React.FC = () => {
                         <i className="fas fa-eye"></i> Détails
                       </button>
                       <a
-                        href={asset.file_url}
+                        href={getFullAssetUrl(asset.file_url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-4 transition-colors duration-200"
@@ -268,7 +274,7 @@ const MediaAssetsManager: React.FC = () => {
                 <p><strong>Taille:</strong> {(selectedAsset.file_size / 1024).toFixed(2)} KB</p>
               </div>
               <div>
-                <p><strong>URL:</strong> <a href={selectedAsset.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate">{selectedAsset.file_url}</a></p>
+                <p><strong>URL:</strong> <a href={getFullAssetUrl(selectedAsset.file_url)} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate">{selectedAsset.file_url}</a></p>
                 <p><strong>Texte Alt (FR):</strong> {selectedAsset.alt_text_fr || 'N/A'}</p>
                 <p><strong>Texte Alt (EN):</strong> {selectedAsset.alt_text_en || 'N/A'}</p>
                 <p><strong>Actif:</strong> {selectedAsset.is_active ? 'Oui' : 'Non'}</p>
@@ -284,8 +290,8 @@ const MediaAssetsManager: React.FC = () => {
               <p className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md border border-gray-200 dark:border-gray-600 whitespace-pre-wrap">{selectedAsset.description_en || 'N/A'}</p>
             </div>
             <div className="mt-6">
-                {selectedAsset.type === 'image' && <img src={selectedAsset.file_url} alt={selectedAsset.alt_text_fr} className="max-w-full h-auto object-contain rounded-md border border-gray-200 dark:border-gray-700 mx-auto" />}
-                {selectedAsset.type === 'video' && <video src={selectedAsset.file_url} controls className="max-w-full h-auto object-contain rounded-md border border-gray-200 dark:border-gray-700 mx-auto" />}
+                {selectedAsset.type === 'image' && <img src={getFullAssetUrl(selectedAsset.file_url)} alt={selectedAsset.alt_text_fr} className="max-w-full h-auto object-contain rounded-md border border-gray-200 dark:border-gray-700 mx-auto" />}
+                {selectedAsset.type === 'video' && <video src={getFullAssetUrl(selectedAsset.file_url)} controls className="max-w-full h-auto object-contain rounded-md border border-gray-200 dark:border-gray-700 mx-auto" />}
                 {selectedAsset.type === 'document' && <p className="text-center text-gray-500"><i className="fas fa-file-alt text-6xl"></i><br/>Document Preview Not Available</p>}
             </div>
             <div className="mt-6 flex justify-end">

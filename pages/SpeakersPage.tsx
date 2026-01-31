@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PageHero from '../components/ui/PageHero';
 import { Speaker } from '../utils/types';
-import { API_URL } from '../utils/config';
+import { API_URL, UPLOADS_URL } from '../utils/config';
 
 const SpeakerCard: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
+    const getFullImageUrl = (path: string) => {
+        if (!path) return ''; // or a placeholder image
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
+
     return (
         <div className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300">
-            <img src={speaker.image_url} alt={speaker.name} className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-110" />
+            <img src={getFullImageUrl(speaker.image_url)} alt={speaker.name} className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
                 <span className="text-brand-green text-sm font-semibold">{speaker.category_fr}</span>
                 <h3 className="text-xl font-bold mt-1 text-white">{speaker.name}</h3>

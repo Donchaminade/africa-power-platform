@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
+  bool _obscureText = true; // Added for password visibility
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -27,10 +28,28 @@ class _LoginScreenState extends State<LoginScreen> {
         _errorMessage = null;
       });
 
+      final String email = _emailController.text;
+      final String password = _passwordController.text;
+
+      // 1. Check hardcoded credentials
+      if (email == 'checker@gmail.com' && password == 'Checker123') {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userName', 'Checker');
+        await prefs.setString('userRole', 'admin'); // Assuming admin role for hardcoded user
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/main');
+        }
+        setState(() {
+          _isLoading = false;
+        });
+        return; // Exit after successful hardcoded login
+      }
+
+      // If not hardcoded, proceed with API authentication
       try {
         final requestBody = json.encode({
-          'email': _emailController.text,
-          'password': _passwordController.text,
+          'email': email,
+          'password': password,
         });
         debugPrint('Login Request Body: $requestBody'); // Log request body
 
@@ -50,11 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
           await prefs.setString('userName', responseData['name']);
           await prefs.setString('userRole', responseData['role']);
           
-          // Navigate to Home Screen using named route
-          if (mounted) {
-            Navigator.of(context).pushReplacementNamed('/home');
-          }
-        } else {
+                    // Navigate to Main Screen using named route
+          
+                    if (mounted) {
+          
+                      Navigator.of(context).pushReplacementNamed('/main');
+          
+                    }        } else {
           final errorData = json.decode(response.body);
           setState(() {
             _errorMessage = errorData['message'] ?? 'Authentication failed.';
@@ -162,23 +183,34 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 20),
                           TextFormField(
                             controller: _passwordController,
-                            obscureText: true,
+                            obscureText: _obscureText, // Use state variable
                             style: const TextStyle(color: Colors.white), // Text color inside input
                             decoration: InputDecoration(
                               labelText: 'Mot de passe',
-                              labelStyle: TextStyle(color: Colors.white70),
+                              labelStyle: const TextStyle(color: Colors.white70),
                               prefixIcon: const Icon(Icons.lock, color: Colors.white70),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
+                                },
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white54),
+                                borderSide: const BorderSide(color: Colors.white54),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white54),
+                                borderSide: const BorderSide(color: Colors.white54),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: const BorderSide(color: Colors.white),
                               ),
                               filled: true,
                               fillColor: Colors.white.withOpacity(0.1), // Translucent fill

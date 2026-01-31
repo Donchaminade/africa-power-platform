@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 import { AuthUser } from '../Dashboard';
 
-import { API_URL } from '../../config';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface Speaker {
   id: number;
@@ -106,6 +106,12 @@ const SpeakersManager: React.FC<SpeakersManagerProps> = ({ authUser }) => {
         }
     };
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path; // Already a full URL
+        return `${UPLOADS_URL}${path}`;
+    };
+
     const renderContent = () => {
         if (isLoading) return <div className="text-center p-8">Loading speakers...</div>;
         if (error) return <div className="text-center p-8 text-red-500">Error: {error}</div>;
@@ -125,7 +131,7 @@ const SpeakersManager: React.FC<SpeakersManagerProps> = ({ authUser }) => {
                 <tbody>
                     {speakers.map(speaker => (
                         <tr key={speaker.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td className="p-2"><img src={speaker.image_url} alt={speaker.name} className="w-12 h-12 rounded-md object-cover" /></td>
+                            <td className="p-2"><img src={getFullImageUrl(speaker.image_url)} alt={speaker.name} className="w-12 h-12 rounded-md object-cover" /></td>
                             <td className="p-4 font-semibold">{speaker.name}</td>
                             <td className="p-4">{speaker.title_fr}</td>
                             <td className="p-4">{speaker.is_active ? 'Yes' : 'No'}</td>

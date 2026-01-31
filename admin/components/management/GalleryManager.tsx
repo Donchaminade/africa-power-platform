@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 import { AuthUser } from '../Dashboard';
 
-import { API_URL } from '../../config';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface GalleryImage {
     id: number;
@@ -107,6 +107,12 @@ const GalleryManager: React.FC<GalleryManagerProps> = ({ authUser }) => {
         }
     };
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
+
     const renderContent = () => {
         if (isLoading) return <div className="text-center p-8">Loading gallery...</div>;
         if (error) return <div className="text-center p-8 text-red-500">Error: {error}</div>;
@@ -128,7 +134,7 @@ const GalleryManager: React.FC<GalleryManagerProps> = ({ authUser }) => {
                         {images.map(image => (
                             <tr key={image.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td className="p-2">
-                                    <img src={image.image_url} alt={image.title} className="w-16 h-16 rounded-md object-cover" />
+                                    <img src={getFullImageUrl(image.image_url)} alt={image.title} className="w-16 h-16 rounded-md object-cover" />
                                 </td>
                                 <td className="p-4 font-semibold">{image.title}</td>
                                 <td className="p-4">{image.image_date ? new Date(image.image_date).toLocaleDateString() : 'N/A'}</td>

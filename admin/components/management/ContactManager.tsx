@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../config';
 
+
 interface ContactMessage {
   id: number;
   name: string;
@@ -25,7 +26,7 @@ const ContactManager: React.FC = () => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('`${API_URL}/contact`');
+      const response = await axios.get(`${API_URL}/contact`);
       setMessages(response.data);
       setError(null);
     } catch (err) {

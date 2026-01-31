@@ -32,7 +32,7 @@ const PassTypesManager: React.FC = () => {
 
     try {
 
-      const response = await axios.get('${API_URL}/passes?all=true');
+      const response = await axios.get(`${API_URL}/passes?all=true`);
 
       setPassTypes(response.data);
 
@@ -134,7 +134,7 @@ const PassTypesManager: React.FC = () => {
 
       } else {
 
-        await axios.post('${API_URL}/passes', editingPass);
+        await axios.post(`${API_URL}/passes`, editingPass);
 
       }
 

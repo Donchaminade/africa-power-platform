@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from '../ui/Modal';
 import ImageUpload from '../ui/ImageUpload';
 
-import { API_URL } from '../../config';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface TeamMember {
     id: number;
@@ -100,6 +100,12 @@ const TeamManager: React.FC = () => {
         }
     };
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
+
     return (
         <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <div className="flex justify-between items-center mb-6">
@@ -128,7 +134,7 @@ const TeamManager: React.FC = () => {
                             {team.map(member => (
                                 <tr key={member.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <img src={member.image_url} alt={member.name} className="w-12 h-12 rounded-md object-cover" />
+                                        <img src={getFullImageUrl(member.image_url)} alt={member.name} className="w-12 h-12 rounded-md object-cover" />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{member.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{member.role_fr}</td>

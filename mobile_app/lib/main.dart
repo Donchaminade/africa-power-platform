@@ -3,7 +3,7 @@ import 'package:mobile_app/screens/login_screen.dart'; // Import LoginScreen
 import 'package:mobile_app/screens/main_screen.dart'; // Import MainScreen
 import 'package:mobile_app/screens/scanner_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences for session check
-
+import 'package:permission_handler/permission_handler.dart' as permission_handler; // Import permission_handler
 
 void main() {
   runApp(const MyApp());
@@ -48,13 +48,52 @@ class _SplashScreenState extends State<SplashScreen> {
     _animateLogo();
   }
 
+  Future<bool> _requestCameraPermission() async {
+    var status = await permission_handler.Permission.camera.status;
+    if (status.isDenied) {
+      status = await permission_handler.Permission.camera.request();
+    }
+    if (status.isPermanentlyDenied) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: const Text('Autorisation de la caméra requise'),
+              content: const Text(
+                  'Les permissions caméra sont nécessaires pour scanner les QR codes. Veuillez les activer manuellement dans les paramètres de l\'application.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                    // Optionally, you can navigate to settings or exit the app
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return false;
+    }
+    return status.isGranted;
+  }
+
   void _animateLogo() async {
     await Future.delayed(const Duration(milliseconds: 500));
     setState(() {
       _logoOpacity = 1.0;
     });
     await Future.delayed(const Duration(seconds: 2)); // Display logo for 2 seconds
-    _checkLoginStatus();
+    bool cameraGranted = await _requestCameraPermission();
+    if (cameraGranted) {
+      _checkLoginStatus();
+    } else {
+      // If camera permission is not granted, stay on splash screen or show an error
+      // For now, we'll just wait for the user to close the dialog
+    }
   }
 
   void _checkLoginStatus() async {

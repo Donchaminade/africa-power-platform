@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../contexts/LanguageContext';
 import { GalleryImage } from '../utils/types';
-import { API_URL } from '../utils/config';
+import { API_URL, UPLOADS_URL } from '../utils/config';
 
 // Modal Component for viewing a single image
 const GalleryModal: React.FC<{
-  image: GalleryImage;
+  image: GalleryImage & { full_url: string };
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
@@ -29,7 +29,7 @@ const GalleryModal: React.FC<{
     >
       <div className="relative" onClick={(e) => e.stopPropagation()}>
         <img
-          src={image.image_url}
+          src={image.full_url}
           alt={image.title}
           className="max-h-[85vh] max-w-[90vw] object-contain rounded-lg"
         />
@@ -69,6 +69,12 @@ const Gallery: React.FC = () => {
         fetchImages();
     }, []);
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return ''; // or a placeholder image
+        if (path.startsWith('http')) return path;
+        return `${UPLOADS_URL}${path}`;
+    };
+
     const openModal = (index: number) => setSelectedImageIndex(index);
     const closeModal = () => setSelectedImageIndex(null);
     
@@ -82,6 +88,8 @@ const Gallery: React.FC = () => {
             setSelectedImageIndex((prev) => (prev! - 1 + images.length) % images.length);
         }
     };
+    
+    const imagesWithFullUrl = images.map(image => ({...image, full_url: getFullImageUrl(image.image_url)}));
 
     return (
         <section id="gallery" className="py-24 bg-white dark:bg-black">
@@ -101,10 +109,10 @@ const Gallery: React.FC = () => {
 
                 {!isLoading && !error && (
                      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-                        {images.map((image, index) => (
+                        {imagesWithFullUrl.map((image, index) => (
                             <div key={image.id} className="overflow-hidden rounded-lg break-inside-avoid" onClick={() => openModal(index)}>
                                 <img 
-                                    src={image.image_url} 
+                                    src={image.full_url} 
                                     alt={image.title} 
                                     className="w-full h-auto object-cover cursor-pointer transition-transform duration-300 hover:scale-105"
                                 />
@@ -119,7 +127,7 @@ const Gallery: React.FC = () => {
 
             {selectedImageIndex !== null && (
                 <GalleryModal 
-                    image={images[selectedImageIndex]}
+                    image={imagesWithFullUrl[selectedImageIndex]}
                     onClose={closeModal}
                     onNext={handleNext}
                     onPrev={handlePrev}

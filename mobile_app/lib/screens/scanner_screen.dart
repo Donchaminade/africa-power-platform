@@ -6,8 +6,6 @@ import '../config/api_config.dart';
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:audioplayers/audioplayers.dart'; // For sound feedback
 import 'package:vibration/vibration.dart'; // For haptic feedback
-import 'package:permission_handler/permission_handler.dart'
-    as permission_handler; // For explicit permission checks
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -39,7 +37,6 @@ class _ScannerScreenState extends State<ScannerScreen>
   void initState() {
     super.initState();
     _statusMessage = 'Scannez le QR code d\'un participant';
-    _checkCameraPermissions();
 
     // Initialize these states directly from the controller's constructor arguments
     _isTorchOn = cameraController.torchEnabled;
@@ -53,24 +50,6 @@ class _ScannerScreenState extends State<ScannerScreen>
       begin: 0.0,
       end: 1.0,
     ).animate(_animationController);
-  }
-
-  void _checkCameraPermissions() async {
-    var status = await permission_handler.Permission.camera.status;
-    if (status.isDenied) {
-      status = await permission_handler.Permission.camera.request();
-    }
-    if (status.isPermanentlyDenied) {
-      if (mounted) {
-        _showSnackbar(
-          context,
-          'Les permissions caméra sont nécessaires pour scanner. Veuillez les activer manuellement dans les paramètres de l\'application.',
-          false,
-        );
-      }
-    } else if (status.isGranted) {
-      // No need to call _initializeCameraState() anymore as states are initialized directly
-    }
   }
 
   Future<void> _playScanSound() async {

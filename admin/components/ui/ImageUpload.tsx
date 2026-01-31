@@ -1,6 +1,5 @@
-import React, { useState, useCallback } from 'react';
-
-import { API_URL } from '../../config';
+import React, { useState, useCallback, useEffect } from 'react';
+import { API_URL, UPLOADS_URL } from '../../config';
 
 interface ImageUploadProps {
     onUploadSuccess: (filePath: string) => void;
@@ -9,8 +8,12 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onUploadSuccess, initialImageUrl }) => {
     const [isUploading, setIsUploading] = useState(false);
-    const [preview, setPreview] = useState<string | null>(initialImageUrl || null);
+    const [preview, setPreview] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        setPreview(initialImageUrl || null);
+    }, [initialImageUrl]);
 
     const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -44,12 +47,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onUploadSuccess, initialImage
         }
     }, [onUploadSuccess]);
 
+    const getFullImageUrl = (path: string) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path; // Already a full URL
+        return `${UPLOADS_URL}${path}`;
+    };
+
     return (
         <div>
             <label className="block text-sm font-medium mb-1">Image</label>
             <div className="flex items-center gap-4">
                 {preview && (
-                    <img src={preview} alt="Preview" className="w-20 h-20 rounded-md object-cover" />
+                    <img src={getFullImageUrl(preview)} alt="Preview" className="w-20 h-20 rounded-md object-cover" />
                 )}
                 <input
                     type="file"
