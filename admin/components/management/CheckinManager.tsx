@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios
 import { API_URL } from '../../config';
 import { Registration } from '../../../utils/types'; // Using the shared Registration interface
-import { useDebounce } from './RegistrationsManager'; // Re-use the debounce hook
+import { useDebounce } from './RegistrationsManager';
 import Modal from '../ui/Modal'; // Import Modal for potential future use or consistency
 
 export const CheckinManager: React.FC = () => {

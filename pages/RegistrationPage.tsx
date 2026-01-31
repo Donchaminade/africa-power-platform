@@ -4,8 +4,8 @@ import { PassType } from '../utils/types';
 import { useSettings } from '../contexts/SettingsContext'; // Import useSettings
 import axios from 'axios'; // Ensure axios is imported
 import Modal from '../components/ui/Modal'; // Import the Modal component
-import { API_URL } from '../admin/config'; // Import API_URL from config
-import { generateClientSideTicketPdf } from '@/src/utils/generateTicketPdf'; // Import the new utility
+import { API_URL } from '../utils/config'; // Import API_URL from config
+
 
 const RegistrationPage: React.FC = () => {
     const { t, language } = useTranslation();
@@ -144,9 +144,7 @@ const RegistrationPage: React.FC = () => {
         }
         console.log("Downloading ticket for ID:", ticketId); // Added for diagnosis
         try {
-            await generateClientSideTicketPdf(ticketId!); // Call the new utility function
-
-
+            window.open(`${API_URL}/ticket.php?id=${ticketId}`, '_blank');
             setHasDownloadedTicket(true);
             setMessage({ type: 'success', text: 'Votre ticket a été téléchargé avec succès !' });
         } catch (err) {

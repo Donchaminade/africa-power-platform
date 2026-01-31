@@ -3,14 +3,9 @@ require_once 'db.php';
 // The PDF generator is no longer needed here.
 
 $method = $_SERVER['REQUEST_METHOD'];
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path_parts = explode('/', trim($path, '/'));
-$registration_id = null;
-
-// Get the last part of the path
-$last_part = end($path_parts);
-if (is_numeric($last_part)) {
-    $registration_id = (int)$last_part;
+$registration_id = $_GET['id'] ?? null;
+if ($registration_id !== null) {
+    $registration_id = (int)$registration_id;
 }
 
 switch ($method) {

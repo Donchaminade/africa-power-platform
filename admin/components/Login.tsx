@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 
-import { API_URL } from '../../utils/config';
+import { API_URL } from '../config';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');

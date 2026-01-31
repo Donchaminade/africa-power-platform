@@ -5,9 +5,9 @@ import Modal from '../ui/Modal'; // Import the Modal component
 import { API_URL } from "../../config";
 import { Registration } from '../../../utils/types'; // Use shared Registration interface
 import axios from 'axios'; // Import axios
-import { generateClientSideTicketPdf } from '@/src/utils/generateTicketPdf';
 
-// Custom hook for debouncing
+
+
 export const useDebounce = (value: string, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
     useEffect(() => {
@@ -17,7 +17,7 @@ export const useDebounce = (value: string, delay: number) => {
     return debouncedValue;
 };
 
-const RegistrationsManager: React.FC = () => {
+export const RegistrationsManager: React.FC = () => {
     const [registrations, setRegistrations] = useState<Registration[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -96,9 +96,8 @@ const RegistrationsManager: React.FC = () => {
         }
         console.log("Downloading ticket for ID:", registrationId); // Added for diagnosis
         try {
-            await generateClientSideTicketPdf(registrationId); // Call the new utility function
-
-            setMessage({ type: 'success', text: 'Le ticket a été téléchargé avec succès !' });
+            window.open(`${API_URL}/ticket.php?id=${registrationId}`, '_blank');
+            setMessage({ type: 'success', text: 'Le ticket est en cours de téléchargement !' });
         } catch (err) {
             console.error('Erreur lors du téléchargement du ticket:', err);
             setMessage({ type: 'error', text: 'Échec du téléchargement du ticket. Veuillez réessayer.' });
@@ -141,7 +140,7 @@ const RegistrationsManager: React.FC = () => {
         const method = editingRegistration ? 'PUT' : 'POST';
 
         try {
-            const response = await axios({ // Changed to axios
+            const response = await axios({
                 method,
                 url,
                 data: payload,
@@ -293,10 +292,10 @@ const RegistrationsManager: React.FC = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div className="flex justify-end gap-2">
-                                        <button onClick={() => openModal(reg)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200" title="Modifier l'inscription">
+                                        <button onClick={() => openModal(reg)} className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200" title="Modifier l\'inscription">
                                             <i className="fas fa-edit"></i> Modifier
                                         </button>
-                                        <button onClick={() => openConfirmDeleteModal(reg.id!)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200" title="Supprimer l'inscription">
+                                        <button onClick={() => openConfirmDeleteModal(reg.id!)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200" title="Supprimer l\'inscription">
                                             <i className="fas fa-trash"></i> Supprimer
                                         </button>
                                         <button onClick={() => handleDownloadTicket(reg.id!)} className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 transition-colors duration-200" title="Télécharger le billet">
@@ -365,7 +364,7 @@ const RegistrationsManager: React.FC = () => {
                             <option value="bootcamp_applicant">Pass Bootcamp</option>
                         </select>
                     </div>
-                    {editingRegistration && ( // Only show on edit
+                    {editingRegistration && (
                         <div className="flex items-center gap-2">
                             <input type="checkbox" name="is_checked_in" id="reg_is_checked_in" defaultChecked={editingRegistration.is_checked_in || false} className="h-4 w-4 text-brand-green focus:ring-brand-green border-gray-300 rounded"/>
                             <label htmlFor="reg_is_checked_in" className="text-sm font-medium text-gray-700 dark:text-gray-300">Enregistré</label>
@@ -396,5 +395,3 @@ const RegistrationsManager: React.FC = () => {
         </div>
     );
 };
-
-export default RegistrationsManager;

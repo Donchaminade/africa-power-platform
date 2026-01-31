@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import RegistrationsManager from './management/RegistrationsManager';
+import { RegistrationsManager } from './management/RegistrationsManager';
 
 import SpeakersManager from './management/SpeakersManager';
 
