@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import { API_URL } from '../../config';
-import { Registration } from '../../../utils/types'; // Using the shared Registration interface
+import { Registration } from '../../../utils/types';
 import { useDebounce } from './RegistrationsManager';
-import Modal from '../ui/Modal'; // Import Modal for potential future use or consistency
+import Modal from '../ui/Modal';
 
 export const CheckinManager: React.FC = () => {
     const [registrations, setRegistrations] = useState<Registration[]>([]);
@@ -18,12 +18,12 @@ export const CheckinManager: React.FC = () => {
         setError(null);
         try {
             const url = new URL(`${API_URL}/registrations`);
-            url.searchParams.append('limit', '9999'); // Fetch all for check-in management
+            url.searchParams.append('limit', '9999');
             if (debouncedSearchTerm) {
                 url.searchParams.append('search', debouncedSearchTerm);
             }
-            const response = await axios.get(url.toString()); // Changed to axios
-            const result = await response.data; // Changed for axios
+            const response = await axios.get(url.toString());
+            const result = response.data;
             setRegistrations(result.data || []); 
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue.');
@@ -39,41 +39,51 @@ export const CheckinManager: React.FC = () => {
     const handleCheckin = async (registrationId: number) => {
         setMessage(null);
         try {
-            const response = await axios.post(`${API_URL}/checkin/${registrationId}`, {}); // Changed to axios
-            const result = await response.data; // Changed for axios
+            const response = await axios.post(`${API_URL}/checkin/${registrationId}`, {});
+            const result = response.data;
 
-            if (response.status < 200 || response.status >= 300) { // Changed for axios
+            if (response.status >= 300) {
                 throw new Error(result.message || 'Échec de l\'enregistrement.');
             }
 
             setMessage({ type: 'success', text: result.message });
-            fetchRegistrations(); // Re-fetch to get updated data
+            fetchRegistrations();
         } catch (err) {
             setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Une erreur inconnue est survenue lors de l\'enregistrement.' });
         }
     };
 
     const formatDate = (dateString: string | undefined, includeTime: boolean = false) => {
-      if (!dateString) return 'N/A';
-      try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-          return "Date invalide";
+        if (!dateString) return 'N/A';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return "Date invalide";
+            return date.toLocaleString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric', ...(includeTime && { hour: '2-digit', minute: '2-digit' }) });
+        } catch (e) {
+            return "Date invalide";
         }
-        return date.toLocaleString('fr-FR', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          ...(includeTime && { hour: '2-digit', minute: '2-digit' }),
-        });
-      } catch (e) {
-        return "Date invalide";
-      }
+    };
+    
+    const downloadFile = (blob: Blob, filename: string) => {
+        const urlBlob = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = urlBlob;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode?.removeChild(link);
+        window.URL.revokeObjectURL(urlBlob);
     };
 
-    const handleExportPdf = async (exportFilter: 'all' | 'checked' | 'not_checked') => {
+    const handleExport = async (format: 'pdf' | 'csv', exportFilter: 'all' | 'checked' | 'not_checked') => {
+        const endpoint = format === 'pdf' ? 'export_pdf' : 'export_csv';
+        const filename = `inscriptions_${exportFilter}.${format}`;
+        const mimeType = format === 'pdf' ? 'application/pdf' : 'text/csv;charset=utf-8;';
+        
         try {
-            const url = new URL(`${API_URL}/registrations/export/pdf`);
+            const url = new URL(`${API_URL}/registrations`);
+            url.searchParams.append(endpoint, 'true');
+
             if (exportFilter === 'checked') {
                 url.searchParams.append('checkedIn', 'true');
             } else if (exportFilter === 'not_checked') {
@@ -83,29 +93,13 @@ export const CheckinManager: React.FC = () => {
                 url.searchParams.append('search', debouncedSearchTerm);
             }
 
-            const response = await axios.get(url.toString(), { responseType: 'blob' }); // Changed to axios with responseType
+            const response = await axios.get(url.toString(), { responseType: 'blob' });
             
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const urlBlob = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = urlBlob;
+            downloadFile(new Blob([response.data], { type: mimeType }), filename);
             
-            let filename = 'registrations_';
-            if (exportFilter === 'checked') {
-                filename += 'checked_in.pdf';
-            } else if (exportFilter === 'not_checked') {
-                filename += 'not_checked_in.pdf';
-            } else {
-                filename += 'all.pdf';
-            }
-            link.setAttribute('download', filename);
-            
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode?.removeChild(link);
-            setMessage({type: 'success', text: 'Export PDF réussi !'});
+            setMessage({type: 'success', text: `Export ${format.toUpperCase()} réussi !`});
         } catch (err) {
-            setMessage({type: 'error', text: 'Erreur lors de l\'export PDF: ' + (err instanceof Error ? err.message : 'Erreur inconnue')});
+            setMessage({type: 'error', text: `Erreur lors de l\'export ${format.toUpperCase()}: ` + (err instanceof Error ? err.message : 'Erreur inconnue')});
         }
     };
 
@@ -122,7 +116,7 @@ export const CheckinManager: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                     <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Liste des Inscrits</h3>
-                    <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
                         <input
                             type="text"
                             placeholder="Rechercher par nom, email..."
@@ -130,15 +124,16 @@ export const CheckinManager: React.FC = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="px-4 py-2 rounded-md bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-brand-green focus:border-brand-green text-gray-900 dark:text-white"
                         />
-                        <button onClick={() => handleExportPdf('all')} className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">
-                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Tous)
-                        </button>
-                        <button onClick={() => handleExportPdf('checked')} className="bg-green-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-green-700 transition">
-                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Checké)
-                        </button>
-                        <button onClick={() => handleExportPdf('not_checked')} className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition">
-                            <i className="fas fa-file-pdf mr-2"></i> Export PDF (Non Checké)
-                        </button>
+                        <div className="flex gap-2 border-l pl-2">
+                            <button onClick={() => handleExport('pdf', 'all')} className="bg-blue-600 text-white px-3 py-2 rounded-md font-semibold hover:bg-blue-700 transition" title="Exporter en PDF (Tous)"><i className="fas fa-file-pdf"></i></button>
+                            <button onClick={() => handleExport('pdf', 'checked')} className="bg-green-600 text-white px-3 py-2 rounded-md font-semibold hover:bg-green-700 transition" title="Exporter en PDF (Checkés)"><i className="fas fa-file-pdf"></i> <i className="fas fa-check"></i></button>
+                            <button onClick={() => handleExport('pdf', 'not_checked')} className="bg-yellow-600 text-white px-3 py-2 rounded-md font-semibold hover:bg-yellow-700 transition" title="Exporter en PDF (Non-checkés)"><i className="fas fa-file-pdf"></i> <i className="fas fa-times"></i></button>
+                        </div>
+                         <div className="flex gap-2 border-l pl-2">
+                            <button onClick={() => handleExport('csv', 'all')} className="bg-blue-800 text-white px-3 py-2 rounded-md font-semibold hover:bg-blue-900 transition" title="Exporter en CSV (Tous)"><i className="fas fa-file-csv"></i></button>
+                            <button onClick={() => handleExport('csv', 'checked')} className="bg-green-800 text-white px-3 py-2 rounded-md font-semibold hover:bg-green-900 transition" title="Exporter en CSV (Checkés)"><i className="fas fa-file-csv"></i> <i className="fas fa-check"></i></button>
+                            <button onClick={() => handleExport('csv', 'not_checked')} className="bg-yellow-800 text-white px-3 py-2 rounded-md font-semibold hover:bg-yellow-900 transition" title="Exporter en CSV (Non-checkés)"><i className="fas fa-file-csv"></i> <i className="fas fa-times"></i></button>
+                        </div>
                     </div>
                 </div>
                 {isLoading && <div className="text-center p-8 text-gray-500">Chargement des inscrits...</div>}

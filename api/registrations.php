@@ -1,35 +1,118 @@
 <?php
 require_once 'db.php';
 
+// Handle CSV Export Request
+if (isset($_GET['export_csv'])) {
+    try {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="inscriptions.csv"');
+        
+        $output = fopen('php://output', 'w');
+        
+        // Add UTF-8 BOM for Excel compatibility
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF)); 
+        
+        // CSV Header
+        fputcsv($output, ['ID', 'Prénom', 'Nom', 'Email', 'Entreprise', 'Poste', 'Pays', 'Type de Pass', 'Check-in', 'Date Check-in'], ';');
+        
+        // Database query with filters
+        $search = $_GET['search'] ?? '';
+        $checkedIn = $_GET['checkedIn'] ?? null;
+
+        $query = "SELECT * FROM registrations";
+        $where_clauses = [];
+        $params = [];
+        $types = "";
+
+        if ($search) {
+            $where_clauses[] = '(first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR company LIKE ?)';
+            $search_term = "%" . $search . "%";
+            array_push($params, $search_term, $search_term, $search_term, $search_term);
+            $types .= "ssss";
+        }
+        if ($checkedIn === 'true') {
+            $where_clauses[] = 'is_checked_in = 1';
+        } elseif ($checkedIn === 'false') {
+            $where_clauses[] = 'is_checked_in = 0';
+        }
+
+        if (!empty($where_clauses)) {
+            $query .= " WHERE " . implode(' AND ', $where_clauses);
+        }
+        $query .= " ORDER BY registration_date DESC";
+
+        $stmt = $mysqli->prepare($query);
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Write data to CSV
+        while ($row = $result->fetch_assoc()) {
+            fputcsv($output, [
+                $row['id'],
+                $row['first_name'],
+                $row['last_name'],
+                $row['email'],
+                $row['company'],
+                $row['job_title'],
+                $row['country'],
+                str_replace('_', ' ', $row['pass_type']),
+                $row['is_checked_in'] ? 'Oui' : 'Non',
+                $row['check_in_time'] ? date('d/m/y H:i', strtotime($row['check_in_time'])) : 'N/A'
+            ], ';');
+        }
+        $stmt->close();
+
+    } catch (Exception $e) {
+        error_log('CSV Export Error: ' . $e->getMessage());
+    } finally {
+        fclose($output);
+        $mysqli->close();
+        exit();
+    }
+}
+
 // PDF EXPORT LOGIC
 if (isset($_GET['export_pdf'])) {
     require_once '../fpdf186/fpdf.php';
 
     class PDF extends FPDF {
         private $logoPath = '';
+        public $tableX;
+
+        function __construct($orientation='P', $unit='mm', $size='A4') {
+            parent::__construct($orientation, $unit, $size);
+            $pageWidth = $this->GetPageWidth();
+            $tableWidth = 255; // 10+50+65+40+20+30
+            $this->tableX = ($pageWidth - $tableWidth) / 2;
+        }
 
         function setLogoPath($path) {
             $this->logoPath = $path;
         }
 
-function Header() {
-        if ($this->logoPath && file_exists($this->logoPath)) {
-            $this->Image($this->logoPath, 10, 8, 15);
-        }
-        $this->SetY(15);
-        $this->SetFont('Arial', 'B', 16);
-        $this->Cell(0, 10, 'Liste des Inscriptions - Africa Power Platform', 0, 1, 'C');
-        $this->Ln(5);
+        function Header() {
+            if ($this->logoPath && file_exists($this->logoPath)) {
+                $this->Image($this->logoPath, 10, 8, 20);
+            }
+            $this->SetY(15);
+            $this->SetFont('Arial', 'B', 12);
+            $this->Cell(0, 10, 'Liste des Inscriptions - Africa Power Platform', 0, 1, 'C');
+            $this->Ln(5);
 
-        $this->SetFont('Arial', 'B', 8);
-        $this->SetFillColor(230, 230, 230); // Light gray background for header
-        $this->Cell(10, 7, 'ID', 1, 0, 'C', true);
-        $this->Cell(50, 7, 'Nom', 1, 0, 'C', true);
-        $this->Cell(65, 7, 'Email', 1, 0, 'C', true);
-        $this->Cell(40, 7, 'Pass', 1, 0, 'C', true);
-        $this->Cell(20, 7, 'Check-in', 1, 0, 'C', true);
-        $this->Cell(30, 7, 'Date Check-in', 1, 1, 'C', true);
-    }
+            $this->SetFont('Arial', 'B', 8);
+            $this->SetFillColor(230, 230, 230);
+            
+            $this->SetX($this->tableX);
+            $this->Cell(10, 7, 'ID', 1, 0, 'C', true);
+            $this->Cell(50, 7, 'Nom', 1, 0, 'C', true);
+            $this->Cell(65, 7, 'Email', 1, 0, 'C', true);
+            $this->Cell(40, 7, 'Pass', 1, 0, 'C', true);
+            $this->Cell(20, 7, 'Check-in', 1, 0, 'C', true);
+            $this->Cell(30, 7, 'Date Check-in', 1, 1, 'C', true);
+        }
 
         function Footer() {
             $this->SetY(-15);
@@ -44,13 +127,11 @@ function Header() {
     }
 
     try {
-        // Fetch settings to get logo
         $result_settings = $mysqli->query("SELECT setting_key, setting_value FROM site_settings WHERE setting_key = 'event_logo_url'");
         $settings_data = $result_settings->fetch_assoc();
         $logo_image_url = $settings_data['setting_value'] ?? '/assets/images/logo.png';
         $logo_path = realpath(dirname(dirname(__FILE__)) . '/public' . $logo_image_url);
 
-        // Fetch registrations based on filters
         $search = $_GET['search'] ?? '';
         $checkedIn = $_GET['checkedIn'] ?? null;
 
@@ -85,7 +166,6 @@ function Header() {
         $registrations = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
 
-        // Create and configure PDF object
         $pdf = new PDF('L', 'mm', 'A4');
         if ($logo_path) {
             $pdf->setLogoPath($logo_path);
@@ -94,8 +174,8 @@ function Header() {
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 8);
 
-        // Add data to PDF
         foreach ($registrations as $reg) {
+            $pdf->SetX($pdf->tableX);
             $pdf->Cell(10, 6, $reg['id'], 1);
             $pdf->Cell(50, 6, $reg['first_name'] . ' ' . $reg['last_name'], 1);
             $pdf->Cell(65, 6, $reg['email'], 1);
@@ -119,12 +199,9 @@ function Header() {
 
 // REGULAR JSON API LOGIC
 $method = $_SERVER['REQUEST_METHOD'];
-$request_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 $id = null;
-$request_uri_parts = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-
-if (isset($request_uri_parts[count($request_uri_parts) - 1]) && is_numeric($request_uri_parts[count($request_uri_parts) - 1])) {
-    $id = (int)$request_uri_parts[count($request_uri_parts) - 1];
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = (int)$_GET['id'];
 }
 
 switch ($method) {
@@ -147,6 +224,7 @@ switch ($method) {
 }
 
 function handle_get($mysqli, $id) {
+    header('Content-Type: application/json');
     if ($id) {
         $stmt = $mysqli->prepare("SELECT * FROM registrations WHERE id = ?");
         $stmt->bind_param("i", $id);
@@ -203,7 +281,6 @@ function handle_get($mysqli, $id) {
         $registrations = $result_data->fetch_all(MYSQLI_ASSOC);
         $stmt_data->close();
         
-        header('Content-Type: application/json');
         echo json_encode([
             'data' => $registrations,
             'pagination' => [

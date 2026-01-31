@@ -183,42 +183,13 @@ export const RegistrationsManager: React.FC = () => {
 
     // --- Export functions ---
     const handleExportCsv = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/registrations?limit=${totalItems}`); // Changed to axios
-            const result = await response.data; // Changed for axios
-            
-            // Reformat data for better CSV/Excel readability
-            const dataToExport = result.data.map((reg: Registration) => ({
-                'ID': reg.id,
-                'Prénom': reg.first_name,
-                'Nom': reg.last_name,
-                'Email': reg.email,
-                'Entreprise': reg.company || '',
-                'Titre du Poste': reg.job_title || '',
-                'Pays': reg.country || '',
-                'Type de Pass': reg.pass_type.replace('_', ' ').toUpperCase(),
-                'Date d\'inscription': reg.registration_date ? new Date(reg.registration_date).toLocaleDateString('fr-FR') : 'N/A',
-                'Check-in': reg.is_checked_in ? 'Oui' : 'Non',
-                'Heure Check-in': reg.check_in_time ? new Date(reg.check_in_time).toLocaleString('fr-FR') : 'N/A',
-            }));
-
-            const csv = Papa.unparse(dataToExport, {
-                header: true,
-                delimiter: ';' // Use semicolon for better Excel compatibility in French locales
-            });
-            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'inscriptions.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setMessage({type: 'success', text: 'Export CSV réussi !'});
-        } catch (err) {
-            setMessage({type: 'error', text: 'Erreur lors de l\'export CSV: ' + (err instanceof Error ? err.message : 'Erreur inconnue')});
+        const url = new URL(`${API_URL}/registrations`);
+        url.searchParams.append('export_csv', 'true');
+        if (debouncedSearchTerm) {
+            url.searchParams.append('search', debouncedSearchTerm);
         }
+        window.open(url.toString(), '_blank');
+        setMessage({ type: 'success', text: 'L\'exportation CSV a commencé.' });
     };
 
     const handleExportPdf = async () => {
