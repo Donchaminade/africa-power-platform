@@ -1,4 +1,6 @@
 <?php
+
+
 require_once 'db.php';
 
 $method = $_SERVER['REQUEST_METHOD'];

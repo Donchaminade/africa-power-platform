@@ -6,7 +6,7 @@ class ApiConfig {
   static const String apachePort = '80'; // Your XAMPP Apache port (default is 80)
 
   // Production settings (update this with your actual production domain)
-  static const String productionBasePath = 'https://app.africapowerplatform.com'; 
+  static const String productionBasePath = 'https://powerapi.grosbit.com'; 
 
   // Base paths for API and application
   static const String _localBasePath = 'http://$localIpAddress${apachePort != '80' ? ':$apachePort' : ''}/africa-power-platform';

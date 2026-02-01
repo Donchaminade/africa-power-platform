@@ -1,0 +1,3 @@
+# Ignorer le dossier des uploads qui contient du contenu dynamique
+# et cause des erreurs de permission lors du déploiement.
+public/uploads

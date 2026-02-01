@@ -1,13 +1,8 @@
-const productionApiUrl = 'https://app.africapowerplatform.com/api'; // IMPORTANT: Update this with your actual Hostinger domain/subdomain
-const developmentApiUrl = 'http://localhost/africa-power-platform/api';
+// Lit les variables d'environnement fournies par Vite
+// En développement, elles viendront de .env.local
+// En production (sur Vercel), elles devront être configurées dans les paramètres du projet.
+export const API_URL = import.meta.env.VITE_API_URL;
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const productionBaseUrl = 'https://app.africapowerplatform.com/';
-const developmentBaseUrl = 'http://localhost/africa-power-platform/';
-
-
-// Use hostname to determine environment
-const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-export const API_URL = isDevelopment ? developmentApiUrl : productionApiUrl;
-export const BASE_URL = isDevelopment ? developmentBaseUrl : productionBaseUrl;
+// L'URL des uploads est construite à partir de l'URL de base
 export const UPLOADS_URL = `${BASE_URL}public`;

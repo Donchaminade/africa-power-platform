@@ -2,7 +2,7 @@
 ob_start(); // Start output buffering to prevent accidental output before headers
 
 // CORS headers - ALWAYS send these for every request hitting the API
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Explicitly allow frontend origin
+header("Access-Control-Allow-Origin: https://africa-power-platform.vercel.app"); // Explicitly allow frontend origin
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With"); // Added X-Requested-With
 header("Access-Control-Allow-Credentials: true");
@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // Debugging: Added a test log
 error_log("PHP script reached db.php - " . date('Y-m-d H:i:s'));
 
-$db_host = getenv('DB_HOST') ?: 'localhost';
-$db_user = getenv('DB_USER') ?: 'root';
-$db_password = getenv('DB_PASSWORD') ?: '';
-$db_name = getenv('DB_NAME') ?: 'africa_power_platform';
-$db_port = getenv('DB_PORT') ?: 3306;
+$db_host = 'VOTRE_HOTE_BDD'; // Remplacer par l'hôte de votre base de données Hostinger
+$db_user = 'VOTRE_UTILISATEUR_BDD'; // Remplacer par le nom d'utilisateur de votre base de données Hostinger
+$db_password = 'VOTRE_MOT_DE_PASSE_BDD'; // Remplacer par le mot de passe de votre base de données Hostinger
+$db_name = 'u878418868_powerplate'; // Nom de la base de données confirmé
+$db_port = 3306;
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
 
