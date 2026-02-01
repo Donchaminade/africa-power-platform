@@ -17,11 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // Debugging: Added a test log
 error_log("PHP script reached db.php - " . date('Y-m-d H:i:s'));
 
-$db_host = 'VOTRE_HOTE_BDD'; // Remplacer par l'hôte de votre base de données Hostinger
-$db_user = 'VOTRE_UTILISATEUR_BDD'; // Remplacer par le nom d'utilisateur de votre base de données Hostinger
-$db_password = 'VOTRE_MOT_DE_PASSE_BDD'; // Remplacer par le mot de passe de votre base de données Hostinger
-$db_name = 'u878418868_powerplate'; // Nom de la base de données confirmé
-$db_port = 3306;
+// Détection de l'environnement (local vs production)
+if ($_SERVER['HTTP_HOST'] === 'localhost' || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false) {
+    // Environnement de développement local (XAMPP)
+    $db_host = 'localhost';
+    $db_user = 'root'; // Utilisateur par défaut de XAMPP
+    $db_password = ''; // Mot de passe par défaut de XAMPP (vide)
+    $db_name = 'africa_power_platform'; // Le nom correct de votre base de données locale
+    $db_port = 3306;
+} else {
+    // Environnement de production (Hostinger)
+    $db_host = 'localhost'; // Confirmé comme étant correct pour votre Hostinger
+    $db_user = 'u878418868_Donchaminade';
+    $db_password = 'Donchaminade1@@';
+    $db_name = 'u878418868_powerplate';
+    $db_port = 3306;
+}
 
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
 
