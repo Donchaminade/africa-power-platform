@@ -40,13 +40,19 @@ function handle_post_login($mysqli) {
         }
 
         // Comparer le mot de passe fourni avec le hash stocké
+        error_log("Attempting password_verify for email: " . $email);
+        error_log("Provided password (first 5 chars): " . substr($password, 0, 5) . "...");
+        error_log("Stored hash (first 5 chars): " . substr($user['password_hash'], 0, 5) . "...");
+
         if (password_verify($password, $user['password_hash'])) {
+            error_log("password_verify SUCCESS for email: " . $email);
             // Le mot de passe correspond. Renvoyer les informations de l'utilisateur (sans le hash)
             echo json_encode([
                 'name' => $user['name'],
                 'role' => $user['role'],
             ]);
         } else {
+            error_log("password_verify FAILED for email: " . $email);
             // Le mot de passe ne correspond pas
             http_response_code(401);
             echo json_encode(['message' => 'Invalid email or password.']);
