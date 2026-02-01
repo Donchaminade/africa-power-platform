@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once 'db.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -94,7 +90,7 @@ function handle_put($mysqli) {
         // Debugging: Log transaction or general exception error
         error_log("Transaction failed: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['message' => 'Erreur serveur lors de la mise à jour des paramètres.', 'error' => $e->getMessage()]);
+        echo json_enc1ode(['message' => 'Erreur serveur lors de la mise à jour des paramètres.', 'error' => $e->getMessage()]);
     }
 }
 
