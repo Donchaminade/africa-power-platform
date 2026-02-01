@@ -1,8 +1,0 @@
-un Feb 01 00:41:34.004380 2026] [php:notice] [pid 8872:tid 1928] [client ::1:57486] PHP script reached db.php - 2026-02-01 00:41:34, referer: http://localhost:3000/
-[Sun Feb 01 00:41:38.149604 2026] [php:notice] [pid 8872:tid 1928] [client ::1:57486] PHP script reached db.php - 2026-02-01 00:41:38, referer: http://localhost:3000/
-[Sun Feb 01 00:41:38.155610 2026] [php:notice] [pid 8872:tid 1928] [client ::1:57486] PHP script reached db.php - 2026-02-01 00:41:38, referer: http://localhost:3000/
-[Sun Feb 01 00:41:51.023837 2026] [php:notice] [pid 8872:tid 1928] [client ::1:60918] PHP script reached db.php - 2026-02-01 00:41:51, referer: http://localhost:3000/
-[Sun Feb 01 00:41:51.025848 2026] [php:notice] [pid 8872:tid 1928] [client ::1:60918] handle_post (users): Received data: {"name":"Dorianedcdc","email":"admin@churchflow.com","role":"manager","is_active":false,"password":"password123"}, referer: http://localhost:3000/
-[Sun Feb 01 00:41:51.088348 2026] [php:notice] [pid 8872:tid 1928] [client ::1:60918] handle_post (users): is_active value before bind: false, referer: http://localhost:3000/
-[Sun Feb 01 00:41:51.089354 2026] [php:error] [pid 8872:tid 1928] [client ::1:60918] PHP Fatal error:  Uncaught Error: mysqli_stmt::bind_param(): Argument #6 could not be passed by reference in C:\\xampp\\htdocs\\africa-power-platform\\api\\users.php:86\nStack trace:\n#0 C:\\xampp\\htdocs\\africa-power-platform\\api\\users.php(19): handle_post(Object(mysqli))\n#1 {main}\n  thrown in C:\\xampp\\htdocs\\africa-power-platform\\api\\users.php on line 86, referer: http://localhost:3000/
-[Sun Feb 01 00:41:51.095352 2026] [php:notice] [pid 8872:tid 1928] [client ::1:60918] PHP script reached db.php - 2026-02-01 00:41:51, referer: http://localhost:3000/

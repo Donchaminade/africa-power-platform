@@ -125,28 +125,83 @@ function handle_post($mysqli) {
 function handle_post_upload_video($mysqli) {
     $file_field_name = 'video'; // Name of the file input field
 
+    // Debugging: Log the entire $_FILES array
+    error_log("handle_post_upload_video: Received _FILES array: " . json_encode($_FILES));
+    error_log("handle_post_upload_video: Received _POST array: " . json_encode($_POST)); // FormData can also contain POST data
+
     if (!isset($_FILES[$file_field_name]) || $_FILES[$file_field_name]['error'] !== UPLOAD_ERR_OK) {
+        // Debugging: Log specific upload error code
+        $error_code = $_FILES[$file_field_name]['error'] ?? 'N/A';
+        error_log("handle_post_upload_video: Upload failed. Error code: " . $error_code);
+        
         http_response_code(400);
-        echo json_encode(['message' => 'Aucun fichier vidéo téléchargé.']);
+        echo json_encode(['message' => 'Aucun fichier vidéo téléchargé ou une erreur est survenue pendant le téléchargement. Code d\'erreur: ' . $error_code]);
         return;
     }
 
     $file = $_FILES[$file_field_name];
-    $upload_dir = __DIR__ . '/../../public/uploads/'; // Path relative to current script
+    
+    // Get the desired upload path from the frontend, default to 'uploads'
+    $frontend_upload_path = $_POST['uploadPath'] ?? 'uploads'; // Default to 'uploads' relative to public/
 
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
+    // Sanitize the path to prevent directory traversal attacks
+    $frontend_upload_path = str_replace(['..', './', '/.'], '', $frontend_upload_path); // Simple sanitization
+    $frontend_upload_path = trim($frontend_upload_path, '/'); // Remove leading/trailing slashes
+
+    // Construct the full absolute upload directory path
+    // __DIR__ is api/
+    // /../../public/ -> brings us to the project root, then to public/
+    // Then append the sanitized frontend_upload_path
+    $base_upload_dir = __DIR__ . '/../../public/';
+    $final_upload_dir = $base_upload_dir . $frontend_upload_path . '/'; // Add trailing slash
+
+
+    // Debugging: Check and log upload directory permissions
+    if (!is_dir($final_upload_dir)) {
+        error_log("handle_post_upload_video: Final Upload directory does not exist. Attempting to create: " . $final_upload_dir);
+        if (!mkdir($final_upload_dir, 0777, true)) {
+            error_log("handle_post_upload_video: Failed to create final upload directory: " . $final_upload_dir);
+            http_response_code(500);
+            echo json_encode(['message' => 'Erreur serveur : Impossible de créer le répertoire de téléchargement spécifié.']);
+            return;
+        }
+        error_log("handle_post_upload_video: Final Upload directory created successfully.");
+    } elseif (!is_writable($final_upload_dir)) {
+        error_log("handle_post_upload_video: Final Upload directory not writable: " . $final_upload_dir);
+        http_response_code(500);
+        echo json_encode(['message' => 'Erreur serveur : Le répertoire de téléchargement spécifié n\'est pas accessible en écriture.']);
+        return;
     }
+    error_log("handle_post_upload_video: Final Upload directory exists and is writable: " . $final_upload_dir);
+
 
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $unique_filename = $file_field_name . '-' . time() . '-' . rand(100000000, 999999999) . '.' . $extension;
-    $target_file_path = $upload_dir . $unique_filename;
-    $video_url = '/uploads/' . $unique_filename;
+    $extension = strtolower($extension);
+
+    $unique_filename = md5(microtime(true) . $file['name']) . '.' . $extension;
+    $target_file_path = $final_upload_dir . $unique_filename;
+    
+    // The URL should reflect the frontend_upload_path
+    $video_url = '/' . $frontend_upload_path . '/' . $unique_filename;
+
+
+    // Debugging: Log file details before moving
+    error_log("handle_post_upload_video: Attempting to move file: " . $file['tmp_name'] . " to " . $target_file_path);
+    error_log("handle_post_upload_video: Upload directory is: " . $final_upload_dir);
+    error_log("handle_post_upload_video: Target file path is: " . $target_file_path);
+    error_log("handle_post_upload_video: Is " . $file['tmp_name'] . " an uploaded file? " . (is_uploaded_file($file['tmp_name']) ? 'Yes' : 'No'));
+    error_log("handle_post_upload_video: Is " . dirname($target_file_path) . " writable? " . (is_writable(dirname($target_file_path)) ? 'Yes' : 'No'));
+
 
     if (move_uploaded_file($file['tmp_name'], $target_file_path)) {
+        error_log("handle_post_upload_video: File moved successfully to: " . $target_file_path);
         http_response_code(200);
         echo json_encode(['message' => 'Vidéo téléchargée avec succès', 'videoUrl' => $video_url]);
     } else {
+        error_log("handle_post_upload_video: Failed to move uploaded file. Last error: " . (error_get_last()['message'] ?? 'Unknown reason'));
+        error_log("handle_post_upload_video: Source temporary file: " . $file['tmp_name']);
+        error_log("handle_post_upload_video: Destination path: " . $target_file_path);
+        
         http_response_code(500);
         echo json_encode(['message' => 'Erreur lors du déplacement du fichier vidéo téléversé.']);
     }
